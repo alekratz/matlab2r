@@ -50,6 +50,26 @@ matlab_unit
         : %empty
         ;
 
+/*
+// Rule types
+%type <ast::line_list_p>        lines
+%type <ast::line_list_p>        lines_tail
+%type <ast::line_p>             line
+%type <ast::conditional_p>      conditional
+%type <ast::expr_p>             expr
+%type <ast::for_stmt_p>         for_stmt
+%type <ast::if_stmt_p>          if_stmt
+%type <ast::else_stmt_p>        else_stmt
+%type <ast::funcall_p>          funcall
+%type <ast::funcall_p>          funcall_inner
+%type <ast::args_list_p>        args_list
+%type <ast::dimension_p>        dimension
+%type <ast::qualified_id_p>     qualified_id
+%type <ast::qualified_id_p>     qualified_id_tail
+%type <ast::range_p>            range
+ */
+
+
 %%
 
 void yy::matlab_parser::error(const location_type& l, const std::string& m)

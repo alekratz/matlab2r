@@ -1,0 +1,58 @@
+%skeleton "lalr1.cc"
+%require "3.0.4"
+%defines
+%locations
+
+%define parser_class_name {matlab_parser}
+%define api.value.type variant
+%define api.token.constructor
+%define parse.assert
+%define parse.trace
+%define parse.error verbose
+%define api.token.prefix {TOK_}
+
+%code requires
+{
+    #include <string>
+    #include <vector>
+    #include <cstdint>
+    class matlab2r_driver;
+}
+
+%param { matlab2r_driver& driver }
+%printer { yyoutput << $$; } <*>;
+
+%initial-action
+{
+    // Initialize the initial location
+    @$.begin.filename = @$.end.filename = &driver.streamname;
+}
+
+%code
+{
+    #include "matlab2r_driver.hpp"
+    #include "matlab_lexer.hpp"
+    #include <sstream>
+    #undef yylex
+    #define yylex driver.lexer->lex
+}
+
+// Tokens
+%token
+    END     0   "end of file"
+    NEWLINE 10  "newline"
+
+%%
+
+%start matlab_unit;
+
+matlab_unit
+        : %empty
+        ;
+
+%%
+
+void yy::matlab_parser::error(const location_type& l, const std::string& m)
+{
+    // TODO : driver error
+}

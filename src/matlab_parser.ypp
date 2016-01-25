@@ -20,7 +20,7 @@
 }
 
 %param { matlab2r_driver& driver }
-%printer { yyoutput << $$; } <*>;
+/* %printer { yyoutput << $$; } <*>; */
 
 %initial-action
 {
@@ -41,13 +41,27 @@
 %token
     END     0   "end of file"
     NEWLINE 10  "newline"
-
+    IDENTIFIER  "identifier"
+    CONSTANT    "literal"
+    STRING_LIT  "string literal"
+    TRANSPOSE   "transpose"
+    NCTRANSPOSE "nctranspose"
+    BREAK       "break keyword"
+    CLEAR       "clear keyword"
+    ELSE        "else keyword"
+    ELSEIF      "elseif keyword"
+    FOR         "for keyword"
+    FUNCTION    "function keyword"
+    GLOBAL      "global keyword"
+    IF          "if keyword"
+    RETURN      "return keyword"
+    WHILE       "while keyword"
 %%
 
 %start matlab_unit;
 
 matlab_unit
-        : %empty
+        : %empty { }
         ;
 
 /*
@@ -74,5 +88,6 @@ matlab_unit
 
 void yy::matlab_parser::error(const location_type& l, const std::string& m)
 {
-    // TODO : driver error
+    driver.error(l, m);
 }
+

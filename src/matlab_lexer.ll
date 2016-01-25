@@ -18,11 +18,11 @@
 
 L           [a-zA-Z_]
 D           [0-9]
-H           {D}|[a-fA-F]
+E           [DdEe][+-]?{D}+
 
 identifier  {L}({L}|{D})*
 num         {D}+
-comment     #.*{newline}
+comment     %.*{newline}
 newline     \n+
 ws          [\t ]
 

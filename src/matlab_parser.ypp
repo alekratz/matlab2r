@@ -218,17 +218,18 @@ selection_statement
         ;
 
 case_list
-        : CASE expression eostmt statement_list case_list_tail
+        : CASE expression eostmt statement_list_tail case_list_tail
         | eostmt case_list
         ;
 
 case_list_tail
-        : CASE expression eostmt statement_list case_list_tail
+        : CASE expression eostmt statement_list_tail case_list_tail
+        | eostmt case_list_tail
         | %empty
         ;
 
 otherwise_clause
-        : OTHERWISE eostmt statement_list
+        : OTHERWISE eostmt statement_list_tail
         | %empty
         ;
 

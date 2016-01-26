@@ -120,14 +120,25 @@
 %start matlab_unit;
 
 matlab_unit
-        : function_declare_list
-        | statement_list
+        /* : empty_lines function_declare_list */
+        : empty_lines statement_list
         ;
 
-eostmt
+eostmt  : COMMA
+        | SEMICOLON
+        | NEWLINE
+        ;
+
+eostmt_or_eof
         : COMMA
         | SEMICOLON
         | NEWLINE
+        | END
+        ;
+
+empty_lines
+        : NEWLINE empty_lines
+        | %empty
         ;
 
 /******************************************************************************
@@ -140,8 +151,13 @@ function_declare_list
         ;
 
 function_declare
-        : FUNCTION function_declare_lhs eostmt statement_list
-        | FUNCTION func_return_list EQUALS function_declare_lhs eostmt statement_list
+        : FUNCTION function_declare_lhs eostmt statement_list optional_end
+        | FUNCTION func_return_list EQUALS function_declare_lhs eostmt statement_list optional_end
+        ;
+
+optional_end
+        : END_KEYW eostmt_or_eof
+        | %empty
         ;
 
 func_return_list
@@ -165,7 +181,11 @@ func_ident_list
  *****************************************************************************/
 
 statement_list
-        : statement statement_list
+        : statement statement_list_tail
+        ;
+
+statement_list_tail
+        : statement statement_list_tail
         | %empty
         ;
 
@@ -179,31 +199,32 @@ statement
         | jump_statement
         | try_catch_statement
         | no_paren_funcall_statement
+        | function_declare
         ;
 
 global_statement
-        : GLOBAL identifier_list eostmt
+        : GLOBAL identifier_list eostmt_or_eof
         ;
 
 clear_statement
-        : CLEAR identifier_list eostmt
+        : CLEAR identifier_list eostmt_or_eof
         ;
 
 expression_statement
         : eostmt
-        | expression eostmt
+        | expression eostmt_or_eof
         ;
 
 assignment_statement
-        : assignment_expression eostmt
+        : assignment_expression eostmt_or_eof
         ;
 
 selection_statement
-        : IF expression statement_list END_KEYW eostmt
-        | IF expression statement_list ELSE statement_list END_KEYW eostmt
-        | IF expression statement_list elseif_clause END_KEYW eostmt
-        | IF expression statement_list elseif_clause ELSE statement_list END_KEYW eostmt
-        | SWITCH expression eostmt case_list otherwise_clause END_KEYW eostmt
+        : IF expression statement_list END_KEYW eostmt_or_eof
+        | IF expression statement_list ELSE statement_list END_KEYW eostmt_or_eof
+        | IF expression statement_list elseif_clause END_KEYW eostmt_or_eof
+        | IF expression statement_list elseif_clause ELSE statement_list END_KEYW eostmt_or_eof
+        | SWITCH expression eostmt case_list otherwise_clause END_KEYW eostmt_or_eof
         ;
 
 case_list
@@ -227,9 +248,9 @@ elseif_clause
         ;
 
 iteration_statement
-        : WHILE expression statement_list END_KEYW eostmt
-        | FOR IDENTIFIER EQUALS expression statement_list END_KEYW eostmt
-        | FOR LPAREN IDENTIFIER EQUALS expression RPAREN statement_list END_KEYW eostmt
+        : WHILE expression statement_list END_KEYW eostmt_or_eof
+        | FOR IDENTIFIER EQUALS expression statement_list END_KEYW eostmt_or_eof
+        | FOR LPAREN IDENTIFIER EQUALS expression RPAREN statement_list END_KEYW eostmt_or_eof
         ;
 
 jump_statement
@@ -244,21 +265,27 @@ identifier_list
         ;
 
 try_catch_statement
-        : TRY statement_list catch_statement END_KEYW eostmt
-        | TRY statement_list END_KEYW eostmt
+        : TRY statement_list catch_statement END_KEYW eostmt_or_eof
+        | TRY statement_list END_KEYW eostmt_or_eof
         ;
 
 catch_statement
         : CATCH IDENTIFIER statement_list
         | CATCH statement_list
+        ;
 
 no_paren_funcall_statement
         : IDENTIFIER eostmt
-        | IDENTIFIER IDENTIFIER { driver.lexer->begin_garbage_mode(); } naked_args eostmt
+        | IDENTIFIER IDENTIFIER { driver.lexer->begin_garbage_mode(); } naked_args eostmt_or_eof
         ;
 
 naked_args
         : NAKED_ARG naked_args
+        | %empty
+        ;
+
+optional_eof
+        : END
         | %empty
         ;
 

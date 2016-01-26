@@ -23,7 +23,7 @@ E           [DdEe][+-]?{D}+
 
 identifier  {L}({L}|{D})*
 num         {D}+
-comment     %.*{newline}
+comment     %[^\n]*{newline}
 newline     \n+
 ws          [\t ]
 
@@ -34,7 +34,7 @@ fcall {identifier}[ \t]{ws}*[^(]
 %special transpose string_lit naked_args
 
 %%
-{comment}               { loc.lines(1); }
+{comment}               { unput('\n'); }
 {continue}.*\n          { loc.lines(1); }
 
 break                   { BEGIN string_lit; return yy::matlab_parser::make_BREAK(loc); }
@@ -131,9 +131,10 @@ while                   { BEGIN string_lit; return yy::matlab_parser::make_WHILE
 ">"                     { BEGIN string_lit; return yy::matlab_parser::make_GT_OP(loc); }
 "^"                     { BEGIN string_lit; return yy::matlab_parser::make_POW(loc); }
 "."                     { BEGIN string_lit; return yy::matlab_parser::make_DOT(loc); }
-{newline}               { BEGIN string_lit; loc.lines(1); return yy::matlab_parser::make_NEWLINE(loc); }
+{newline}               { BEGIN string_lit; loc.lines(yyleng); return yy::matlab_parser::make_NEWLINE(loc); }
 {ws}                    
 
+.                       {  }
 %{
     loc.step();
 %}

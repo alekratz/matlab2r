@@ -95,6 +95,7 @@
 %token <std::string>        IDENTIFIER
 %token <std::string>        CONSTANT
 %token <std::string>        STRING_LITERAL
+%token <std::string>        NAKED_ARG
 /*
 // Rule types
 %type <ast::line_list_p>        lines
@@ -113,14 +114,17 @@
 %type <ast::qualified_id_p>     qualified_id_tail
 %type <ast::range_p>            range
  */
+%precedence IDENTIFIER
+%precedence FUNCTION
 
 %%
+
 
 %start matlab_unit;
 
 matlab_unit
-        : statement_list
-        | FUNCTION function_declare eostmt statement_list
+        : FUNCTION function_declare eostmt statement_list
+        | statement_list
         ;
 
 eostmt
@@ -172,6 +176,7 @@ statement
         | iteration_statement
         | jump_statement
         | try_catch_statement
+        | no_paren_funcall_statement
         ;
 
 global_statement
@@ -224,6 +229,16 @@ identifier_list
 try_catch_statement
         : TRY statement_list CATCH IDENTIFIER statement_list END eostmt
         | TRY statement_list CATCH eostmt statement_list END eostmt
+        ;
+
+no_paren_funcall_statement
+        : IDENTIFIER eostmt
+        | IDENTIFIER IDENTIFIER { driver.lexer->begin_garbage_mode(); } naked_args eostmt
+        ;
+
+naked_args
+        : NAKED_ARG naked_args
+        | %empty
         ;
 
 /******************************************************************************

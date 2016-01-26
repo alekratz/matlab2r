@@ -4,6 +4,7 @@
 #include "matlab2r_driver.hpp"
 #include "matlab_lexer.hpp"
 #include "parser.hpp"
+#include "util.hpp"
 
 #include <sstream>
 #include <string>
@@ -13,7 +14,6 @@
 
 #undef yywrap
 #define yywrap() 1
-
 // HACK : remove this really hacky paren depth tracker and find a better way to ignore special keywords
 static int32_t paren_depth = 0;
 %}
@@ -30,9 +30,9 @@ ws          [\t ]
 
 dot         \.
 continue    \.\.\.
+fcall {identifier}[ \t]{ws}*[^(]
 
-%special transpose string_lit
-
+%special transpose string_lit naked_args
 
 %%
 {comment}      { loc.lines(1); }
@@ -74,8 +74,13 @@ while                   { BEGIN string_lit; return yy::matlab_parser::make_WHILE
 {D}*{dot}{D}+({E})?     { BEGIN transpose; return yy::matlab_parser::make_CONSTANT(yytext, loc); }
 {D}+{dot}{D}*({E})?     { BEGIN transpose; return yy::matlab_parser::make_CONSTANT(yytext, loc); }
 
+<string_lit>'[^'\n]*'/' { BEGIN string_lit; return yy::matlab_parser::make_STRING_LITERAL(yytext, loc); }
 <string_lit>'[^'\n]*'   { BEGIN string_lit; return yy::matlab_parser::make_STRING_LITERAL(yytext, loc); }
 <transpose>'            { BEGIN transpose; return yy::matlab_parser::make_TRANSPOSE(loc); }
+
+<naked_args>{newline}   { BEGIN string_lit; loc.lines(1); return yy::matlab_parser::make_NEWLINE(loc); }
+<naked_args>{ws}*       
+<naked_args>[^\t\n ]*   { return yy::matlab_parser::make_NAKED_ARG(yytext, loc); }
 
 ".*"                    { BEGIN string_lit; return yy::matlab_parser::make_AMUL(loc); }
 ".^"                    { BEGIN string_lit; return yy::matlab_parser::make_APOW(loc); }
@@ -115,8 +120,8 @@ while                   { BEGIN string_lit; return yy::matlab_parser::make_WHILE
 ">"                     { BEGIN string_lit; return yy::matlab_parser::make_GT_OP(loc); }
 "^"                     { BEGIN string_lit; return yy::matlab_parser::make_POW(loc); }
 "|"                     { BEGIN string_lit; return yy::matlab_parser::make_VBAR(loc); }
-{newline}               { loc.lines(1); return yy::matlab_parser::make_NEWLINE(loc); }
-{ws}                    loc.step();
+{newline}               { BEGIN string_lit; loc.lines(1); return yy::matlab_parser::make_NEWLINE(loc); }
+{ws}                    
 
 %{
     loc.step();
@@ -130,3 +135,7 @@ int yyFlexLexer::yylex()
     return 0;
 }
 
+void matlab_lexer::begin_garbage_mode()
+{
+    BEGIN naked_args;
+}

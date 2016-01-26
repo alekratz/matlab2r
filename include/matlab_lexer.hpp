@@ -29,6 +29,8 @@ public:
     // Location of the current token
     yy::location loc;
 
+public:
+    void begin_garbage_mode();
 };
 
 #endif

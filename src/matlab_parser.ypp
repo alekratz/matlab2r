@@ -157,7 +157,7 @@ function_declare_lhs
 
 func_ident_list
         : IDENTIFIER
-        | func_ident_list COMMA IDENTIFIER
+        | IDENTIFIER COMMA func_ident_list
         ;
 
 /******************************************************************************
@@ -207,8 +207,8 @@ selection_statement
         /* TODO : switch/case */
 
 elseif_clause
-        : ELSEIF expression statement_list
-        | elseif_clause ELSEIF expression statement_list
+        : ELSEIF expression statement_list elseif_clause
+        | %empty
         ;
 
 iteration_statement
@@ -266,6 +266,7 @@ primary_expression
         | LPAREN expression RPAREN
         | LBRACKET RBRACKET
         | LBRACKET array_list RBRACKET
+        | LBRACE RBRACE
         | LBRACE array_list RBRACE
         ;
 
@@ -276,40 +277,40 @@ expression
 
 or_expression
         : and_expression
-        | or_expression VBAR and_expression
+        | and_expression VBAR or_expression
         ;
 
 and_expression
         : equality_expression
-        | and_expression AMP equality_expression
+        | equality_expression AMP and_expression
         ;
 
 equality_expression
         : additive_expression
-        | equality_expression EQ_OP additive_expression
-        | equality_expression NE_OP additive_expression
-        | equality_expression LT_OP additive_expression
-        | equality_expression GT_OP additive_expression
-        | equality_expression LE_OP additive_expression
-        | equality_expression GE_OP additive_expression
+        | additive_expression EQ_OP equality_expression
+        | additive_expression NE_OP equality_expression
+        | additive_expression LT_OP equality_expression
+        | additive_expression GT_OP equality_expression
+        | additive_expression LE_OP equality_expression
+        | additive_expression GE_OP equality_expression
         ;
 
 additive_expression
         : multiplicative_expression
-        | additive_expression PLUS multiplicative_expression
-        | additive_expression MINUS multiplicative_expression
+        | multiplicative_expression PLUS additive_expression
+        | multiplicative_expression MINUS additive_expression
         ;
 
 multiplicative_expression
         : unary_expression
-        | multiplicative_expression TIMES unary_expression
-        | multiplicative_expression FSLASH unary_expression
-        | multiplicative_expression BSLASH unary_expression
-        | multiplicative_expression POW unary_expression
-        | multiplicative_expression AMUL unary_expression
-        | multiplicative_expression ADIV unary_expression
-        | multiplicative_expression ARDIV unary_expression
-        | multiplicative_expression APOW unary_expression
+        | unary_expression TIMES multiplicative_expression
+        | unary_expression FSLASH multiplicative_expression
+        | unary_expression BSLASH multiplicative_expression
+        | unary_expression POW multiplicative_expression
+        | unary_expression AMUL multiplicative_expression
+        | unary_expression ADIV multiplicative_expression
+        | unary_expression ARDIV multiplicative_expression
+        | unary_expression APOW multiplicative_expression
         ;
 
 unary_expression

@@ -114,16 +114,13 @@
 %type <ast::qualified_id_p>     qualified_id_tail
 %type <ast::range_p>            range
  */
-%precedence IDENTIFIER
-%precedence FUNCTION
 
 %%
-
 
 %start matlab_unit;
 
 matlab_unit
-        : FUNCTION function_declare eostmt statement_list
+        : function_declare_list
         | statement_list
         ;
 
@@ -137,9 +134,14 @@ eostmt
  * Function decls
  *****************************************************************************/
 
+function_declare_list
+        : function_declare
+        | function_declare function_declare_list
+        ;
+
 function_declare
-        : function_declare_lhs
-        | func_return_list EQUALS function_declare_lhs
+        : FUNCTION function_declare_lhs eostmt statement_list
+        | FUNCTION func_return_list EQUALS function_declare_lhs eostmt statement_list
         ;
 
 func_return_list
@@ -264,6 +266,7 @@ primary_expression
         | LPAREN expression RPAREN
         | LBRACKET RBRACKET
         | LBRACKET array_list RBRACKET
+        | LBRACE array_list RBRACE
         ;
 
 expression

@@ -53,7 +53,7 @@ end                     {
                             else
                             {
                                 BEGIN string_lit;
-                                return yy::matlab_parser::make_END(loc);
+                                return yy::matlab_parser::make_END_KEYW(loc);
                             }
                         }
 elseif                  { BEGIN string_lit; return yy::matlab_parser::make_ELSEIF(loc); }
@@ -110,7 +110,10 @@ while                   { BEGIN string_lit; return yy::matlab_parser::make_WHILE
 "]"                     { BEGIN transpose; return yy::matlab_parser::make_RBRACKET(loc); }
 "{"                     { BEGIN transpose; return yy::matlab_parser::make_LBRACE(loc); }
 "}"                     { BEGIN transpose; return yy::matlab_parser::make_RBRACE(loc); }
+"&&"                    { BEGIN string_lit; return yy::matlab_parser::make_AMP(loc); }
+"||"                    { BEGIN string_lit; return yy::matlab_parser::make_VBAR(loc); }
 "&"                     { BEGIN string_lit; return yy::matlab_parser::make_AMP(loc); }
+"|"                     { BEGIN string_lit; return yy::matlab_parser::make_VBAR(loc); }
 "-"                     { BEGIN string_lit; return yy::matlab_parser::make_MINUS(loc); }
 "+"                     { BEGIN string_lit; return yy::matlab_parser::make_PLUS(loc); }
 "*"                     { BEGIN string_lit; return yy::matlab_parser::make_TIMES(loc); }
@@ -119,7 +122,6 @@ while                   { BEGIN string_lit; return yy::matlab_parser::make_WHILE
 "<"                     { BEGIN string_lit; return yy::matlab_parser::make_LT_OP(loc); }
 ">"                     { BEGIN string_lit; return yy::matlab_parser::make_GT_OP(loc); }
 "^"                     { BEGIN string_lit; return yy::matlab_parser::make_POW(loc); }
-"|"                     { BEGIN string_lit; return yy::matlab_parser::make_VBAR(loc); }
 {newline}               { BEGIN string_lit; loc.lines(1); return yy::matlab_parser::make_NEWLINE(loc); }
 {ws}                    
 

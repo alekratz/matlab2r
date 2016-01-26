@@ -39,7 +39,7 @@
 
 // Tokens
 %token
-    EOF     0       "end of file"
+    END     0       "end of file"
     NEWLINE 10      "newline"
     CONTINUATION    "continuation (...)"
     BREAK
@@ -48,7 +48,7 @@
     CLEAR
     CONTINUE
     ELSE
-    END
+    END_KEYW
     ELSEIF
     FOR
     FUNCTION
@@ -199,10 +199,10 @@ assignment_statement
         ;
 
 selection_statement
-        : IF expression statement_list END eostmt
-        | IF expression statement_list ELSE statement_list END eostmt
-        | IF expression statement_list elseif_clause END eostmt
-        | IF expression statement_list elseif_clause ELSE statement_list END eostmt
+        : IF expression statement_list END_KEYW eostmt
+        | IF expression statement_list ELSE statement_list END_KEYW eostmt
+        | IF expression statement_list elseif_clause END_KEYW eostmt
+        | IF expression statement_list elseif_clause ELSE statement_list END_KEYW eostmt
         ;
         /* TODO : switch/case */
 
@@ -212,9 +212,9 @@ elseif_clause
         ;
 
 iteration_statement
-        : WHILE expression statement_list END eostmt
-        | FOR IDENTIFIER EQUALS expression statement_list END eostmt
-        | FOR LPAREN IDENTIFIER EQUALS expression RPAREN statement_list END eostmt
+        : WHILE expression statement_list END_KEYW eostmt
+        | FOR IDENTIFIER EQUALS expression statement_list END_KEYW eostmt
+        | FOR LPAREN IDENTIFIER EQUALS expression RPAREN statement_list END_KEYW eostmt
         ;
 
 jump_statement
@@ -229,8 +229,8 @@ identifier_list
         ;
 
 try_catch_statement
-        : TRY statement_list CATCH IDENTIFIER statement_list END eostmt
-        | TRY statement_list CATCH eostmt statement_list END eostmt
+        : TRY statement_list CATCH IDENTIFIER statement_list END_KEYW eostmt
+        | TRY statement_list CATCH eostmt statement_list END_KEYW eostmt
         ;
 
 no_paren_funcall_statement

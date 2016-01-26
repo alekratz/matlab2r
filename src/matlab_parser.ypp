@@ -20,7 +20,7 @@
 }
 
 %param { matlab2r_driver& driver }
-/* %printer { yyoutput << $$; } <*>; */
+%printer { yyoutput << $$; } <*>;
 
 %initial-action
 {
@@ -163,8 +163,8 @@ func_ident_list
  *****************************************************************************/
 
 statement_list
-        : statement
-        | statement_list statement
+        : statement statement_list
+        | %empty
         ;
 
 statement

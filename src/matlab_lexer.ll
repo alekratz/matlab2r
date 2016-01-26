@@ -75,6 +75,7 @@ while                   { BEGIN string_lit; return yy::matlab_parser::make_WHILE
 
 <string_lit>'[^'\n]*'/' { BEGIN string_lit; return yy::matlab_parser::make_STRING_LITERAL(yytext, loc); }
 <string_lit>'[^'\n]*'   { BEGIN string_lit; return yy::matlab_parser::make_STRING_LITERAL(yytext, loc); }
+<transpose>{ws}         { BEGIN string_lit; }
 <transpose>'            { BEGIN transpose; return yy::matlab_parser::make_TRANSPOSE(loc); }
 
 <naked_args>{newline}   { BEGIN string_lit; loc.lines(1); return yy::matlab_parser::make_NEWLINE(loc); }

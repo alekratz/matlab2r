@@ -108,8 +108,16 @@ while                   { BEGIN string_lit; return yy::matlab_parser::make_WHILE
                         }
 "["                     { BEGIN string_lit; return yy::matlab_parser::make_LBRACKET(loc); }
 "]"                     { BEGIN transpose; return yy::matlab_parser::make_RBRACKET(loc); }
-"{"                     { BEGIN transpose; return yy::matlab_parser::make_LBRACE(loc); }
-"}"                     { BEGIN transpose; return yy::matlab_parser::make_RBRACE(loc); }
+"{"                     { 
+                            paren_depth++;
+                            BEGIN string_lit;
+                            return yy::matlab_parser::make_LBRACE(loc);
+                        }
+"}"                     {
+                            paren_depth--;
+                            BEGIN transpose;
+                            return yy::matlab_parser::make_RBRACE(loc);
+                        }
 "&&"                    { BEGIN string_lit; return yy::matlab_parser::make_AMP(loc); }
 "||"                    { BEGIN string_lit; return yy::matlab_parser::make_VBAR(loc); }
 "&"                     { BEGIN string_lit; return yy::matlab_parser::make_AMP(loc); }

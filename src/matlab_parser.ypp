@@ -203,8 +203,23 @@ selection_statement
         | IF expression statement_list ELSE statement_list END_KEYW eostmt
         | IF expression statement_list elseif_clause END_KEYW eostmt
         | IF expression statement_list elseif_clause ELSE statement_list END_KEYW eostmt
+        | SWITCH expression eostmt case_list otherwise_clause END_KEYW eostmt
         ;
-        /* TODO : switch/case */
+
+case_list
+        : CASE expression eostmt statement_list case_list_tail
+        | eostmt case_list
+        ;
+
+case_list_tail
+        : CASE expression eostmt statement_list case_list_tail
+        | %empty
+        ;
+
+otherwise_clause
+        : OTHERWISE eostmt statement_list
+        | %empty
+        ;
 
 elseif_clause
         : ELSEIF expression statement_list elseif_clause
@@ -229,9 +244,13 @@ identifier_list
         ;
 
 try_catch_statement
-        : TRY statement_list CATCH IDENTIFIER statement_list END_KEYW eostmt
-        | TRY statement_list CATCH eostmt statement_list END_KEYW eostmt
+        : TRY statement_list catch_statement END_KEYW eostmt
+        | TRY statement_list END_KEYW eostmt
         ;
+
+catch_statement
+        : CATCH IDENTIFIER statement_list
+        | CATCH statement_list
 
 no_paren_funcall_statement
         : IDENTIFIER eostmt
@@ -253,26 +272,21 @@ assignment_expression
 
 postfix_expression
         : primary_expression
-        | array_or_function_call_expression
-        | array_cell_expression
+        | qualified_id
         | postfix_expression TRANSPOSE
         | postfix_expression NCTRANSPOSE
         ;
 
 primary_expression
-        : qualified_id
+        : STRING_LITERAL
         | CONSTANT
-        | STRING_LITERAL
-        | LPAREN expression RPAREN
         | LBRACKET RBRACKET
-        | LBRACKET array_list RBRACKET
         | LBRACE RBRACE
-        | LBRACE array_list RBRACE
         ;
 
 expression
         : or_expression
-        | expression COLON or_expression
+        | or_expression COLON expression
         ;
 
 or_expression
@@ -325,11 +339,11 @@ unary_operator
         ;
 
 array_or_function_call_expression
-        : IDENTIFIER LPAREN index_expression_list RPAREN
+        : qualified_id LPAREN index_expression_list RPAREN
         ;
 
 array_cell_expression
-        : IDENTIFIER LBRACE index_expression_list RBRACE
+        : qualified_id LBRACE index_expression_list RBRACE
         ;
 
 index_expression_list
@@ -343,8 +357,17 @@ index_expression
         ;
 
 qualified_id
+        : qualified_id_item
+        | qualified_id_item DOT qualified_id
+        ;
+
+qualified_id_item
         : IDENTIFIER
-        | IDENTIFIER DOT qualified_id
+        | LPAREN expression RPAREN
+        | LBRACKET array_list RBRACKET
+        | LBRACE array_list RBRACE
+        | array_or_function_call_expression
+        | array_cell_expression
         ;
 
 /******************************************************************************

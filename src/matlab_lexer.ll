@@ -4,7 +4,6 @@
 #include "matlab2r_driver.hpp"
 #include "matlab_lexer.hpp"
 #include "parser.hpp"
-#include "util.hpp"
 
 #include <sstream>
 #include <string>

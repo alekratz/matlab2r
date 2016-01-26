@@ -44,5 +44,5 @@ void matlab2r_driver::error(const yy::location& l, cstref m)
 
 void matlab2r_driver::error (cstref m)
 {
-    cerr << streamname << ":" << m << endl;
+    cerr << streamname << ":" << lexer->loc << ": " << m << endl;
 }

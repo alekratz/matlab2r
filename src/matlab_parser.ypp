@@ -65,14 +65,22 @@
     ADIV
     ARDIV
     TRANSPOSE
+    NCTRANSPOSE
     LE_OP
     GE_OP
     EQ_OP
     NE_OP
+    TILDE
+    SEMICOLON
+    COMMA
+    COLON
+    EQUALS
     LPAREN
     RPAREN
     LBRACKET
     RBRACKET
+    LBRACE
+    RBRACE
     AMP
     MINUS
     PLUS
@@ -81,20 +89,12 @@
     BSLASH
     LT_OP
     GT_OP
+    POW
     VBAR
 
 %token <std::string>        IDENTIFIER
 %token <std::string>        CONSTANT
 %token <std::string>        STRING_LITERAL
-
-%%
-
-%start matlab_unit;
-
-matlab_unit
-        : %empty { }
-        ;
-
 /*
 // Rule types
 %type <ast::line_list_p>        lines
@@ -114,6 +114,219 @@ matlab_unit
 %type <ast::range_p>            range
  */
 
+%%
+
+%start matlab_unit;
+
+matlab_unit
+        : statement_list
+        | FUNCTION function_declare eostmt statement_list
+        ;
+
+eostmt
+        : COMMA
+        | SEMICOLON
+        | NEWLINE
+        ;
+
+/******************************************************************************
+ * Function decls
+ *****************************************************************************/
+
+function_declare
+        : function_declare_lhs
+        | func_return_list EQUALS function_declare_lhs
+        ;
+
+func_return_list
+        : IDENTIFIER
+        | LBRACKET func_ident_list RBRACKET
+        ;
+
+function_declare_lhs
+        : IDENTIFIER
+        | IDENTIFIER LPAREN RPAREN
+        | IDENTIFIER LPAREN func_ident_list RPAREN
+        ;
+
+func_ident_list
+        : IDENTIFIER
+        | func_ident_list COMMA IDENTIFIER
+        ;
+
+/******************************************************************************
+ * Statements
+ *****************************************************************************/
+
+statement_list
+        : statement
+        | statement_list statement
+        ;
+
+statement
+        : global_statement
+        | clear_statement
+        | assignment_statement
+        | expression_statement
+        | selection_statement
+        | iteration_statement
+        | jump_statement
+        ;
+
+global_statement
+        : GLOBAL identifier_list eostmt
+        ;
+
+clear_statement
+        : CLEAR identifier_list eostmt
+        ;
+
+expression_statement
+        : eostmt
+        | expression eostmt
+        ;
+
+assignment_statement
+        : assignment_expression eostmt
+        ;
+
+selection_statement
+        : IF expression statement_list END eostmt
+        | IF expression statement_list ELSE statement_list END eostmt
+        | IF expression statement_list elseif_clause END eostmt
+        | IF expression statement_list elseif_clause ELSE statement_list END eostmt
+        ;
+        /* TODO : switch/case */
+
+elseif_clause
+        : ELSEIF expression statement_list
+        | elseif_clause ELSEIF expression statement_list
+        ;
+
+iteration_statement
+        : WHILE expression statement_list END eostmt
+        | FOR IDENTIFIER EQUALS expression statement_list END eostmt
+        | FOR LPAREN IDENTIFIER EQUALS expression RPAREN statement_list END eostmt
+        ;
+
+jump_statement
+        : BREAK eostmt
+        | CONTINUE eostmt
+        | RETURN eostmt
+        ;
+
+identifier_list
+        : IDENTIFIER
+        | identifier_list IDENTIFIER
+        ;
+
+/******************************************************************************
+ * Expressions
+ *****************************************************************************/
+
+assignment_expression
+        : postfix_expression EQUALS expression
+        ;
+
+postfix_expression
+        : primary_expression
+        | array_or_function_call_expression
+        | array_cell_expression
+        | postfix_expression TRANSPOSE
+        | postfix_expression NCTRANSPOSE
+        ;
+
+primary_expression
+        : IDENTIFIER
+        | CONSTANT
+        | STRING_LITERAL
+        | LPAREN expression RPAREN
+        | LBRACKET RBRACKET
+        | LBRACKET array_list RBRACKET
+        ;
+
+expression
+        : or_expression
+        | expression COLON or_expression
+        ;
+
+or_expression
+        : and_expression
+        | or_expression VBAR and_expression
+        ;
+
+and_expression
+        : equality_expression
+        | and_expression AMP equality_expression
+        ;
+
+equality_expression
+        : additive_expression
+        | equality_expression EQ_OP additive_expression
+        | equality_expression NE_OP additive_expression
+        | equality_expression LT_OP additive_expression
+        | equality_expression GT_OP additive_expression
+        | equality_expression LE_OP additive_expression
+        | equality_expression GE_OP additive_expression
+        ;
+
+additive_expression
+        : multiplicative_expression
+        | additive_expression PLUS multiplicative_expression
+        | additive_expression MINUS multiplicative_expression
+        ;
+
+multiplicative_expression
+        : unary_expression
+        | multiplicative_expression TIMES unary_expression
+        | multiplicative_expression FSLASH unary_expression
+        | multiplicative_expression BSLASH unary_expression
+        | multiplicative_expression POW unary_expression
+        | multiplicative_expression AMUL unary_expression
+        | multiplicative_expression ADIV unary_expression
+        | multiplicative_expression ARDIV unary_expression
+        | multiplicative_expression APOW unary_expression
+        ;
+
+unary_expression
+        : postfix_expression
+        | unary_operator postfix_expression
+        ;
+
+unary_operator
+        : PLUS
+        | MINUS
+        | TILDE
+        ;
+
+array_or_function_call_expression
+        : IDENTIFIER LPAREN index_expression_list RPAREN
+        ;
+
+array_cell_expression
+        : IDENTIFIER LBRACE index_expression_list RBRACE
+        ;
+
+index_expression_list
+        : index_expression
+        | index_expression COMMA index_expression_list
+        ;
+
+index_expression
+        : COLON
+        | expression
+        ;
+
+/******************************************************************************
+ * Array indexing
+ *****************************************************************************/
+
+array_list
+        : expression
+        | expression array_list
+        | expression COMMA array_list
+        | expression SEMICOLON array_list
+        ;
 
 %%
 

@@ -41,7 +41,6 @@
 %token
     END     0       "end of file"
     NEWLINE 10      "newline"
-    CONTINUATION    "continuation (...)"
     BREAK
     CASE
     CATCH
@@ -91,6 +90,7 @@
     GT_OP
     POW
     VBAR
+    DOT
 
 %token <std::string>        IDENTIFIER
 %token <std::string>        CONSTANT
@@ -260,7 +260,7 @@ postfix_expression
         ;
 
 primary_expression
-        : IDENTIFIER
+        : qualified_id
         | CONSTANT
         | STRING_LITERAL
         | LPAREN expression RPAREN
@@ -339,6 +339,11 @@ index_expression_list
 index_expression
         : COLON
         | expression
+        ;
+
+qualified_id
+        : IDENTIFIER
+        | IDENTIFIER DOT qualified_id
         ;
 
 /******************************************************************************

@@ -34,8 +34,8 @@ fcall {identifier}[ \t]{ws}*[^(]
 %special transpose string_lit naked_args
 
 %%
-{comment}      { loc.lines(1); }
-{continue}.*$  { loc.lines(1); return yy::matlab_parser::make_CONTINUATION(loc); }
+{comment}               { loc.lines(1); }
+{continue}.*\n          { loc.lines(1); }
 
 break                   { BEGIN string_lit; return yy::matlab_parser::make_BREAK(loc); }
 case                    { BEGIN string_lit; return yy::matlab_parser::make_CASE(loc); }
@@ -122,6 +122,7 @@ while                   { BEGIN string_lit; return yy::matlab_parser::make_WHILE
 "<"                     { BEGIN string_lit; return yy::matlab_parser::make_LT_OP(loc); }
 ">"                     { BEGIN string_lit; return yy::matlab_parser::make_GT_OP(loc); }
 "^"                     { BEGIN string_lit; return yy::matlab_parser::make_POW(loc); }
+"."                     { BEGIN string_lit; return yy::matlab_parser::make_DOT(loc); }
 {newline}               { BEGIN string_lit; loc.lines(1); return yy::matlab_parser::make_NEWLINE(loc); }
 {ws}                    
 

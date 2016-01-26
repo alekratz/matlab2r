@@ -171,6 +171,7 @@ statement
         | selection_statement
         | iteration_statement
         | jump_statement
+        | try_catch_statement
         ;
 
 global_statement
@@ -218,6 +219,11 @@ jump_statement
 identifier_list
         : IDENTIFIER
         | identifier_list IDENTIFIER
+        ;
+
+try_catch_statement
+        : TRY statement_list CATCH IDENTIFIER statement_list END eostmt
+        | TRY statement_list CATCH eostmt statement_list END eostmt
         ;
 
 /******************************************************************************

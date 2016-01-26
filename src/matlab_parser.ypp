@@ -121,7 +121,7 @@
 
 matlab_unit
         /* : empty_lines function_declare_list */
-        : empty_lines statement_list
+        : statement_list
         ;
 
 eostmt  : COMMA
@@ -136,19 +136,9 @@ eostmt_or_eof
         | END
         ;
 
-empty_lines
-        : NEWLINE empty_lines
-        | %empty
-        ;
-
 /******************************************************************************
  * Function decls
  *****************************************************************************/
-
-function_declare_list
-        : function_declare
-        | function_declare function_declare_list
-        ;
 
 function_declare
         : FUNCTION function_declare_lhs eostmt statement_list optional_end
@@ -281,11 +271,6 @@ no_paren_funcall_statement
 
 naked_args
         : NAKED_ARG naked_args
-        | %empty
-        ;
-
-optional_eof
-        : END
         | %empty
         ;
 

@@ -23,19 +23,19 @@ E           [DdEe][+-]?{D}+
 
 identifier  {L}({L}|{D})*
 num         {D}+
-comment     %[^\n]*{newline}
-newline     \n+
-ws          [\t ]
+comment     %[^\n]*\n
+newline     \n
+newlines    {newline}+
+ws          [\t ]+
 
 dot         \.
 continue    \.\.\.
-fcall {identifier}[ \t]{ws}*[^(]
 
-%special transpose string_lit naked_args
+%special transpose string_lit naked_args naked_args_start
 
 %%
-{comment}               { unput('\n'); }
-{continue}.*\n          { loc.lines(1); }
+{comment}               { loc.lines(1); }
+{continue}.*{newline}   { loc.lines(1); }
 
 break                   { BEGIN string_lit; return yy::matlab_parser::make_BREAK(loc); }
 case                    { BEGIN string_lit; return yy::matlab_parser::make_CASE(loc); }
@@ -78,9 +78,13 @@ while                   { BEGIN string_lit; return yy::matlab_parser::make_WHILE
 <transpose>{ws}         { BEGIN string_lit; }
 <transpose>'            { BEGIN transpose; return yy::matlab_parser::make_TRANSPOSE(loc); }
 
+<naked_args_start>{ws}({L}|{D})[^ \t\n]* {
+                            BEGIN naked_args; return yy::matlab_parser::make_NAKED_ARG(yytext, loc); 
+                        }
+<naked_args_start>.     { BEGIN string_lit; yymore(); }
 <naked_args>{newline}   { BEGIN string_lit; loc.lines(1); return yy::matlab_parser::make_NEWLINE(loc); }
-<naked_args>{ws}*       
-<naked_args>[^\t\n ]*   { return yy::matlab_parser::make_NAKED_ARG(yytext, loc); }
+<naked_args>{ws}        
+<naked_args>[^\t\n ]+   { BEGIN naked_args; return yy::matlab_parser::make_NAKED_ARG(yytext, loc); }
 
 ".*"                    { BEGIN string_lit; return yy::matlab_parser::make_AMUL(loc); }
 ".^"                    { BEGIN string_lit; return yy::matlab_parser::make_APOW(loc); }
@@ -131,7 +135,7 @@ while                   { BEGIN string_lit; return yy::matlab_parser::make_WHILE
 ">"                     { BEGIN string_lit; return yy::matlab_parser::make_GT_OP(loc); }
 "^"                     { BEGIN string_lit; return yy::matlab_parser::make_POW(loc); }
 "."                     { BEGIN string_lit; return yy::matlab_parser::make_DOT(loc); }
-{newline}               { BEGIN string_lit; loc.lines(yyleng); return yy::matlab_parser::make_NEWLINE(loc); }
+{newlines}              { BEGIN string_lit; loc.lines(yyleng); return yy::matlab_parser::make_NEWLINE(loc); }
 {ws}                    
 
 .                       {  }
@@ -147,7 +151,7 @@ int yyFlexLexer::yylex()
     return 0;
 }
 
-void matlab_lexer::begin_garbage_mode()
+void matlab_lexer::begin_naked_args()
 {
-    BEGIN naked_args;
+    BEGIN naked_args_start;
 }

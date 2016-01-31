@@ -30,7 +30,7 @@ public:
     yy::location loc;
 
 public:
-    void begin_garbage_mode();
+    void begin_naked_args();
 };
 
 #endif

@@ -34,7 +34,7 @@ continue    \.\.\.
 %special transpose string_lit naked_args naked_args_start
 
 %%
-{comment}               { loc.lines(1); }
+{comment}               { loc.lines(1); return yy::matlab_parser::make_NEWLINE(loc); }
 {continue}.*{newline}   { loc.lines(1); }
 
 break                   { BEGIN string_lit; return yy::matlab_parser::make_BREAK(loc); }

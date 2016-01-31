@@ -223,7 +223,7 @@ assignment_statement
         ;
 
 selection_statement
-        : IF expression eostmt statement_list elseif_clause else_clause END_KEYW eostmt_or_eof { std::cout << "selection_statement -> IF expression eostmt statement_list elseif_clause else_clause END_KEYW eostmt_or_eof" << std::endl; }
+        : IF expression statement_list elseif_clause else_clause END_KEYW eostmt_or_eof { std::cout << "selection_statement -> IF expression statement_list elseif_clause else_clause END_KEYW eostmt_or_eof" << std::endl; }
         /*
         | IF expression eostmt statement_list ELSE statement_list END_KEYW eostmt_or_eof
         | IF expression eostmt statement_list elseif_clause END_KEYW eostmt_or_eof
@@ -233,12 +233,12 @@ selection_statement
         ;
 
 else_clause
-        : ELSE eostmt statement_list { std::cout << "else_clause -> ELSE eostmt statement_list" << std::endl; }
+        : ELSE statement_list { std::cout << "else_clause -> ELSE statement_list" << std::endl; }
         | %empty { std::cout << "else_clause -> %empty" << std::endl; }
         ;
 
 elseif_clause
-        : ELSEIF expression eostmt statement_list elseif_clause { std::cout << "elseif_clause -> ELSEIF expression eostmt statement_list elseif_clause" << std::endl; }
+        : ELSEIF expression statement_list elseif_clause { std::cout << "elseif_clause -> ELSEIF expression statement_list elseif_clause" << std::endl; }
         | %empty { std::cout << "elseif_clause -> %empty" << std::endl; }
         ;
 
@@ -387,6 +387,7 @@ qualified_id_item
 
 array_row_list
         : expression { std::cout << "array_row_list -> expression" << std::endl; }
+        | expression COMMA { std::cout << "array_row_list -> expression COMMA" << std::endl; }
         | expression array_row_list { std::cout << "array_row_list -> expression array_row_list" << std::endl; }
         | expression COMMA array_row_list { std::cout << "array_row_list -> expression COMMA array_row_list" << std::endl; }
         | NEWLINE array_row_list { std::cout << "array_row_list -> NEWLINE array_row_list" << std::endl; }

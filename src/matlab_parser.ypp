@@ -130,7 +130,7 @@ matlab_unit
         : statement_list { std::cout << "matlab_unit -> statement_list" << std::endl; }
         ;
 
-eostmt  : COMMA { std::cout << "eostmt -> stmt  : COMMA" << std::endl; }
+eostmt  : COMMA { std::cout << "eostmt -> COMMA" << std::endl; }
         | SEMICOLON { std::cout << "eostmt -> SEMICOLON" << std::endl; }
         | NEWLINE { std::cout << "eostmt -> NEWLINE" << std::endl; }
         ;
@@ -198,7 +198,7 @@ statement
         | function_declare { std::cout << "statement -> function_declare" << std::endl; }
         | naked_funcall { std::cout << "statement -> naked_funcall" << std::endl; }
         | expression_statement { std::cout << "statement -> expression_statement" << std::endl; }
-        | eostmt { std::cout << "statement -> eostmt_or_eof" << std::endl; }
+        | eostmt { std::cout << "statement -> eostmt" << std::endl; }
         ;
 
 naked_funcall
@@ -212,6 +212,7 @@ global_statement
 
 clear_statement
         : CLEAR identifier_list eostmt_or_eof { std::cout << "clear_statement -> CLEAR identifier_list eostmt_or_eof" << std::endl; }
+        | CLEAR eostmt_or_eof { std::cout << "clear_statement -> CLEAR eostmt_or_eof" << std::endl; }
         ;
 
 expression_statement
@@ -349,12 +350,13 @@ unary_operator
         | TILDE { std::cout << "unary_operator -> TILDE" << std::endl; }
         ;
 
-array_or_function_call_expression
-        : qualified_id LPAREN index_expression_list RPAREN { std::cout << "array_or_function_call_expression -> qualified_id LPAREN index_expression_list RPAREN" << std::endl; }
+array_or_funcall_tail
+        : LPAREN index_expression_list RPAREN { std::cout << "array_or_funcall_tail -> LPAREN index_expression_list RPAREN" << std::endl; }
+        | LPAREN RPAREN { std::cout << "array_or_funcall_tail -> LPAREN RPAREN" << std::endl; }
         ;
 
-array_cell_expression
-        : qualified_id LBRACE index_expression_list RBRACE { std::cout << "array_cell_expression -> qualified_id LBRACE index_expression_list RBRACE" << std::endl; }
+array_cell_tail
+        : LBRACE index_expression_list RBRACE { std::cout << "array_cell_tail -> LBRACE index_expression_list RBRACE" << std::endl; }
         ;
 
 index_expression_list
@@ -374,11 +376,11 @@ qualified_id
 
 qualified_id_item
         : IDENTIFIER { std::cout << "qualified_id_item -> IDENTIFIER" << std::endl; }
+        | qualified_id_item array_or_funcall_tail { std::cout << "qualified_id_item -> array_or_funcall_tail" << std::endl; }
+        | qualified_id_item array_cell_tail { std::cout << "qualified_id_item -> array_cell_tail" << std::endl; }
         | LPAREN expression RPAREN { std::cout << "qualified_id_item -> LPAREN expression RPAREN" << std::endl; }
         | LBRACKET array_col_list RBRACKET { std::cout << "qualified_id_item -> LBRACKET array_col_list RBRACKET" << std::endl; }
         | LBRACE array_col_list RBRACE { std::cout << "qualified_id_item -> LBRACE array_col_list RBRACE" << std::endl; }
-        | array_or_function_call_expression { std::cout << "qualified_id_item -> array_or_function_call_expression" << std::endl; }
-        | array_cell_expression { std::cout << "qualified_id_item -> array_cell_expression" << std::endl; }
         ;
 
 /******************************************************************************

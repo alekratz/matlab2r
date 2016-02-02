@@ -297,18 +297,23 @@ assignment_expression
         : postfix_expression EQUALS expression { }
         ;
 
+assignment_lhs
+        : IDENTIFIER
+        ;
+
 postfix_expression
         : primary_expression { }
-        | qualified_id { }
         | postfix_expression TRANSPOSE { }
         | postfix_expression NCTRANSPOSE { }
         ;
 
 primary_expression
-        : STRING_LITERAL { }
+        : qualified_id { }
+        | STRING_LITERAL { }
         | CONSTANT { }
-        | LBRACKET RBRACKET { }
-        | LBRACE RBRACE { }
+        | LBRACKET array_col_list RBRACKET { }
+        | LBRACE array_col_list RBRACE { }
+        | LPAREN expression RPAREN { }
         ;
 
 expression
@@ -340,18 +345,17 @@ binary_expression
 
 unary_expression
         : unary_op postfix_expression { }
+        | postfix_expression { }
         ;
 
 unary_op
         : PLUS { $$ = std::make_shared<ast::unary_op>(ast::PLUS); }
         | MINUS { $$ = std::make_shared<ast::unary_op>(ast::MINUS); }
         | TILDE { $$ = std::make_shared<ast::unary_op>(ast::TILDE); }
-        | %empty { $$ = std::make_shared<ast::unary_op>(ast::NONE); }
         ;
 
 array_or_funcall_tail
         : LPAREN index_expression_list RPAREN { }
-        | LPAREN RPAREN { }
         ;
 
 array_cell_tail
@@ -361,6 +365,7 @@ array_cell_tail
 index_expression_list
         : index_expression { }
         | index_expression COMMA index_expression_list { }
+        | %empty
         ;
 
 index_expression
@@ -375,11 +380,9 @@ qualified_id
 
 qualified_id_item
         : IDENTIFIER { }
+        | LPAREN expression RPAREN { } // apparently this is allowed
         | qualified_id_item array_or_funcall_tail { }
         | qualified_id_item array_cell_tail { }
-        | LPAREN expression RPAREN { }
-        | LBRACKET array_col_list RBRACKET { }
-        | LBRACE array_col_list RBRACE { }
         ;
 
 /******************************************************************************
@@ -392,6 +395,7 @@ array_row_list
         | expression array_row_list { }
         | expression COMMA array_row_list { }
         | NEWLINE array_row_list { }
+        | %empty
         ;
 
 array_col_list

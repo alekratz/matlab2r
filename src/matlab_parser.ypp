@@ -127,19 +127,19 @@
 
 matlab_unit
         /* : empty_lines function_declare_list */
-        : statement_list { std::cout << "matlab_unit -> statement_list" << std::endl; }
+        : statement_list { }
         ;
 
-eostmt  : COMMA { std::cout << "eostmt -> COMMA" << std::endl; }
-        | SEMICOLON { std::cout << "eostmt -> SEMICOLON" << std::endl; }
-        | NEWLINE { std::cout << "eostmt -> NEWLINE" << std::endl; }
+eostmt  : COMMA { }
+        | SEMICOLON { }
+        | NEWLINE { }
         ;
 
 eostmt_or_eof
-        : COMMA { std::cout << "eostmt_or_eof -> COMMA" << std::endl; }
-        | SEMICOLON { std::cout << "eostmt_or_eof -> SEMICOLON" << std::endl; }
-        | NEWLINE { std::cout << "eostmt_or_eof -> NEWLINE" << std::endl; }
-        | END { std::cout << "eostmt_or_eof -> END" << std::endl; }
+        : COMMA { }
+        | SEMICOLON { }
+        | NEWLINE { }
+        | END { }
         ;
 
 /******************************************************************************
@@ -147,29 +147,29 @@ eostmt_or_eof
  *****************************************************************************/
 
 function_declare
-        : FUNCTION function_declare_lhs eostmt statement_list optional_end { std::cout << "function_declare -> FUNCTION function_declare_lhs eostmt statement_list optional_end" << std::endl; }
-        | FUNCTION func_return_list EQUALS function_declare_lhs eostmt statement_list optional_end { std::cout << "function_declare -> FUNCTION func_return_list EQUALS function_declare_lhs eostmt statement_list optional_end" << std::endl; }
+        : FUNCTION function_declare_lhs eostmt statement_list optional_end { }
+        | FUNCTION func_return_list EQUALS function_declare_lhs eostmt statement_list optional_end { }
         ;
 
 optional_end
-        : END_KEYW eostmt_or_eof { std::cout << "optional_end -> END_KEYW eostmt_or_eof" << std::endl; }
-        | %empty { std::cout << "optional_end -> %empty" << std::endl; }
+        : END_KEYW eostmt_or_eof { }
+        | %empty { }
         ;
 
 func_return_list
-        : IDENTIFIER { std::cout << "func_return_list -> IDENTIFIER" << std::endl; }
-        | LBRACKET func_ident_list RBRACKET { std::cout << "func_return_list -> LBRACKET func_ident_list RBRACKET" << std::endl; }
+        : IDENTIFIER { }
+        | LBRACKET func_ident_list RBRACKET { }
         ;
 
 function_declare_lhs
-        : IDENTIFIER { std::cout << "function_declare_lhs -> IDENTIFIER" << std::endl; }
-        | IDENTIFIER LPAREN RPAREN { std::cout << "function_declare_lhs -> IDENTIFIER LPAREN RPAREN" << std::endl; }
-        | IDENTIFIER LPAREN func_ident_list RPAREN { std::cout << "function_declare_lhs -> IDENTIFIER LPAREN func_ident_list RPAREN" << std::endl; }
+        : IDENTIFIER { }
+        | IDENTIFIER LPAREN RPAREN { }
+        | IDENTIFIER LPAREN func_ident_list RPAREN { }
         ;
 
 func_ident_list
-        : IDENTIFIER { std::cout << "func_ident_list -> IDENTIFIER" << std::endl; }
-        | IDENTIFIER COMMA func_ident_list { std::cout << "func_ident_list -> IDENTIFIER COMMA func_ident_list" << std::endl; }
+        : IDENTIFIER { }
+        | IDENTIFIER COMMA func_ident_list { }
         ;
 
 /******************************************************************************
@@ -177,113 +177,113 @@ func_ident_list
  *****************************************************************************/
 
 statement_list
-        : statement statement_list_tail { std::cout << "statement_list -> statement statement_list_tail" << std::endl; }
-        | %empty { std::cout << "%statement_list -> empty" << std::endl; }
+        : statement statement_list_tail { }
+        | %empty { }
         ;
 
 statement_list_tail
-        : statement statement_list_tail { std::cout << "statement_list_tail -> statement statement_list_tail" << std::endl; }
-        | %empty { std::cout << "statement_list_tail -> %empty" << std::endl; }
+        : statement statement_list_tail { }
+        | %empty { }
         //| error { yyerrok; }
         ;
 
 statement
-        : global_statement { std::cout << "statement -> global_statement" << std::endl; }
-        | clear_statement { std::cout << "statement -> clear_statement" << std::endl; }
-        | assignment_statement { std::cout << "statement -> assignment_statement" << std::endl; }
-        | selection_statement { std::cout << "statement -> selection_statement" << std::endl; }
-        | iteration_statement { std::cout << "statement -> iteration_statement" << std::endl; }
-        | jump_statement { std::cout << "statement -> jump_statement" << std::endl; }
-        | try_catch_statement { std::cout << "statement -> try_catch_statement" << std::endl; }
-        | function_declare { std::cout << "statement -> function_declare" << std::endl; }
-        | naked_funcall { std::cout << "statement -> naked_funcall" << std::endl; }
-        | expression_statement { std::cout << "statement -> expression_statement" << std::endl; }
-        | eostmt { std::cout << "statement -> eostmt" << std::endl; }
+        : global_statement { }
+        | clear_statement { }
+        | assignment_statement { }
+        | selection_statement { }
+        | iteration_statement { }
+        | jump_statement { }
+        | try_catch_statement { }
+        | function_declare { }
+        | naked_funcall { }
+        | expression_statement { }
+        | eostmt { }
         ;
 
 naked_funcall
-        : IDENTIFIER IDENTIFIER { driver.lexer->begin_naked_args(); } naked_args eostmt_or_eof { std::cout << "naked_funcall -> qualified_id naked_args eostmt_or_eof" << std::endl; }
+        : IDENTIFIER IDENTIFIER { driver.lexer->begin_naked_args(); } naked_args eostmt_or_eof { }
         | IDENTIFIER eostmt_or_eof
         ;
 
 global_statement
-        : GLOBAL identifier_list eostmt_or_eof { std::cout << "global_statement -> GLOBAL identifier_list eostmt_or_eof" << std::endl; }
+        : GLOBAL identifier_list eostmt_or_eof { }
         ;
 
 clear_statement
-        : CLEAR identifier_list eostmt_or_eof { std::cout << "clear_statement -> CLEAR identifier_list eostmt_or_eof" << std::endl; }
-        | CLEAR eostmt_or_eof { std::cout << "clear_statement -> CLEAR eostmt_or_eof" << std::endl; }
+        : CLEAR identifier_list eostmt_or_eof { }
+        | CLEAR eostmt_or_eof { }
         ;
 
 expression_statement
-        : expression eostmt_or_eof { std::cout << "expression_statement -> expression eostmt_or_eof" << std::endl; }
+        : expression eostmt_or_eof { }
         ;
 
 assignment_statement
-        : assignment_expression eostmt_or_eof { std::cout << "assignment_statement -> assignment_expression eostmt_or_eof" << std::endl; }
+        : assignment_expression eostmt_or_eof { }
         ;
 
 selection_statement
-        : IF expression statement_list elseif_clause else_clause END_KEYW eostmt_or_eof { std::cout << "selection_statement -> IF expression statement_list elseif_clause else_clause END_KEYW eostmt_or_eof" << std::endl; }
+        : IF expression statement_list elseif_clause else_clause END_KEYW eostmt_or_eof { }
         /*
         | IF expression eostmt statement_list ELSE statement_list END_KEYW eostmt_or_eof
         | IF expression eostmt statement_list elseif_clause END_KEYW eostmt_or_eof
         | IF expression eostmt statement_list elseif_clause ELSE statement_list END_KEYW eostmt_or_eof
         */
-        | SWITCH expression eostmt case_list otherwise_clause END_KEYW eostmt_or_eof { std::cout << "selection_statement -> SWITCH expression eostmt case_list otherwise_clause END_KEYW eostmt_or_eof" << std::endl; }
+        | SWITCH expression eostmt case_list otherwise_clause END_KEYW eostmt_or_eof { }
         ;
 
 else_clause
-        : ELSE statement_list { std::cout << "else_clause -> ELSE statement_list" << std::endl; }
-        | %empty { std::cout << "else_clause -> %empty" << std::endl; }
+        : ELSE statement_list { }
+        | %empty { }
         ;
 
 elseif_clause
-        : ELSEIF expression statement_list elseif_clause { std::cout << "elseif_clause -> ELSEIF expression statement_list elseif_clause" << std::endl; }
-        | %empty { std::cout << "elseif_clause -> %empty" << std::endl; }
+        : ELSEIF expression statement_list elseif_clause { }
+        | %empty { }
         ;
 
 case_list
-        : CASE expression eostmt statement_list case_list { std::cout << "case_list -> CASE expression eostmt statement_list case_list" << std::endl; }
+        : CASE expression eostmt statement_list case_list { }
         | eostmt case_list
-        | %empty { std::cout << "case_list -> %empty" << std::endl; }
+        | %empty { }
         ;
 
 otherwise_clause
-        : OTHERWISE eostmt statement_list { std::cout << "otherwise_clause -> OTHERWISE eostmt statement_list" << std::endl; }
-        | %empty { std::cout << "otherwise_clause -> %empty" << std::endl; }
+        : OTHERWISE eostmt statement_list { }
+        | %empty { }
         ;
 
 iteration_statement
-        : WHILE expression statement_list END_KEYW eostmt_or_eof { std::cout << "iteration_statement -> WHILE expression statement_list END_KEYW eostmt_or_eof" << std::endl; }
-        | FOR IDENTIFIER EQUALS expression statement_list END_KEYW eostmt_or_eof { std::cout << "iteration_statement -> FOR IDENTIFIER EQUALS expression statement_list END_KEYW eostmt_or_eof" << std::endl; }
-        | FOR LPAREN IDENTIFIER EQUALS expression RPAREN statement_list END_KEYW eostmt_or_eof { std::cout << "iteration_statement -> FOR LPAREN IDENTIFIER EQUALS expression RPAREN statement_list END_KEYW eostmt_or_eof" << std::endl; }
+        : WHILE expression statement_list END_KEYW eostmt_or_eof { }
+        | FOR IDENTIFIER EQUALS expression statement_list END_KEYW eostmt_or_eof { }
+        | FOR LPAREN IDENTIFIER EQUALS expression RPAREN statement_list END_KEYW eostmt_or_eof { }
         ;
 
 jump_statement
-        : BREAK eostmt { std::cout << "jump_statement -> BREAK eostmt" << std::endl; }
-        | CONTINUE eostmt { std::cout << "jump_statement -> CONTINUE eostmt" << std::endl; }
-        | RETURN eostmt { std::cout << "jump_statement -> RETURN eostmt" << std::endl; }
+        : BREAK eostmt { }
+        | CONTINUE eostmt { }
+        | RETURN eostmt { }
         ;
 
 identifier_list
-        : IDENTIFIER { std::cout << "identifier_list -> IDENTIFIER" << std::endl; }
-        | identifier_list IDENTIFIER { std::cout << "identifier_list -> identifier_list IDENTIFIER" << std::endl; }
+        : IDENTIFIER { }
+        | identifier_list IDENTIFIER { }
         ;
 
 try_catch_statement
-        : TRY statement_list catch_statement END_KEYW eostmt_or_eof { std::cout << "try_catch_statement -> TRY statement_list catch_statement END_KEYW eostmt_or_eof" << std::endl; }
-        | TRY statement_list END_KEYW eostmt_or_eof { std::cout << "try_catch_statement -> TRY statement_list END_KEYW eostmt_or_eof" << std::endl; }
+        : TRY statement_list catch_statement END_KEYW eostmt_or_eof { }
+        | TRY statement_list END_KEYW eostmt_or_eof { }
         ;
 
 catch_statement
-        : CATCH IDENTIFIER statement_list { std::cout << "catch_statement -> CATCH IDENTIFIER statement_list" << std::endl; }
-        | CATCH statement_list { std::cout << "catch_statement -> CATCH statement_list" << std::endl; }
+        : CATCH IDENTIFIER statement_list { }
+        | CATCH statement_list { }
         ;
 
 naked_args
-        : NAKED_ARG naked_args { std::cout << "naked_args -> NAKED_ARG naked_args" << std::endl; }
-        | %empty { std::cout << "naked_args -> %empty" << std::endl; }
+        : NAKED_ARG naked_args { }
+        | %empty { }
         ;
 
 /******************************************************************************
@@ -291,96 +291,96 @@ naked_args
  *****************************************************************************/
 
 assignment_expression
-        : postfix_expression EQUALS expression { std::cout << "assignment_expression -> postfix_expression EQUALS expression" << std::endl; }
+        : postfix_expression EQUALS expression { }
         ;
 
 postfix_expression
-        : primary_expression { std::cout << "postfix_expression -> primary_expression" << std::endl; }
-        | qualified_id { std::cout << "postfix_expression -> qualified_id" << std::endl; }
-        | postfix_expression TRANSPOSE { std::cout << "postfix_expression -> postfix_expression TRANSPOSE" << std::endl; }
-        | postfix_expression NCTRANSPOSE { std::cout << "postfix_expression -> postfix_expression NCTRANSPOSE" << std::endl; }
+        : primary_expression { }
+        | qualified_id { }
+        | postfix_expression TRANSPOSE { }
+        | postfix_expression NCTRANSPOSE { }
         ;
 
 primary_expression
-        : STRING_LITERAL { std::cout << "primary_expression -> STRING_LITERAL" << std::endl; }
-        | CONSTANT { std::cout << "primary_expression -> CONSTANT" << std::endl; }
-        | LBRACKET RBRACKET { std::cout << "primary_expression -> LBRACKET RBRACKET" << std::endl; }
-        | LBRACE RBRACE { std::cout << "primary_expression -> LBRACE RBRACE" << std::endl; }
+        : STRING_LITERAL { }
+        | CONSTANT { }
+        | LBRACKET RBRACKET { }
+        | LBRACE RBRACE { }
         ;
 
 expression
-        : boolean_expression { std::cout << "expression -> boolean_expression" << std::endl; }
-        | boolean_expression COLON expression { std::cout << "expression -> boolean_expression COLON expression" << std::endl; }
+        : boolean_expression { }
+        | boolean_expression COLON expression { }
         ;
 
 boolean_expression
-        : mathematical_expression { std::cout << "boolean_expression -> mathematical_expression" << std::endl; }
-        | boolean_expression VBAR mathematical_expression { std::cout << "boolean_expression -> boolean_expression VBAR mathematical_expression" << std::endl; }
-        | boolean_expression AMP mathematical_expression { std::cout << "boolean_expression -> boolean_expression AMP mathematical_expression" << std::endl; }
-        | boolean_expression EQ_OP mathematical_expression { std::cout << "boolean_expression -> boolean_expression EQ_OP mathematical_expression" << std::endl; }
-        | boolean_expression NE_OP mathematical_expression { std::cout << "boolean_expression -> boolean_expression NE_OP mathematical_expression" << std::endl; }
-        | boolean_expression LT_OP mathematical_expression { std::cout << "boolean_expression -> boolean_expression LT_OP mathematical_expression" << std::endl; }
-        | boolean_expression GT_OP mathematical_expression { std::cout << "boolean_expression -> boolean_expression GT_OP mathematical_expression" << std::endl; }
-        | boolean_expression LE_OP mathematical_expression { std::cout << "boolean_expression -> boolean_expression LE_OP mathematical_expression" << std::endl; }
-        | boolean_expression GE_OP mathematical_expression { std::cout << "boolean_expression -> boolean_expression GE_OP mathematical_expression" << std::endl; }
+        : mathematical_expression { }
+        | boolean_expression VBAR mathematical_expression { }
+        | boolean_expression AMP mathematical_expression { }
+        | boolean_expression EQ_OP mathematical_expression { }
+        | boolean_expression NE_OP mathematical_expression { }
+        | boolean_expression LT_OP mathematical_expression { }
+        | boolean_expression GT_OP mathematical_expression { }
+        | boolean_expression LE_OP mathematical_expression { }
+        | boolean_expression GE_OP mathematical_expression { }
         ;
 
 mathematical_expression
-        : unary_expression { std::cout << "mathematical_expression -> unary_expression" << std::endl; }
-        | mathematical_expression PLUS unary_expression { std::cout << "mathematical_expression -> mathematical_expression PLUS unary_expression" << std::endl; }
-        | mathematical_expression MINUS unary_expression { std::cout << "mathematical_expression -> mathematical_expression MINUS unary_expression" << std::endl; }
-        | mathematical_expression TIMES unary_expression { std::cout << "mathematical_expression -> mathematical_expression TIMES unary_expression" << std::endl; }
-        | mathematical_expression FSLASH unary_expression { std::cout << "mathematical_expression -> mathematical_expression FSLASH unary_expression" << std::endl; }
-        | mathematical_expression BSLASH unary_expression { std::cout << "mathematical_expression -> mathematical_expression BSLASH unary_expression" << std::endl; }
-        | mathematical_expression POW unary_expression { std::cout << "mathematical_expression -> mathematical_expression POW unary_expression" << std::endl; }
-        | mathematical_expression AMUL unary_expression { std::cout << "mathematical_expression -> mathematical_expression AMUL unary_expression" << std::endl; }
-        | mathematical_expression ADIV unary_expression { std::cout << "mathematical_expression -> mathematical_expression ADIV unary_expression" << std::endl; }
-        | mathematical_expression ARDIV unary_expression { std::cout << "mathematical_expression -> mathematical_expression ARDIV unary_expression" << std::endl; }
-        | mathematical_expression APOW unary_expression { std::cout << "mathematical_expression -> mathematical_expression APOW unary_expression" << std::endl; }
+        : unary_expression { }
+        | mathematical_expression PLUS unary_expression { }
+        | mathematical_expression MINUS unary_expression { }
+        | mathematical_expression TIMES unary_expression { }
+        | mathematical_expression FSLASH unary_expression { }
+        | mathematical_expression BSLASH unary_expression { }
+        | mathematical_expression POW unary_expression { }
+        | mathematical_expression AMUL unary_expression { }
+        | mathematical_expression ADIV unary_expression { }
+        | mathematical_expression ARDIV unary_expression { }
+        | mathematical_expression APOW unary_expression { }
         ;
 
 unary_expression
-        : postfix_expression { std::cout << "unary_expression -> postfix_expression" << std::endl; }
-        | unary_operator postfix_expression { std::cout << "unary_expression -> unary_operator postfix_expression" << std::endl; }
+        : postfix_expression { }
+        | unary_operator postfix_expression { }
         ;
 
 unary_operator
-        : PLUS { std::cout << "unary_operator -> PLUS" << std::endl; }
-        | MINUS { std::cout << "unary_operator -> MINUS" << std::endl; }
-        | TILDE { std::cout << "unary_operator -> TILDE" << std::endl; }
+        : PLUS { }
+        | MINUS { }
+        | TILDE { }
         ;
 
 array_or_funcall_tail
-        : LPAREN index_expression_list RPAREN { std::cout << "array_or_funcall_tail -> LPAREN index_expression_list RPAREN" << std::endl; }
-        | LPAREN RPAREN { std::cout << "array_or_funcall_tail -> LPAREN RPAREN" << std::endl; }
+        : LPAREN index_expression_list RPAREN { }
+        | LPAREN RPAREN { }
         ;
 
 array_cell_tail
-        : LBRACE index_expression_list RBRACE { std::cout << "array_cell_tail -> LBRACE index_expression_list RBRACE" << std::endl; }
+        : LBRACE index_expression_list RBRACE { }
         ;
 
 index_expression_list
-        : index_expression { std::cout << "index_expression_list -> index_expression" << std::endl; }
-        | index_expression COMMA index_expression_list { std::cout << "index_expression_list -> index_expression COMMA index_expression_list" << std::endl; }
+        : index_expression { }
+        | index_expression COMMA index_expression_list { }
         ;
 
 index_expression
-        : COLON { std::cout << "index_expression -> COLON" << std::endl; }
-        | expression { std::cout << "index_expression -> expression" << std::endl; }
+        : COLON { }
+        | expression { }
         ;
 
 qualified_id
-        : qualified_id_item { std::cout << "qualified_id -> qualified_id_item" << std::endl; }
-        | qualified_id_item DOT qualified_id { std::cout << "qualified_id -> qualified_id_item DOT qualified_id" << std::endl; }
+        : qualified_id_item { }
+        | qualified_id_item DOT qualified_id { }
         ;
 
 qualified_id_item
-        : IDENTIFIER { std::cout << "qualified_id_item -> IDENTIFIER" << std::endl; }
-        | qualified_id_item array_or_funcall_tail { std::cout << "qualified_id_item -> array_or_funcall_tail" << std::endl; }
-        | qualified_id_item array_cell_tail { std::cout << "qualified_id_item -> array_cell_tail" << std::endl; }
-        | LPAREN expression RPAREN { std::cout << "qualified_id_item -> LPAREN expression RPAREN" << std::endl; }
-        | LBRACKET array_col_list RBRACKET { std::cout << "qualified_id_item -> LBRACKET array_col_list RBRACKET" << std::endl; }
-        | LBRACE array_col_list RBRACE { std::cout << "qualified_id_item -> LBRACE array_col_list RBRACE" << std::endl; }
+        : IDENTIFIER { }
+        | qualified_id_item array_or_funcall_tail { }
+        | qualified_id_item array_cell_tail { }
+        | LPAREN expression RPAREN { }
+        | LBRACKET array_col_list RBRACKET { }
+        | LBRACE array_col_list RBRACE { }
         ;
 
 /******************************************************************************
@@ -388,17 +388,17 @@ qualified_id_item
  *****************************************************************************/
 
 array_row_list
-        : expression { std::cout << "array_row_list -> expression" << std::endl; }
-        | expression COMMA { std::cout << "array_row_list -> expression COMMA" << std::endl; }
-        | expression array_row_list { std::cout << "array_row_list -> expression array_row_list" << std::endl; }
-        | expression COMMA array_row_list { std::cout << "array_row_list -> expression COMMA array_row_list" << std::endl; }
-        | NEWLINE array_row_list { std::cout << "array_row_list -> NEWLINE array_row_list" << std::endl; }
+        : expression { }
+        | expression COMMA { }
+        | expression array_row_list { }
+        | expression COMMA array_row_list { }
+        | NEWLINE array_row_list { }
         ;
 
 array_col_list
-        : array_row_list { std::cout << "array_col_list -> array_row_list" << std::endl; }
-        | array_row_list SEMICOLON array_col_list { std::cout << "array_col_list -> array_row_list SEMICOLON array_col_list" << std::endl; }
-        | NEWLINE array_col_list { std::cout << "array_col_list -> NEWLINE array_col_list" << std::endl; }
+        : array_row_list { }
+        | array_row_list SEMICOLON array_col_list { }
+        | NEWLINE array_col_list { }
         ;
 
 %%

@@ -26,7 +26,7 @@ public:
         : type(type) { }
     virtual ~unary_op() = default;
     unary_op_type type;
-    virtual void accept(visitor_p guest);
+    virtual void accept(visitor_p guest) { }
 };
 
 };

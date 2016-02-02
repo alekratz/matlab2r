@@ -16,6 +16,7 @@
     #include <string>
     #include <vector>
     #include <cstdint>
+    #include "ast.hpp"
     class matlab2r_driver;
 }
 
@@ -309,45 +310,41 @@ primary_expression
         ;
 
 expression
-        : boolean_expression { }
-        | boolean_expression COLON expression { }
+        : binary_expression { }
+        | binary_expression COLON expression { }
         ;
 
-boolean_expression
-        : mathematical_expression { }
-        | boolean_expression VBAR mathematical_expression { }
-        | boolean_expression AMP mathematical_expression { }
-        | boolean_expression EQ_OP mathematical_expression { }
-        | boolean_expression NE_OP mathematical_expression { }
-        | boolean_expression LT_OP mathematical_expression { }
-        | boolean_expression GT_OP mathematical_expression { }
-        | boolean_expression LE_OP mathematical_expression { }
-        | boolean_expression GE_OP mathematical_expression { }
-        ;
-
-mathematical_expression
+binary_expression
         : unary_expression { }
-        | mathematical_expression PLUS unary_expression { }
-        | mathematical_expression MINUS unary_expression { }
-        | mathematical_expression TIMES unary_expression { }
-        | mathematical_expression FSLASH unary_expression { }
-        | mathematical_expression BSLASH unary_expression { }
-        | mathematical_expression POW unary_expression { }
-        | mathematical_expression AMUL unary_expression { }
-        | mathematical_expression ADIV unary_expression { }
-        | mathematical_expression ARDIV unary_expression { }
-        | mathematical_expression APOW unary_expression { }
+        | binary_expression VBAR unary_expression { }
+        | binary_expression AMP unary_expression { }
+        | binary_expression EQ_OP unary_expression { }
+        | binary_expression NE_OP unary_expression { }
+        | binary_expression LT_OP unary_expression { }
+        | binary_expression GT_OP unary_expression { }
+        | binary_expression LE_OP unary_expression { }
+        | binary_expression GE_OP unary_expression { }
+        | binary_expression PLUS unary_expression { }
+        | binary_expression MINUS unary_expression { }
+        | binary_expression TIMES unary_expression { }
+        | binary_expression FSLASH unary_expression { }
+        | binary_expression BSLASH unary_expression { }
+        | binary_expression POW unary_expression { }
+        | binary_expression AMUL unary_expression { }
+        | binary_expression ADIV unary_expression { }
+        | binary_expression ARDIV unary_expression { }
+        | binary_expression APOW unary_expression { }
         ;
 
 unary_expression
-        : postfix_expression { }
-        | unary_operator postfix_expression { }
+        : unary_op postfix_expression { }
         ;
 
-unary_operator
+unary_op
         : PLUS { }
         | MINUS { }
         | TILDE { }
+        | %empty { }
         ;
 
 array_or_funcall_tail

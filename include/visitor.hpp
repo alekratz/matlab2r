@@ -10,7 +10,7 @@ public:
     virtual ~visitor() = default;
 
 public:
-    virtual void unary_op(ast::unary_op*) { }
+    virtual void visit(ast::unary_op*) { }
 };
 
 typedef std::shared_ptr<visitor> visitor_p;

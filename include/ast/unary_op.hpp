@@ -26,7 +26,10 @@ public:
         : type(type) { }
     virtual ~unary_op() = default;
     unary_op_type type;
-    virtual void accept(visitor_p guest) { }
+    virtual void accept(visitor_p guest);
+    virtual void children_accept(visitor_p guest) { accept(guest); };
+    virtual void traverse_top_down(visitor_p guest) { accept(guest); };
+    virtual void traverse_bottom_up(visitor_p guest) { accept(guest); };
 };
 
 };

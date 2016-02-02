@@ -22,6 +22,7 @@ set(CMAKE_CXX_FLAGS "-g -Wall --std=c++14")
 set(IM_SOURCES 
     src/main.cpp
     src/matlab2r_driver.cpp
+    src/ast/accept.cpp
     ${FLEX_matlab_lexer_OUTPUTS} 
     ${BISON_matlab_parser_OUTPUTS})
 

@@ -116,6 +116,8 @@
 %type <ast::range_p>            range
  */
 
+%type <ast::unary_op_p>         unary_op
+
 %left VBAR
 %left AMP
 %left GT_OP GE_OP LT_OP LE_OP EQ_OP NE_OP
@@ -341,10 +343,10 @@ unary_expression
         ;
 
 unary_op
-        : PLUS { }
-        | MINUS { }
-        | TILDE { }
-        | %empty { }
+        : PLUS { $$ = std::make_shared<ast::unary_op>(ast::PLUS); }
+        | MINUS { $$ = std::make_shared<ast::unary_op>(ast::MINUS); }
+        | TILDE { $$ = std::make_shared<ast::unary_op>(ast::TILDE); }
+        | %empty { $$ = std::make_shared<ast::unary_op>(ast::NONE); }
         ;
 
 array_or_funcall_tail

@@ -23,8 +23,8 @@ class unary_op
 {
 public:
     unary_op(unary_op_type type)
-    : type(type)
-        { }
+        : type(type) { }
+    virtual ~unary_op() = default;
     unary_op_type type;
     virtual void accept(visitor_p guest);
 };

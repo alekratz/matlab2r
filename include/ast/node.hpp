@@ -12,7 +12,7 @@ typedef std::shared_ptr<node> node_p;
 class node
 {
 public:
-    virtual ~node() = 0;
+    virtual ~node() = default;
     virtual void accept(visitor_p visitor) = 0;
 };
 

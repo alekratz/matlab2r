@@ -6,8 +6,11 @@
 namespace ast
 {
 
-VISITOR_ACCEPT_DECL(unary_op)
 VISITOR_ACCEPT_DECL(qualified_id_item)
 VISITOR_ACCEPT_DECL(qualified_id)
+VISITOR_ACCEPT_DECL(expression)
+VISITOR_ACCEPT_DECL(unary_expression)
+VISITOR_ACCEPT_DECL(postfix_expression)
+VISITOR_ACCEPT_DECL(primary_expression)
 
 } /* namespace ast */

@@ -100,8 +100,10 @@
 
 %type <ast::qualified_id_p>         qualified_id
 %type <ast::qualified_id_item_p>    qualified_id_item
-%type <ast::unary_op_p>             unary_op
+%type <ast::expression_p>           expression
+%type <ast::unary_expression_p>     unary_expression
 
+%left COLON
 %left VBAR
 %left AMP
 %left GT_OP GE_OP LT_OP LE_OP EQ_OP NE_OP
@@ -301,41 +303,33 @@ primary_expression
         ;
 
 expression
-        : binary_expression { }
-        | binary_expression COLON expression { }
-        ;
-
-binary_expression
         : unary_expression { }
-        | binary_expression VBAR unary_expression { }
-        | binary_expression AMP unary_expression { }
-        | binary_expression EQ_OP unary_expression { }
-        | binary_expression NE_OP unary_expression { }
-        | binary_expression LT_OP unary_expression { }
-        | binary_expression GT_OP unary_expression { }
-        | binary_expression LE_OP unary_expression { }
-        | binary_expression GE_OP unary_expression { }
-        | binary_expression PLUS unary_expression { }
-        | binary_expression MINUS unary_expression { }
-        | binary_expression TIMES unary_expression { }
-        | binary_expression FSLASH unary_expression { }
-        | binary_expression BSLASH unary_expression { }
-        | binary_expression POW unary_expression { }
-        | binary_expression AMUL unary_expression { }
-        | binary_expression ADIV unary_expression { }
-        | binary_expression ARDIV unary_expression { }
-        | binary_expression APOW unary_expression { }
+        | expression COLON unary_expression { }
+        | expression VBAR unary_expression { }
+        | expression AMP unary_expression { }
+        | expression EQ_OP unary_expression { }
+        | expression NE_OP unary_expression { }
+        | expression LT_OP unary_expression { }
+        | expression GT_OP unary_expression { }
+        | expression LE_OP unary_expression { }
+        | expression GE_OP unary_expression { }
+        | expression PLUS unary_expression { }
+        | expression MINUS unary_expression { }
+        | expression TIMES unary_expression { }
+        | expression FSLASH unary_expression { }
+        | expression BSLASH unary_expression { }
+        | expression POW unary_expression { }
+        | expression AMUL unary_expression { }
+        | expression ADIV unary_expression { }
+        | expression ARDIV unary_expression { }
+        | expression APOW unary_expression { }
         ;
 
 unary_expression
-        : unary_op postfix_expression { }
+        : PLUS postfix_expression { }
+        | MINUS postfix_expression { }
+        | TILDE postfix_expression { }
         | postfix_expression { }
-        ;
-
-unary_op
-        : PLUS { $$ = std::make_shared<ast::unary_op>(ast::PLUS); }
-        | MINUS { $$ = std::make_shared<ast::unary_op>(ast::MINUS); }
-        | TILDE { $$ = std::make_shared<ast::unary_op>(ast::TILDE); }
         ;
 
 array_or_funcall_tail

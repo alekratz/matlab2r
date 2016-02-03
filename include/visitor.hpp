@@ -10,9 +10,12 @@ public:
     virtual ~visitor() = default;
 
 public:
-    virtual void visit(ast::unary_op*) { }
     virtual void visit(ast::qualified_id*) { }
     virtual void visit(ast::qualified_id_item*) { }
+    virtual void visit(ast::expression*) { }
+    virtual void visit(ast::unary_expression*) { }
+    virtual void visit(ast::postfix_expression*) { }
+    virtual void visit(ast::primary_expression*) { }
 
 };
 

@@ -7,5 +7,7 @@ namespace ast
 {
 
 VISITOR_ACCEPT_DECL(unary_op)
+VISITOR_ACCEPT_DECL(qualified_id_item)
+VISITOR_ACCEPT_DECL(qualified_id)
 
 } /* namespace ast */

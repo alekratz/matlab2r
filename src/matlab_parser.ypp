@@ -97,26 +97,10 @@
 %token <std::string>        CONSTANT
 %token <std::string>        STRING_LITERAL
 %token <std::string>        NAKED_ARG
-/*
-// Rule types
-%type <ast::line_list_p>        lines
-%type <ast::line_list_p>        lines_tail
-%type <ast::line_p>             line
-%type <ast::conditional_p>      conditional
-%type <ast::expr_p>             expr
-%type <ast::for_stmt_p>         for_stmt
-%type <ast::if_stmt_p>          if_stmt
-%type <ast::else_stmt_p>        else_stmt
-%type <ast::funcall_p>          funcall
-%type <ast::funcall_p>          funcall_inner
-%type <ast::args_list_p>        args_list
-%type <ast::dimension_p>        dimension
-%type <ast::qualified_id_p>     qualified_id
-%type <ast::qualified_id_p>     qualified_id_tail
-%type <ast::range_p>            range
- */
 
-%type <ast::unary_op_p>         unary_op
+%type <ast::qualified_id_p>         qualified_id
+%type <ast::qualified_id_item_p>    qualified_id_item
+%type <ast::unary_op_p>             unary_op
 
 %left VBAR
 %left AMP
@@ -374,15 +358,41 @@ index_expression
         ;
 
 qualified_id
-        : qualified_id_item { }
-        | qualified_id_item DOT qualified_id { }
+        : qualified_id_item
+        {
+            $$ = std::make_shared<ast::qualified_id>($1);
+        }
+        | qualified_id_item DOT qualified_id
+        {
+            $3->add_front($1);
+            $$ = $3;
+        }
         ;
 
 qualified_id_item
-        : IDENTIFIER { }
-        | LPAREN expression RPAREN { } // apparently this is allowed
-        | qualified_id_item array_or_funcall_tail { }
+        : IDENTIFIER 
+        { 
+            $$ = std::make_shared<ast::qualified_id_item>();
+            $$->identifier = $1;
+        }
+        | LPAREN expression RPAREN // apparently this is allowed
+        {
+            $$ = std::make_shared<ast::qualified_id_item>();
+            // TODO : fill this out when expression is written
+            //qualified_id_item->expression = $2;
+        }
+        | qualified_id_item array_or_funcall_tail
+        {
+            // TODO : fill this out when array_or_funcall_tail is written
+            //$1->array_or_funcall_tail = $2;
+            $$ = $1;
+        }
         | qualified_id_item array_cell_tail { }
+        {
+            // TODO : fill this out when array_or_funcall_tail
+            //$1->array_cell_tail = $2;
+            $$ = $1;
+        }
         ;
 
 /******************************************************************************

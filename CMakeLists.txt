@@ -23,6 +23,7 @@ set(IM_SOURCES
     src/main.cpp
     src/matlab2r_driver.cpp
     src/ast/accept.cpp
+    src/ast/try_statement.cpp
     src/ast/catch_statement.cpp
     src/ast/naked_arg_list.cpp
     src/ast/expression.cpp

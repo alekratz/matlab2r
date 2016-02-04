@@ -251,8 +251,16 @@ otherwise_clause
         ;
 
 iteration_statement
+        : while_statement
+        | for_statement
+        ;
+        
+ while_statement
         : WHILE expression statement_list END_KEYW eostmt_or_eof { }
-        | FOR IDENTIFIER EQUALS expression statement_list END_KEYW eostmt_or_eof { }
+        ;
+
+for_statement
+        : FOR IDENTIFIER EQUALS expression statement_list END_KEYW eostmt_or_eof { }
         | FOR LPAREN IDENTIFIER EQUALS expression RPAREN statement_list END_KEYW eostmt_or_eof { }
         ;
 

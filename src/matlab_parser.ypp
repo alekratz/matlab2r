@@ -106,6 +106,8 @@
 %type <ast::primary_expression_p>   primary_expression
 %type <ast::array_col_list_p>       array_col_list
 %type <ast::array_row_list_p>       array_row_list
+%type <ast::expression_p>           index_expression
+//%type <ast::index_expression_list_p>index_expression_list;       
 
 %left COLON
 %left VBAR

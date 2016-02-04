@@ -17,6 +17,8 @@ typedef std::shared_ptr<visitor> visitor_p;
 #include "ast/postfix_expression.hpp"
 #include "ast/unary_expression.hpp"
 #include "ast/expression.hpp"
+#include "ast/index_expression.hpp"
+#include "ast/index_expression_list.hpp"
 
 /* Include visitor at the end so all classes have access to it */
 #include "visitor.hpp"

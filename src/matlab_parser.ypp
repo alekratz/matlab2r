@@ -98,16 +98,16 @@
 %token <std::string>        STRING_LITERAL
 %token <std::string>        NAKED_ARG
 
-%type <ast::qualified_id_p>         qualified_id
-%type <ast::qualified_id_item_p>    qualified_id_item
-%type <ast::expression_p>           expression
-%type <ast::unary_expression_p>     unary_expression
-%type <ast::postfix_expression_p>   postfix_expression
-%type <ast::primary_expression_p>   primary_expression
-%type <ast::array_col_list_p>       array_col_list
-%type <ast::array_row_list_p>       array_row_list
-%type <ast::expression_p>           index_expression
-//%type <ast::index_expression_list_p>index_expression_list;       
+%type <ast::qualified_id_p>             qualified_id
+%type <ast::qualified_id_item_p>        qualified_id_item
+%type <ast::expression_p>               expression
+%type <ast::unary_expression_p>         unary_expression
+%type <ast::postfix_expression_p>       postfix_expression
+%type <ast::primary_expression_p>       primary_expression
+%type <ast::array_col_list_p>           array_col_list
+%type <ast::array_row_list_p>           array_row_list
+%type <ast::index_expression_p>         index_expression
+%type <ast::index_expression_list_p>    index_expression_list
 
 %left COLON
 %left VBAR
@@ -121,7 +121,6 @@
 %start matlab_unit;
 
 matlab_unit
-        /* : empty_lines function_declare_list */
         : statement_list { }
         ;
 
@@ -373,7 +372,6 @@ qualified_id_item
         | LPAREN expression RPAREN // apparently this is allowed
         {
             $$ = std::make_shared<ast::qualified_id_item>();
-            // TODO : fill this out when expression is written
             $$->expression = $2;
         }
         | qualified_id_item array_or_funcall_tail

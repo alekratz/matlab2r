@@ -14,5 +14,6 @@ VISITOR_ACCEPT_DECL(expression)
 VISITOR_ACCEPT_DECL(unary_expression)
 VISITOR_ACCEPT_DECL(postfix_expression)
 VISITOR_ACCEPT_DECL(primary_expression)
+VISITOR_ACCEPT_DECL(index_expression)
 
 } /* namespace ast */

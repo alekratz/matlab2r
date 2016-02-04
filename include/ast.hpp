@@ -8,6 +8,7 @@ class visitor;
 typedef std::shared_ptr<visitor> visitor_p;
 
 #include "ast/node.hpp"
+#include "ast/list_node.hpp"
 #include "ast/qualified_id_item.hpp"
 #include "ast/qualified_id.hpp"
 #include "ast/array_row_list.hpp"

@@ -12,15 +12,12 @@ class expression;
 typedef std::shared_ptr<expression> expression_p;
 
 class array_row_list
+    : public list_node<expression>
 {
 public:
     array_row_list() = default;
     virtual ~array_row_list() = default;
     
-    std::vector<expression_p> items;
-
-    void add_front(expression_p op) { items.insert(items.begin(), op); }
-
 public:
     virtual void accept(visitor_p guest);
     virtual void children_accept(visitor_p guest);

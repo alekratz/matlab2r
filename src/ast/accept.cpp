@@ -22,5 +22,6 @@ VISITOR_ACCEPT_DECL(primary_expression)
 VISITOR_ACCEPT_DECL(index_expression)
 
 VISITOR_ACCEPT_DECL(naked_arg_list)
+VISITOR_ACCEPT_DECL(catch_statement)
 
 } /* namespace ast */

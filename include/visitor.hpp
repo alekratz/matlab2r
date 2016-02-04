@@ -23,6 +23,7 @@ public:
     virtual void visit(ast::naked_arg_list*) { }
     virtual void visit(ast::catch_statement*) { }
     virtual void visit(ast::try_statement*) { }
+    virtual void visit(ast::jump_statement*) { }
 };
 
 typedef std::shared_ptr<visitor> visitor_p;

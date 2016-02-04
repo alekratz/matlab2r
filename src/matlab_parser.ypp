@@ -211,6 +211,11 @@ clear_statement
         | CLEAR eostmt_or_eof { }
         ;
 
+identifier_list
+        : IDENTIFIER { }
+        | identifier_list IDENTIFIER { }
+        ;
+
 expression_statement
         : expression eostmt_or_eof { }
         ;
@@ -255,11 +260,6 @@ jump_statement
         : BREAK eostmt { }
         | CONTINUE eostmt { }
         | RETURN eostmt { }
-        ;
-
-identifier_list
-        : IDENTIFIER { }
-        | identifier_list IDENTIFIER { }
         ;
 
 try_catch_statement

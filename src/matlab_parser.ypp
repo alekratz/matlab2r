@@ -108,6 +108,8 @@
 %type <ast::array_row_list_p>           array_row_list
 %type <ast::index_expression_p>         index_expression
 %type <ast::index_expression_list_p>    index_expression_list
+%type <ast::index_expression_list_p>    array_or_funcall_tail
+%type <ast::index_expression_list_p>    array_cell_tail
 
 %left COLON
 %left VBAR
@@ -376,14 +378,12 @@ qualified_id_item
         }
         | qualified_id_item array_or_funcall_tail
         {
-            // TODO : fill this out when array_or_funcall_tail is written
-            //$1->array_or_funcall_tail = $2;
+            $1->array_or_funcall_tail = $2;
             $$ = $1;
         }
         | qualified_id_item array_cell_tail { }
         {
-            // TODO : fill this out when array_or_funcall_tail
-            //$1->array_cell_tail = $2;
+            $1->array_cell_tail = $2;
             $$ = $1;
         }
         ;
@@ -393,17 +393,41 @@ qualified_id_item
  *****************************************************************************/
 
 array_row_list
-        : expression { }
-        | expression array_row_list { }
-        | expression COMMA array_row_list { }
-        | NEWLINE array_row_list { }
-        | %empty
+        : expression
+        {
+            $$ = std::make_shared<ast::array_row_list>();
+            $$->add_front($1);
+        }
+        | expression array_row_list
+        {
+            $2->add_front($1);
+            $$ = $2;
+        }
+        | expression COMMA array_row_list
+        {
+            $3->add_front($1);
+            $$ = $3;
+        }
+        | NEWLINE array_row_list { $$ = $2; }
+        | %empty { $$ = std::make_shared<ast::array_row_list>(); }
         ;
 
 array_col_list
-        : array_row_list { }
-        | array_row_list SEMICOLON array_col_list { }
-        | NEWLINE array_col_list { }
+        : array_row_list 
+        {
+            $$ = std::make_shared<ast::array_col_list>();
+            // Push the row to the list of rows if it has any items; otherwise, it is empty.
+            if($1->items.size() != 0) $$->add_front($1);
+        }
+        | array_row_list SEMICOLON array_col_list
+        {
+            if($1 != nullptr) $3->add_front($1);
+            $$ = $3;
+        }
+        | NEWLINE array_col_list
+        {
+            $$ = $2;
+        }
         ;
 
 %%

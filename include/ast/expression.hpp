@@ -52,26 +52,9 @@ public:
     unary_expression_p rhs;
 public:
     virtual void accept(visitor_p guest);
-    virtual void children_accept(visitor_p guest)
-    { 
-        if(lhs != nullptr) lhs->accept(guest);
-        assert(rhs != nullptr && "right hand side of expression is null, when it should not be.");
-        rhs->accept(guest);
-    }
-    virtual void traverse_top_down(visitor_p guest)
-    { 
-        accept(guest);
-        if(lhs != nullptr) lhs->traverse_top_down(guest);
-        assert(rhs != nullptr && "right hand side of expression is null, when it should not be.");
-        rhs->traverse_top_down(guest);
-    }
-    virtual void traverse_bottom_up(visitor_p guest)
-    { 
-        accept(guest);
-        if(lhs != nullptr) lhs->traverse_bottom_up(guest);
-        assert(rhs != nullptr && "right hand side of expression is null, when it should not be");
-        rhs->traverse_bottom_up(guest);
-    }
+    virtual void children_accept(visitor_p guest);
+    virtual void traverse_top_down(visitor_p guest);
+    virtual void traverse_bottom_up(visitor_p guest);
 };
 
 };

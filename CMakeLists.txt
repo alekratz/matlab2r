@@ -23,6 +23,10 @@ set(IM_SOURCES
     src/main.cpp
     src/matlab2r_driver.cpp
     src/ast/accept.cpp
+    src/ast/expression.cpp
+    src/ast/unary_expression.cpp
+    src/ast/postfix_expression.cpp
+    src/ast/primary_expression.cpp
     ${FLEX_matlab_lexer_OUTPUTS} 
     ${BISON_matlab_parser_OUTPUTS})
 

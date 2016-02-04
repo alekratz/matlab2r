@@ -1,7 +1,8 @@
 #include "ast.hpp"
 
-void array_col_list::accept(visitor_p guest)
-    { guest->visit(this); }
+namespace ast
+{
+
 void array_col_list::children_accept(visitor_p guest)
 {
     for(auto row : rows)
@@ -18,4 +19,5 @@ void array_col_list::traverse_bottom_up(visitor_p guest)
     for(auto row : rows)
         row->traverse_bottom_up(guest);
     accept(guest);
+}
 }

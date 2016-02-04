@@ -27,6 +27,8 @@ set(IM_SOURCES
     src/ast/unary_expression.cpp
     src/ast/postfix_expression.cpp
     src/ast/primary_expression.cpp
+    src/ast/array_col_list.cpp
+    src/ast/array_row_list.cpp
     ${FLEX_matlab_lexer_OUTPUTS} 
     ${BISON_matlab_parser_OUTPUTS})
 

@@ -180,7 +180,7 @@ statement_list
 statement_list_tail
         : statement statement_list_tail { }
         | %empty { }
-        //| error { yyerrok; }
+        | error { yyerrok; }
         ;
 
 statement
@@ -284,73 +284,89 @@ naked_args
 assignment_expression
         : postfix_expression EQUALS expression { }
         ;
-
+/*
 assignment_lhs
         : IDENTIFIER
         ;
-
+*/
 postfix_expression
-        : primary_expression { }
-        | postfix_expression TRANSPOSE { }
-        | postfix_expression NCTRANSPOSE { }
+        : primary_expression { $$ = std::make_shared<ast::postfix_expression>($1); }
+        | postfix_expression TRANSPOSE
+        { 
+            $1->add_front(ast::postfix_op::TRANSPOSE);
+            $$ = $1;
+        }
+        | postfix_expression NCTRANSPOSE
+        { 
+            $1->add_front(ast::postfix_op::NCTRANSPOSE);
+            $$ = $1;
+        }
         ;
 
 primary_expression
-        : qualified_id { }
-        | STRING_LITERAL { }
-        | CONSTANT { }
-        | LBRACKET array_col_list RBRACKET { }
-        | LBRACE array_col_list RBRACE { }
-        | LPAREN expression RPAREN { }
+        : qualified_id { $$ = std::make_shared<ast::primary_expression>($1); }
+        | STRING_LITERAL { $$ = std::make_shared<ast::primary_expression>($1); }
+        | CONSTANT { $$ = std::make_shared<ast::primary_expression>($1); }
+        | LBRACKET array_col_list RBRACKET { $$ = std::make_shared<ast::primary_expression>($2, ast::primary_expression_type::MATRIX); }
+        | LBRACE array_col_list RBRACE { $$ = std::make_shared<ast::primary_expression>($2, ast::primary_expression_type::CELL_ARRAY); }
+        | LPAREN expression RPAREN { $$ = std::make_shared<ast::primary_expression>($2); }
         ;
 
 expression
-        : unary_expression { }
-        | expression COLON unary_expression { }
-        | expression VBAR unary_expression { }
-        | expression AMP unary_expression { }
-        | expression EQ_OP unary_expression { }
-        | expression NE_OP unary_expression { }
-        | expression LT_OP unary_expression { }
-        | expression GT_OP unary_expression { }
-        | expression LE_OP unary_expression { }
-        | expression GE_OP unary_expression { }
-        | expression PLUS unary_expression { }
-        | expression MINUS unary_expression { }
-        | expression TIMES unary_expression { }
-        | expression FSLASH unary_expression { }
-        | expression BSLASH unary_expression { }
-        | expression POW unary_expression { }
-        | expression AMUL unary_expression { }
-        | expression ADIV unary_expression { }
-        | expression ARDIV unary_expression { }
-        | expression APOW unary_expression { }
+        : unary_expression { $$ = std::make_shared<ast::expression>($1); }
+        | expression COLON unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::COLON, $3); }
+        | expression VBAR unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::VBAR, $3); }
+        | expression AMP unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::AMP, $3); }
+        | expression EQ_OP unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::EQ_OP, $3); }
+        | expression NE_OP unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::NE_OP, $3); }
+        | expression LT_OP unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::LT_OP, $3); }
+        | expression GT_OP unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::GT_OP, $3); }
+        | expression LE_OP unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::LE_OP, $3); }
+        | expression GE_OP unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::GE_OP, $3); }
+        | expression PLUS unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::PLUS, $3); }
+        | expression MINUS unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::MINUS, $3); }
+        | expression TIMES unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::TIMES, $3); }
+        | expression FSLASH unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::FSLASH, $3); }
+        | expression BSLASH unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::BSLASH, $3); }
+        | expression POW unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::POW, $3); }
+        | expression AMUL unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::AMUL, $3); }
+        | expression ADIV unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::ADIV, $3); }
+        | expression ARDIV unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::ARDIV, $3); }
+        | expression APOW unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::APOW, $3); }
         ;
 
 unary_expression
-        : PLUS postfix_expression { }
-        | MINUS postfix_expression { }
-        | TILDE postfix_expression { }
-        | postfix_expression { }
+        : PLUS postfix_expression { $$ = std::make_shared<ast::unary_expression>(ast::unary_op::PLUS, $2); }
+        | MINUS postfix_expression { $$ = std::make_shared<ast::unary_expression>(ast::unary_op::MINUS, $2); }
+        | TILDE postfix_expression { $$ = std::make_shared<ast::unary_expression>(ast::unary_op::TILDE, $2); }
+        | postfix_expression { $$ = std::make_shared<ast::unary_expression>($1); }
         ;
 
 array_or_funcall_tail
-        : LPAREN index_expression_list RPAREN { }
+        : LPAREN index_expression_list RPAREN { $$ = $2; }
         ;
 
 array_cell_tail
-        : LBRACE index_expression_list RBRACE { }
+        : LBRACE index_expression_list RBRACE { $$ = $2; }
         ;
 
 index_expression_list
-        : index_expression { }
-        | index_expression COMMA index_expression_list { }
-        | %empty
+        : index_expression
+        {
+            $$ = std::make_shared<ast::index_expression_list>();
+            $$->add_front($1);
+        }
+        | index_expression COMMA index_expression_list
+        {
+            $3->add_front($1);
+            $$ = $3;
+        }
+        | %empty { $$ = std::make_shared<ast::index_expression_list>(); }
         ;
 
 index_expression
-        : COLON { }
-        | expression { }
+        : COLON { $$ = std::make_shared<ast::index_expression>(); }
+        | expression { $$ = std::make_shared<ast::index_expression>($1); }
         ;
 
 qualified_id

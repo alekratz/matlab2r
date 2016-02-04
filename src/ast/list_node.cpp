@@ -24,9 +24,9 @@ void list_node<wrapped>::traverse_bottom_up(visitor_p guest) \
     accept(guest); \
 }
 
-DECLARE_SPECIALIZATION(expression);
-DECLARE_SPECIALIZATION(array_row_list);
-DECLARE_SPECIALIZATION(index_expression);
+DECLARE_SPECIALIZATION(expression)
+DECLARE_SPECIALIZATION(array_row_list)
+DECLARE_SPECIALIZATION(index_expression)
 
 template <typename wrapped>
 void list_node<wrapped>::children_accept(visitor_p guest)

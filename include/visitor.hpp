@@ -20,6 +20,7 @@ public:
     virtual void visit(ast::array_row_list*) { }
     virtual void visit(ast::index_expression*) { }
     virtual void visit(ast::index_expression_list*) { }
+    virtual void visit(ast::naked_arg_list*) { }
 };
 
 typedef std::shared_ptr<visitor> visitor_p;

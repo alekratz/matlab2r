@@ -198,7 +198,7 @@ statement
         ;
 
 naked_funcall
-        : IDENTIFIER IDENTIFIER { driver.lexer->begin_naked_args(); } naked_args eostmt_or_eof { }
+        : IDENTIFIER IDENTIFIER { driver.lexer->begin_naked_args(); } naked_arg_list eostmt_or_eof { }
         | IDENTIFIER eostmt_or_eof
         ;
 
@@ -272,8 +272,8 @@ catch_statement
         | CATCH statement_list { }
         ;
 
-naked_args
-        : NAKED_ARG naked_args { }
+naked_arg_list
+        : NAKED_ARG naked_arg_list { }
         | %empty { }
         ;
 

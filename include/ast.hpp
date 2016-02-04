@@ -20,6 +20,8 @@ typedef std::shared_ptr<visitor> visitor_p;
 #include "ast/index_expression.hpp"
 #include "ast/index_expression_list.hpp"
 
+#include "ast/naked_arg_list.hpp"
+
 /* Include visitor at the end so all classes have access to it */
 #include "visitor.hpp"
 #endif

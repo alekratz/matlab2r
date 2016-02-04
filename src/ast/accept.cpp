@@ -1,5 +1,6 @@
 #include "ast.hpp"
 #include "visitor.hpp"
+#include <string>
 
 #define VISITOR_ACCEPT_DECL(classname) void classname::accept(visitor_p guest) { guest->visit(this); }
 #define TEMPLATED_ACCEPT_DECL(classname, wrapped) template<> \
@@ -19,5 +20,7 @@ VISITOR_ACCEPT_DECL(unary_expression)
 VISITOR_ACCEPT_DECL(postfix_expression)
 VISITOR_ACCEPT_DECL(primary_expression)
 VISITOR_ACCEPT_DECL(index_expression)
+
+VISITOR_ACCEPT_DECL(naked_arg_list)
 
 } /* namespace ast */

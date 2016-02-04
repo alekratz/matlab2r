@@ -251,10 +251,10 @@ otherwise_clause
         ;
 
 iteration_statement
-        : while_statement
-        | for_statement
+        : while_statement { }
+        | for_statement { }
         ;
-        
+
  while_statement
         : WHILE expression statement_list END_KEYW eostmt_or_eof { }
         ;

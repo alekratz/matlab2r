@@ -24,6 +24,9 @@ typedef std::shared_ptr<visitor> visitor_p;
 #include "ast/catch_statement.hpp"
 #include "ast/try_statement.hpp"
 #include "ast/jump_statement.hpp"
+#include "ast/iteration_statement.hpp"
+#include "ast/for_statement.hpp"
+#include "ast/while_statement.hpp"
 
 /* Include visitor at the end so all classes have access to it */
 #include "visitor.hpp"

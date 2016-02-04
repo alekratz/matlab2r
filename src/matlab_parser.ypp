@@ -395,7 +395,6 @@ qualified_id_item
 
 array_row_list
         : expression { }
-        | expression COMMA { }
         | expression array_row_list { }
         | expression COMMA array_row_list { }
         | NEWLINE array_row_list { }

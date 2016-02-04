@@ -12,5 +12,7 @@ VISITOR_ACCEPT_DECL(expression)
 VISITOR_ACCEPT_DECL(unary_expression)
 VISITOR_ACCEPT_DECL(postfix_expression)
 VISITOR_ACCEPT_DECL(primary_expression)
+VISITOR_ACCEPT_DECL(array_col_list)
+VISITOR_ACCEPT_DECL(array_row_list)
 
 } /* namespace ast */

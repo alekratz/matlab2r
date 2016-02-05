@@ -30,4 +30,4 @@ public:
 
 } /* namespace ast */
 
-#endif /* AST_ARRAY_COL_LIST_HPP */
+#endif /* AST_WHILE_STATEMENT_HPP */

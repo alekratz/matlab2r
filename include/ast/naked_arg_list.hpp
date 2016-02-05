@@ -32,4 +32,4 @@ public:
 
 } /* namespace ast */
 
-#endif /* AST_ARRAY_COL_LIST_HPP */
+#endif /* AST_NAKED_ARG_LIST_HPP */

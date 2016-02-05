@@ -1,5 +1,5 @@
-#ifndef LIST_NODE_HPP
-#define LIST_NODE_HPP
+#ifndef AST_LIST_NODE_HPP
+#define AST_LIST_NODE_HPP
 
 #include <memory>
 #include <vector>
@@ -31,4 +31,4 @@ public:
 
 } /* namespace ast */
 
-#endif /* AST_ARRAY_COL_LIST_HPP */
+#endif /* AST_LIST_NODE_HPP */

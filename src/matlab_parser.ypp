@@ -225,8 +225,12 @@ assignment_statement
         ;
 
 selection_statement
+        : if_statement
+        | selection_statement
+        ;
+
+if_statement
         : IF expression statement_list elseif_clause else_clause END_KEYW eostmt_or_eof { }
-        | SWITCH expression eostmt case_list otherwise_clause END_KEYW eostmt_or_eof { }
         ;
 
 else_clause
@@ -237,6 +241,10 @@ else_clause
 elseif_clause
         : ELSEIF expression statement_list elseif_clause { }
         | %empty { }
+        ;
+
+switch_statement
+        : SWITCH expression eostmt case_list otherwise_clause END_KEYW eostmt_or_eof { }
         ;
 
 case_list

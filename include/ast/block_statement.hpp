@@ -10,7 +10,7 @@ class block_statement;
 typedef std::shared_ptr<block_statement> block_statement_p;
 
 class block_statement
-    : public node
+    : public statement
 {
 public:
     typedef node base_t;

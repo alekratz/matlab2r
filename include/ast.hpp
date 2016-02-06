@@ -16,8 +16,8 @@ typedef std::shared_ptr<visitor> visitor_p;
 #include "ast/unary_expression.hpp"
 #include "ast/expression.hpp"
 #include "ast/index_expression.hpp"
-//#include "ast/index_expression_list.hpp"
 
+#include "ast/statement.hpp"
 #include "ast/block_statement.hpp"
 #include "ast/naked_arg_list.hpp"
 #include "ast/catch_statement.hpp"

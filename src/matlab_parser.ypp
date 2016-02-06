@@ -120,11 +120,7 @@
 
 %%
 
-%start matlab_unit;
-
-matlab_unit
-        : statement_list { }
-        ;
+%start statement_list;
 
 eostmt  : COMMA { }
         | SEMICOLON { }
@@ -159,13 +155,13 @@ func_return_list
 
 function_declare_lhs
         : IDENTIFIER { }
-        | IDENTIFIER LPAREN RPAREN { }
         | IDENTIFIER LPAREN func_ident_list RPAREN { }
         ;
 
 func_ident_list
         : IDENTIFIER { }
         | IDENTIFIER COMMA func_ident_list { }
+        | %empty { }
         ;
 
 /******************************************************************************
@@ -173,12 +169,8 @@ func_ident_list
  *****************************************************************************/
 
 statement_list
-        : statement statement_list_tail { }
-        | %empty { }
-        ;
-
-statement_list_tail
-        : statement statement_list_tail { }
+        : statement statement_list { }
+        | function_declare statement_list { }
         | %empty { }
         | error { yyerrok; }
         ;
@@ -191,7 +183,6 @@ statement
         | iteration_statement { }
         | jump_statement { }
         | try_catch_statement { }
-        | function_declare { }
         | naked_funcall { }
         | expression_statement { }
         | eostmt { }
@@ -330,25 +321,25 @@ primary_expression
 
 expression
         : unary_expression { $$ = std::make_shared<ast::expression>($1); }
-        | expression COLON unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::COLON, $3); }
-        | expression VBAR unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::VBAR, $3); }
-        | expression AMP unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::AMP, $3); }
-        | expression EQ_OP unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::EQ_OP, $3); }
-        | expression NE_OP unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::NE_OP, $3); }
-        | expression LT_OP unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::LT_OP, $3); }
-        | expression GT_OP unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::GT_OP, $3); }
-        | expression LE_OP unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::LE_OP, $3); }
-        | expression GE_OP unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::GE_OP, $3); }
-        | expression PLUS unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::PLUS, $3); }
-        | expression MINUS unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::MINUS, $3); }
-        | expression TIMES unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::TIMES, $3); }
-        | expression FSLASH unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::FSLASH, $3); }
-        | expression BSLASH unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::BSLASH, $3); }
-        | expression POW unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::POW, $3); }
-        | expression AMUL unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::AMUL, $3); }
-        | expression ADIV unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::ADIV, $3); }
-        | expression ARDIV unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::ARDIV, $3); }
-        | expression APOW unary_expression { $$ = std::make_shared<ast::expression>($1, ast::expression_op::APOW, $3); }
+        | unary_expression COLON expression { $$ = std::make_shared<ast::expression>($3, ast::expression_op::COLON, $1); }
+        | unary_expression VBAR expression { $$ = std::make_shared<ast::expression>($3, ast::expression_op::VBAR, $1); }
+        | unary_expression AMP expression { $$ = std::make_shared<ast::expression>($3, ast::expression_op::AMP, $1); }
+        | unary_expression EQ_OP expression { $$ = std::make_shared<ast::expression>($3, ast::expression_op::EQ_OP, $1); }
+        | unary_expression NE_OP expression { $$ = std::make_shared<ast::expression>($3, ast::expression_op::NE_OP, $1); }
+        | unary_expression LT_OP expression { $$ = std::make_shared<ast::expression>($3, ast::expression_op::LT_OP, $1); }
+        | unary_expression GT_OP expression { $$ = std::make_shared<ast::expression>($3, ast::expression_op::GT_OP, $1); }
+        | unary_expression LE_OP expression { $$ = std::make_shared<ast::expression>($3, ast::expression_op::LE_OP, $1); }
+        | unary_expression GE_OP expression { $$ = std::make_shared<ast::expression>($3, ast::expression_op::GE_OP, $1); }
+        | unary_expression PLUS expression { $$ = std::make_shared<ast::expression>($3, ast::expression_op::PLUS, $1); }
+        | unary_expression MINUS expression { $$ = std::make_shared<ast::expression>($3, ast::expression_op::MINUS, $1); }
+        | unary_expression TIMES expression { $$ = std::make_shared<ast::expression>($3, ast::expression_op::TIMES, $1); }
+        | unary_expression FSLASH expression { $$ = std::make_shared<ast::expression>($3, ast::expression_op::FSLASH, $1); }
+        | unary_expression BSLASH expression { $$ = std::make_shared<ast::expression>($3, ast::expression_op::BSLASH, $1); }
+        | unary_expression POW expression { $$ = std::make_shared<ast::expression>($3, ast::expression_op::POW, $1); }
+        | unary_expression AMUL expression { $$ = std::make_shared<ast::expression>($3, ast::expression_op::AMUL, $1); }
+        | unary_expression ADIV expression { $$ = std::make_shared<ast::expression>($3, ast::expression_op::ADIV, $1); }
+        | unary_expression ARDIV expression { $$ = std::make_shared<ast::expression>($3, ast::expression_op::ARDIV, $1); }
+        | unary_expression APOW expression { $$ = std::make_shared<ast::expression>($3, ast::expression_op::APOW, $1); }
         ;
 
 unary_expression

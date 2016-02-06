@@ -28,6 +28,7 @@ void list_node<WRAPPED>::traverse_bottom_up(visitor_p guest) \
 DECLARE_SPECIALIZATION(expression)          // array_row_list
 DECLARE_SPECIALIZATION(array_row_list)      // array_col_list
 DECLARE_SPECIALIZATION(index_expression)    // index_expression_list
+DECLARE_SPECIALIZATION(statement)           // statement_list
 
 template <typename wrapped>
 void list_node<wrapped>::children_accept(visitor_p guest)

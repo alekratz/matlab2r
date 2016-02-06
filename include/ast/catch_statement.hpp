@@ -10,14 +10,17 @@ class catch_statement;
 typedef std::shared_ptr<catch_statement> catch_statement_p;
 
 class catch_statement
-    : public node
+    : public block_statement
 { 
 public:
-    catch_statement() = default;
-    //catch_statement(statement_list_p statements, std::string identifier="")
+    typedef block_statement base_t;
+
+public:
+    catch_statement(statement_list_p statements, std::string identifier="")
+        : base_t(statements)
+        , identifier(identifier) { }
     virtual ~catch_statement() = default;
 
-    //std::vector<statement_list_p> statements;
     std::string identifier;
 
 public:

@@ -10,14 +10,17 @@ class try_statement;
 typedef std::shared_ptr<try_statement> try_statement_p;
 
 class try_statement
-    : public node
+    : public block_statement
 { 
 public:
-    try_statement() = default;
-    //try_statement(statement_list_p statements, catch_statement_p catch_statement=nullptr)
-    virtual ~try_statement() = default;
+    typedef block_statement base_t;
 
-    //std::vector<statement_list_p> statements;
+public:
+    try_statement(statement_list_p statements, catch_statement_p catch_statement=nullptr)
+        : base_t(statements)
+        , catch_statement(catch_statement) { }
+    virtual ~try_statement() = default;
+    
     catch_statement_p catch_statement;
 
 public:

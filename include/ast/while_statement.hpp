@@ -16,7 +16,9 @@ public:
     typedef block_statement base_t;
 
 public:
-    while_statement(expression_p condition) : condition(condition) { }
+    while_statement(expression_p condition, statement_list_p statements)
+        : base_t(statements)
+        , condition(condition) { }
     virtual ~while_statement() = default;
 
     expression_p condition;

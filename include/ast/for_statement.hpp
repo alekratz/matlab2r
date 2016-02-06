@@ -16,7 +16,10 @@ public:
     typedef block_statement base_t;
 
 public:
-    for_statement(std::string variable, expression_p range) : variable(variable), range(range) { }
+    for_statement(std::string variable, expression_p range, statement_list_p statements)
+        : base_t(statements)
+        , variable(variable)
+        , range(range) { }
     virtual ~for_statement() = default;
 
     std::string variable;

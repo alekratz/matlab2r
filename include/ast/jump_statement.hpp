@@ -17,8 +17,11 @@ enum class jump_statement_type
 };
 
 class jump_statement
-    : public node
+    : public statement
 { 
+public:
+    typedef statement base_t;
+
 public:
     jump_statement(jump_statement_type type) : type(type) { }
     virtual ~jump_statement() = default;

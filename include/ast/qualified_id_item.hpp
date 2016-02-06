@@ -11,7 +11,6 @@ class qualified_id_item;
 typedef std::shared_ptr<qualified_id_item> qualified_id_item_p;
 class expression;
 typedef std::shared_ptr<expression> expression_p;
-class index_expression_list;
 typedef std::shared_ptr<index_expression_list> index_expression_list_p;
 
 class qualified_id_item

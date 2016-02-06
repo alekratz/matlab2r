@@ -10,10 +10,10 @@ class while_statement;
 typedef std::shared_ptr<while_statement> while_statement_p;
 
 class while_statement
-    : public iteration_statement
+    : public block_statement
 {
 public:
-    typedef iteration_statement base_t;
+    typedef block_statement base_t;
 
 public:
     while_statement(expression_p condition) : condition(condition) { }

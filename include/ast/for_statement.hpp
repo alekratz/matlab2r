@@ -10,10 +10,10 @@ class for_statement;
 typedef std::shared_ptr<for_statement> for_statement_p;
 
 class for_statement
-    : public iteration_statement
+    : public block_statement
 {
 public:
-    typedef iteration_statement base_t;
+    typedef block_statement base_t;
 
 public:
     for_statement(std::string variable, expression_p range) : variable(variable), range(range) { }

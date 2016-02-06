@@ -1,23 +1,23 @@
-#ifndef AST_ITERATION_STATEMENT_HPP
-#define AST_ITERATION_STATEMENT_HPP
+#ifndef AST_BLOCK_STATEMENT_HPP
+#define AST_BLOCK_STATEMENT_HPP
 
 #include <memory>
 
 namespace ast
 {
 
-class iteration_statement;
-typedef std::shared_ptr<iteration_statement> iteration_statement_p;
+class block_statement;
+typedef std::shared_ptr<block_statement> block_statement_p;
 
-class iteration_statement
+class block_statement
     : public node
 {
 public:
     typedef node base_t;
 
 public:
-    iteration_statement() = default;
-    virtual ~iteration_statement() = default;
+    block_statement() = default;
+    virtual ~block_statement() = default;
 
     //statement_list_p statement_list;
 
@@ -30,4 +30,4 @@ public:
 
 } /* namespace ast */
 
-#endif /* AST_ARRAY_COL_LIST_HPP */
+#endif /* AST_BLOCK_STATEMENT_HPP */

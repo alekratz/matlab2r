@@ -101,7 +101,7 @@
 %type <ast::statement_list_p>           statement_list
 %type <ast::global_statement_p>         global_statement
 %type <ast::identifier_list_p>          identifier_list
-//%type <ast::clear_statement_p>          clear_statement
+%type <ast::clear_statement_p>          clear_statement
 //%type <ast::assignment_statement_p>     assignment_statement
 %type <ast::block_statement_p>          selection_statement
 //%type <ast::if_statement_p>             if_statement
@@ -213,12 +213,12 @@ naked_funcall
 global_statement
         : GLOBAL identifier_list eostmt_or_eof
         {
-            //$$ = 
+            $$ = std::make_shared<ast::global_statement>($2);
         }
         ;
 
 clear_statement
-        : CLEAR identifier_list eostmt_or_eof { }
+        : CLEAR identifier_list eostmt_or_eof {  }
         | CLEAR eostmt_or_eof { }
         ;
 

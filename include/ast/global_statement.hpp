@@ -15,8 +15,8 @@ public:
     typedef statement base_t;
 
 public:
-    global_statement(const std::vector<std::string>& identifier_list)
-        : identifier_list(identifier_list) { }
+    global_statement(identifier_list_p identifier_list)
+        : identifier_list(identifier_list->identifiers) { }
     virtual ~global_statement() = default;
 
     std::vector<std::string> identifier_list;

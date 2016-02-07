@@ -2,12 +2,11 @@
 #define AST_GLOBAL_STATEMENT_HPP
 
 #include <memory>
+#include "types.hpp"
 
 namespace ast
 {
 
-class global_statement;
-typedef std::shared_ptr<global_statement> global_statement_p;
 
 class global_statement
     : public statement
@@ -16,10 +15,13 @@ public:
     typedef statement base_t;
 
 public:
-    global_statement(global_statement_type type) : type(type) { }
+    global_statement(const std::vector<std::string>& identifier_list)
+        : identifier_list(identifier_list) { }
     virtual ~global_statement() = default;
 
     std::vector<std::string> identifier_list;
+
+    void add_front(cstref identifier) { identifier_list.insert(identifier_list.begin(), identifier); }
 
 public:
     virtual void accept(visitor_p guest);

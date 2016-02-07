@@ -6,8 +6,6 @@
 namespace ast
 {
 
-class statement;
-typedef std::shared_ptr<statement> statement_p;
 
 class statement
     : public node

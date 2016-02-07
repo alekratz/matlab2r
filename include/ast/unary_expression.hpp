@@ -7,8 +7,6 @@
 namespace ast
 {
 
-class unary_expression;
-typedef std::shared_ptr<unary_expression> unary_expression_p;
 
 enum class unary_op
 {

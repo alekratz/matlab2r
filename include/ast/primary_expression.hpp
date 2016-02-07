@@ -18,13 +18,7 @@ enum class primary_expression_type
     EXPRESSION,
 };
 
-class primary_expression;
-typedef std::shared_ptr<primary_expression> primary_expression_p;
 
-class expression;
-typedef std::shared_ptr<expression> expression_p;
-class qualified_id;
-typedef std::shared_ptr<qualified_id> qualified_id_p;
 
 class primary_expression
     : public node

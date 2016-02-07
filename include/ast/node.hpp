@@ -6,8 +6,6 @@
 namespace ast
 {
 
-class node;
-typedef std::shared_ptr<node> node_p;
 
 class node
 {

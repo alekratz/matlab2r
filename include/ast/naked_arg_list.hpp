@@ -9,8 +9,6 @@
 namespace ast
 {
 
-class naked_arg_list;
-typedef std::shared_ptr<naked_arg_list> naked_arg_list_p;
 
 class naked_arg_list
     : public node

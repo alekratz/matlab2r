@@ -7,8 +7,6 @@
 namespace ast
 {
 
-class postfix_expression;
-typedef std::shared_ptr<postfix_expression> postfix_expression_p;
 
 enum class postfix_op
 {

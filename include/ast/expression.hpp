@@ -30,8 +30,6 @@ enum class expression_op
     NONE,
 };
 
-class expression;
-typedef std::shared_ptr<expression> expression_p;
 
 class expression
     : public node

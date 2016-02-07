@@ -6,8 +6,6 @@
 namespace ast
 {
 
-class try_statement;
-typedef std::shared_ptr<try_statement> try_statement_p;
 
 class try_statement
     : public block_statement

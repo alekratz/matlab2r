@@ -7,9 +7,6 @@
 namespace ast
 {
 
-class qualified_id;
-typedef std::shared_ptr<qualified_id> qualified_id_p;
-
 class qualified_id
     : public node
 {
@@ -24,23 +21,9 @@ public:
 
 public:
     virtual void accept(visitor_p guest);
-    virtual void children_accept(visitor_p guest)
-    {
-        for(auto item : items)
-            item->accept(guest);
-    }
-    virtual void traverse_top_down(visitor_p guest)
-    {
-        accept(guest);
-        for(auto item : items)
-            item->traverse_top_down(guest);
-    }
-    virtual void traverse_bottom_up(visitor_p guest)
-    { 
-        for(auto item : items)
-            item->traverse_bottom_up(guest);
-        accept(guest);
-    }
+    virtual void children_accept(visitor_p guest);
+    virtual void traverse_top_down(visitor_p guest);
+    virtual void traverse_bottom_up(visitor_p guest);
 };
 
 };

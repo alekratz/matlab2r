@@ -6,8 +6,6 @@
 namespace ast
 {
 
-class while_statement;
-typedef std::shared_ptr<while_statement> while_statement_p;
 
 class while_statement
     : public block_statement

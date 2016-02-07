@@ -6,8 +6,6 @@
 namespace ast
 {
 
-class jump_statement;
-typedef std::shared_ptr<jump_statement> jump_statement_p;
 
 enum class jump_statement_type
 {

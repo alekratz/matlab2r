@@ -26,5 +26,7 @@ VISITOR_ACCEPT_DECL(catch_statement)
 VISITOR_ACCEPT_DECL(try_statement)
 VISITOR_ACCEPT_DECL(for_statement)
 VISITOR_ACCEPT_DECL(while_statement)
+VISITOR_ACCEPT_DECL(jump_statement)
+VISITOR_ACCEPT_DECL(global_statement)
 
 } /* namespace ast */

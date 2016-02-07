@@ -6,8 +6,6 @@
 namespace ast
 {
 
-class catch_statement;
-typedef std::shared_ptr<catch_statement> catch_statement_p;
 
 class catch_statement
     : public block_statement
@@ -16,9 +14,11 @@ public:
     typedef block_statement base_t;
 
 public:
-    catch_statement(statement_list_p statements, std::string identifier="")
+    catch_statement(std::string identifier, statement_list_p statements)
         : base_t(statements)
         , identifier(identifier) { }
+    catch_statement(statement_list_p statements)
+        : base_t(statements) { }
     virtual ~catch_statement() = default;
 
     std::string identifier;

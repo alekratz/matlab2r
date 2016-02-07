@@ -6,8 +6,6 @@
 namespace ast
 {
 
-class index_expression;
-typedef std::shared_ptr<index_expression> index_expression_p;
 
 class index_expression
     : node

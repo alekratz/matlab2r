@@ -6,8 +6,6 @@
 namespace ast
 {
 
-class for_statement;
-typedef std::shared_ptr<for_statement> for_statement_p;
 
 class for_statement
     : public block_statement

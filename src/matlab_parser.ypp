@@ -20,15 +20,6 @@
     class matlab2r_driver;
 }
 
-%param { matlab2r_driver& driver }
-%printer { yyoutput << $$; } <*>;
-
-%initial-action
-{
-    // Initialize the initial location
-    @$.begin.filename = @$.end.filename = &driver.streamname;
-}
-
 %code
 {
     #include "matlab2r_driver.hpp"
@@ -36,6 +27,15 @@
     #include <sstream>
     #undef yylex
     #define yylex driver.lexer->lex
+}
+
+%param { matlab2r_driver& driver }
+%printer { yyoutput << $$; } <*>;
+
+%initial-action
+{
+    // Initialize the initial location
+    @$.begin.filename = @$.end.filename = &driver.streamname;
 }
 
 // Tokens
@@ -97,6 +97,22 @@
 %token <std::string>        CONSTANT
 %token <std::string>        STRING_LITERAL
 %token <std::string>        NAKED_ARG
+
+%type <ast::statement_list_p>           statement_list
+%type <ast::global_statement_p>         global_statement
+//%type <ast::clear_statement_p>          clear_statement
+//%type <ast::assignment_statement_p>     assignment_statement
+%type <ast::block_statement_p>          selection_statement
+//%type <ast::if_statement_p>             if_statement
+//%type <ast::switch_statement_p>         switch_statement
+%type <ast::block_statement_p>          iteration_statement
+%type <ast::for_statement_p>            for_statement
+%type <ast::while_statement_p>          while_statement
+%type <ast::jump_statement_p>           jump_statement
+%type <ast::try_statement_p>            try_catch_statement
+%type <ast::catch_statement_p>          catch_statement
+//%type <ast::naked_funcall_p>            naked_funcall
+//%type <ast::expression_statement_p>     expression_statement
 
 %type <ast::qualified_id_p>             qualified_id
 %type <ast::qualified_id_item_p>        qualified_id_item
@@ -194,7 +210,10 @@ naked_funcall
         ;
 
 global_statement
-        : GLOBAL identifier_list eostmt_or_eof { }
+        : GLOBAL identifier_list eostmt_or_eof
+        {
+            //$$ = 
+        }
         ;
 
 clear_statement
@@ -216,8 +235,8 @@ assignment_statement
         ;
 
 selection_statement
-        : if_statement
-        | switch_statement
+        : if_statement { }
+        | switch_statement { }
         ;
 
 if_statement
@@ -239,9 +258,13 @@ switch_statement
         ;
 
 case_list
-        : CASE expression eostmt statement_list case_list { }
-        | eostmt case_list
+        : case_statement case_list { }
         | %empty { }
+        ;
+
+case_statement
+        : CASE expression eostmt statement_list
+        | eostmt
         ;
 
 otherwise_clause
@@ -250,33 +273,42 @@ otherwise_clause
         ;
 
 iteration_statement
-        : while_statement { }
-        | for_statement { }
+        : while_statement { $$ = $1; }
+        | for_statement { $$ = $1; }
         ;
 
  while_statement
-        : WHILE expression statement_list END_KEYW eostmt_or_eof { }
+        : WHILE expression statement_list END_KEYW eostmt_or_eof
+        {
+            $$ = std::make_shared<ast::while_statement>($2, $3);
+        }
         ;
 
 for_statement
-        : FOR IDENTIFIER EQUALS expression statement_list END_KEYW eostmt_or_eof { }
-        | FOR LPAREN IDENTIFIER EQUALS expression RPAREN statement_list END_KEYW eostmt_or_eof { }
+        : FOR IDENTIFIER EQUALS expression statement_list END_KEYW eostmt_or_eof
+        {
+            $$ = std::make_shared<ast::for_statement>($2, $4, $5);
+        }
+        | FOR LPAREN IDENTIFIER EQUALS expression RPAREN statement_list END_KEYW eostmt_or_eof
+        {
+            $$ = std::make_shared<ast::for_statement>($3, $5, $7);
+        }
         ;
 
 jump_statement
-        : BREAK eostmt { }
-        | CONTINUE eostmt { }
-        | RETURN eostmt { }
+        : BREAK eostmt { $$ = std::make_shared<ast::jump_statement>(ast::jump_statement_type::BREAK); }
+        | CONTINUE eostmt { $$ = std::make_shared<ast::jump_statement>(ast::jump_statement_type::CONTINUE); }
+        | RETURN eostmt { $$ = std::make_shared<ast::jump_statement>(ast::jump_statement_type::RETURN); }
         ;
 
 try_catch_statement
-        : TRY statement_list catch_statement END_KEYW eostmt_or_eof { }
-        | TRY statement_list END_KEYW eostmt_or_eof { }
+        : TRY statement_list catch_statement END_KEYW eostmt_or_eof { $$ = std::make_shared<ast::try_statement>($2, $3); }
+        | TRY statement_list END_KEYW eostmt_or_eof { $$ = std::make_shared<ast::try_statement>($2, nullptr); }
         ;
 
 catch_statement
-        : CATCH IDENTIFIER statement_list { }
-        | CATCH statement_list { }
+        : CATCH IDENTIFIER statement_list { $$ = std::make_shared<ast::catch_statement>($2, $3); }
+        | CATCH statement_list { $$ = std::make_shared<ast::catch_statement>($2); }
         ;
 
 naked_arg_list
@@ -459,4 +491,3 @@ void yy::matlab_parser::error(const location_type& l, const std::string& m)
 {
     driver.error(l, m);
 }
-

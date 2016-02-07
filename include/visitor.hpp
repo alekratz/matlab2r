@@ -27,6 +27,7 @@ public:
     virtual void visit(ast::while_statement*) { }
     virtual void visit(ast::jump_statement*) { }
     virtual void visit(ast::global_statement*) { }
+    virtual void visit(ast::identifier_list*) { }
 };
 
 typedef std::shared_ptr<visitor> visitor_p;

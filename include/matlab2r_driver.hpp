@@ -4,6 +4,7 @@
 #include "types.hpp"
 #include "parser.hpp"
 #include "matlab_lexer.hpp"
+#include "ast.hpp"
 #include <string>
 #include <iostream>
 
@@ -13,6 +14,7 @@ public:
     matlab2r_driver()
         : streamname()
         , lexer(nullptr)
+        , ast(nullptr)
         , trace_scanning(false)
         , trace_parsing(false)
     { }
@@ -28,6 +30,7 @@ public:
 public:
     std::string streamname;
     matlab_lexer *lexer;
+    ast::statement_list_p ast;
 
     bool trace_scanning;
     bool trace_parsing;

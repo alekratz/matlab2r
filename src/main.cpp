@@ -108,6 +108,17 @@ int main(int argc, char **argv)
         if(the_driver.parse_file(file))
         {
             VCOUT << "done" << endl;
+            // get the AST
+            auto ast = the_driver.ast;
+            if(ast != nullptr)
+            {
+                codegen_visitor visitor;
+                ast->children_accept(&visitor);
+            }
+            else
+            {
+                cerr << "error: ast is null" << endl;
+            }
         }
     }
 }

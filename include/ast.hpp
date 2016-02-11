@@ -52,7 +52,7 @@ AST_LIST_ITEM(case_statement, case_list)
 
 /* Forward declaration of the visitor class */
 class visitor;
-typedef std::shared_ptr<visitor> visitor_p;
+typedef visitor* visitor_p;
 
 #include "ast/node.hpp"
 #include "ast/list_node.hpp"

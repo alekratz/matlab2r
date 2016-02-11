@@ -22,6 +22,8 @@ set(CMAKE_CXX_FLAGS "-g -Wall --std=c++14")
 set(IM_SOURCES 
     src/main.cpp
     src/matlab2r_driver.cpp
+    src/codegen_visitor.cpp
+
     src/ast/accept.cpp
     src/ast/block_statement.cpp
     src/ast/for_statement.cpp

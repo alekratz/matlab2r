@@ -150,7 +150,9 @@
 
 %%
 
-%start statement_list;
+%start unit;
+
+unit    : statement_list { driver.ast = $1; }
 
 eostmt  : COMMA
         | SEMICOLON

@@ -40,6 +40,7 @@ public:
 	virtual void visit(ast::case_list*) { }
 	virtual void visit(ast::case_statement*) { }
 	virtual void visit(ast::otherwise_statement*) { }
+    virtual void visit(ast::statement_list*) { }
 };
 
 typedef std::shared_ptr<visitor> visitor_p;

@@ -195,9 +195,18 @@ func_ident_list
  *****************************************************************************/
 
 statement_list
-        : statement statement_list { }
-        | function_declare statement_list { }
-        | %empty { }
+        : statement statement_list
+        {
+            if($1 != nullptr)
+                $2->add_front($1);
+            $$ = $2;
+        }
+        | function_declare statement_list 
+        {
+            $$ = $2;
+        }
+        | %empty 
+            { $$ = std::make_shared<ast::statement_list>(); }
         | error { yyerrok; }
         ;
 
@@ -221,7 +230,7 @@ statement
         | naked_funcall_statement 
             { $$ = $1; }
         | eostmt 
-            { /* do nothing on eostmt */ }
+            { $$ = nullptr; }
         ;
 
 global_statement

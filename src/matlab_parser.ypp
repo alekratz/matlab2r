@@ -215,14 +215,14 @@ naked_funcall
 
 global_statement
         : GLOBAL identifier_list eostmt_or_eof
-        {
-            $$ = std::make_shared<ast::global_statement>($2);
-        }
+            { $$ = std::make_shared<ast::global_statement>($2); }
         ;
 
 clear_statement
-        : CLEAR identifier_list eostmt_or_eof { $$ = std::make_shared<ast::clear_statement>($2); }
-        | CLEAR eostmt_or_eof { $$ = std::make_shared<ast::clear_statement>(); }
+        : CLEAR identifier_list eostmt_or_eof 
+            { $$ = std::make_shared<ast::clear_statement>($2); }
+        | CLEAR eostmt_or_eof 
+            { $$ = std::make_shared<ast::clear_statement>(); }
         ;
 
 identifier_list
@@ -239,41 +239,45 @@ assignment_statement
         ;
 
 selection_statement
-        : if_statement { $$ = $1; }
+        : if_statement 
+            { $$ = $1; }
         | switch_statement { }
         ;
 
 if_statement
         : IF expression statement_list elseif_list else_statement END_KEYW eostmt_or_eof
-        {
-            $$ = std::make_shared<ast::if_statement>($2, $3, $4, $5);
-        }
+            { $$ = std::make_shared<ast::if_statement>($2, $3, $4, $5); }
         ;
 
 elseif_list
         : elseif_statement elseif_list
-        {
-            $2->add_front($1);
-        }
-        | %empty { $$ = std::make_shared<ast::elseif_list>(); }
+            { $2->add_front($1); }
+        | %empty 
+            { $$ = std::make_shared<ast::elseif_list>(); }
         ;
 
 elseif_statement
-        : ELSEIF expression statement_list { $$ = std::make_shared<ast::elseif_statement>($2, $3); }
+        : ELSEIF expression statement_list
+            { $$ = std::make_shared<ast::elseif_statement>($2, $3); }
         ;
 
 else_statement
-        : ELSE statement_list { $$ = std::make_shared<ast::else_statement>($2); }
-        | %empty { $$ = nullptr; }
+        : ELSE statement_list
+            { $$ = std::make_shared<ast::else_statement>($2); }
+        | %empty
+            { $$ = nullptr; }
         ;
 
 switch_statement
-        : SWITCH expression eostmt case_list otherwise_clause END_KEYW eostmt_or_eof { }
+        : SWITCH expression eostmt case_list otherwise_clause END_KEYW eostmt_or_eof
+            { }
         ;
 
 case_list
-        : case_statement case_list { }
-        | %empty { }
+        : case_statement case_list
+            { }
+        | %empty
+            { }
         ;
 
 case_statement
@@ -282,47 +286,52 @@ case_statement
         ;
 
 otherwise_clause
-        : OTHERWISE eostmt statement_list { }
-        | %empty { }
+        : OTHERWISE eostmt statement_list
+            { }
+        | %empty
+            { }
         ;
 
 iteration_statement
-        : while_statement { $$ = $1; }
-        | for_statement { $$ = $1; }
+        : while_statement
+            { $$ = $1; }
+        | for_statement
+            { $$ = $1; }
         ;
 
  while_statement
         : WHILE expression statement_list END_KEYW eostmt_or_eof
-        {
-            $$ = std::make_shared<ast::while_statement>($2, $3);
-        }
+            { $$ = std::make_shared<ast::while_statement>($2, $3); }
         ;
 
 for_statement
         : FOR IDENTIFIER EQUALS expression statement_list END_KEYW eostmt_or_eof
-        {
-            $$ = std::make_shared<ast::for_statement>($2, $4, $5);
-        }
+            { $$ = std::make_shared<ast::for_statement>($2, $4, $5); }
         | FOR LPAREN IDENTIFIER EQUALS expression RPAREN statement_list END_KEYW eostmt_or_eof
-        {
-            $$ = std::make_shared<ast::for_statement>($3, $5, $7);
-        }
+            { $$ = std::make_shared<ast::for_statement>($3, $5, $7); }
         ;
 
 jump_statement
-        : BREAK eostmt { $$ = std::make_shared<ast::jump_statement>(ast::jump_statement_type::BREAK); }
-        | CONTINUE eostmt { $$ = std::make_shared<ast::jump_statement>(ast::jump_statement_type::CONTINUE); }
-        | RETURN eostmt { $$ = std::make_shared<ast::jump_statement>(ast::jump_statement_type::RETURN); }
+        : BREAK eostmt
+            { $$ = std::make_shared<ast::jump_statement>(ast::jump_statement_type::BREAK); }
+        | CONTINUE eostmt
+            { $$ = std::make_shared<ast::jump_statement>(ast::jump_statement_type::CONTINUE); }
+        | RETURN eostmt
+            { $$ = std::make_shared<ast::jump_statement>(ast::jump_statement_type::RETURN); }
         ;
 
 try_catch_statement
-        : TRY statement_list catch_statement END_KEYW eostmt_or_eof { $$ = std::make_shared<ast::try_statement>($2, $3); }
-        | TRY statement_list END_KEYW eostmt_or_eof { $$ = std::make_shared<ast::try_statement>($2, nullptr); }
+        : TRY statement_list catch_statement END_KEYW eostmt_or_eof
+            { $$ = std::make_shared<ast::try_statement>($2, $3); }
+        | TRY statement_list END_KEYW eostmt_or_eof
+            { $$ = std::make_shared<ast::try_statement>($2, nullptr); }
         ;
 
 catch_statement
-        : CATCH IDENTIFIER statement_list { $$ = std::make_shared<ast::catch_statement>($2, $3); }
-        | CATCH statement_list { $$ = std::make_shared<ast::catch_statement>($2); }
+        : CATCH IDENTIFIER statement_list
+            { $$ = std::make_shared<ast::catch_statement>($2, $3); }
+        | CATCH statement_list
+            { $$ = std::make_shared<ast::catch_statement>($2); }
         ;
 
 naked_arg_list

@@ -36,7 +36,6 @@ set(IM_SOURCES
     src/ast/otherwise_statement.cpp
     src/ast/try_statement.cpp
     src/ast/catch_statement.cpp
-    src/ast/naked_arg_list.cpp
     src/ast/assignment_expression.cpp
     src/ast/expression.cpp
     src/ast/unary_expression.cpp

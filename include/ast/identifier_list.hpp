@@ -14,6 +14,7 @@ class identifier_list
 public:
     typedef node base_t;
 public:
+    identifier_list() = default;
     identifier_list(cstref first) { add_front(first); };
     virtual ~identifier_list() = default;
 

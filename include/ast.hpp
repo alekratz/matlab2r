@@ -23,7 +23,7 @@ AST_ITEM(index_expression)
 AST_ITEM(assignment_expression)
 AST_ITEM(statement)
 AST_ITEM(block_statement)
-AST_ITEM(naked_arg_list)
+AST_ITEM(naked_funcall_statement)
 AST_ITEM(catch_statement)
 AST_ITEM(try_statement)
 AST_ITEM(global_statement)
@@ -66,7 +66,6 @@ typedef std::shared_ptr<visitor> visitor_p;
 
 #include "ast/statement.hpp"
 #include "ast/block_statement.hpp"
-#include "ast/naked_arg_list.hpp"
 #include "ast/catch_statement.hpp"
 #include "ast/try_statement.hpp"
 #include "ast/identifier_list.hpp"
@@ -83,6 +82,7 @@ typedef std::shared_ptr<visitor> visitor_p;
 #include "ast/switch_statement.hpp"
 #include "ast/case_statement.hpp"
 #include "ast/otherwise_statement.hpp"
+#include "ast/naked_funcall_statement.hpp"
 
 /* Include visitor at the end so all classes have access to it */
 #include "visitor.hpp"

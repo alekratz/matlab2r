@@ -120,7 +120,8 @@
 %type <ast::jump_statement_p>           jump_statement
 %type <ast::try_statement_p>            try_catch_statement
 %type <ast::catch_statement_p>          catch_statement
-//%type <ast::naked_funcall_p>            naked_funcall
+%type <ast::naked_funcall_statement_p>            naked_funcall_statement
+%type <ast::identifier_list_p>          naked_arg_list
 
 %type <ast::qualified_id_p>             qualified_id
 %type <ast::qualified_id_item_p>        qualified_id_item
@@ -205,6 +206,8 @@ statement
             { $$ = $1; }
         | clear_statement 
             { $$ = $1; }
+        | expression_statement 
+            { $$ = $1; }
         | assignment_statement 
             { $$ = $1; }
         | selection_statement 
@@ -215,18 +218,10 @@ statement
             { $$ = $1; }
         | try_catch_statement 
             { $$ = $1; }
-        | naked_funcall 
-            { /* TODO */ }
-        | expression_statement 
+        | naked_funcall_statement 
             { $$ = $1; }
         | eostmt 
             { /* do nothing on eostmt */ }
-        ;
-
-naked_funcall
-        : IDENTIFIER IDENTIFIER
-            { driver.lexer->begin_naked_args(); } naked_arg_list eostmt_or_eof { }
-        | IDENTIFIER eostmt_or_eof
         ;
 
 global_statement
@@ -332,7 +327,7 @@ iteration_statement
             { $$ = $1; }
         ;
 
- while_statement
+while_statement
         : WHILE expression statement_list END_KEYW eostmt_or_eof
             { $$ = std::make_shared<ast::while_statement>($2, $3); }
         ;
@@ -367,9 +362,21 @@ catch_statement
             { $$ = std::make_shared<ast::catch_statement>($2); }
         ;
 
+naked_funcall_statement
+        : IDENTIFIER IDENTIFIER { driver.lexer->begin_naked_args(); } naked_arg_list eostmt_or_eof 
+            { $$ = std::make_shared<ast::naked_funcall_statement>($1, $2, $4); }
+        | IDENTIFIER eostmt_or_eof
+            { $$ = std::make_shared<ast::naked_funcall_statement>($1); }
+        ;
+        
 naked_arg_list
-        : NAKED_ARG naked_arg_list { }
-        | %empty { }
+        : NAKED_ARG naked_arg_list
+        {
+            $2->add_front($1);
+            $$ = $2;
+        }
+        | %empty
+            { $$ = std::make_shared<ast::identifier_list>(); }
         ;
 
 /******************************************************************************

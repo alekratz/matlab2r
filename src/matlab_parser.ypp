@@ -101,8 +101,9 @@
 %type <ast::statement_list_p>           statement_list
 %type <ast::statement_p>                statement
 %type <ast::global_statement_p>         global_statement
-%type <ast::identifier_list_p>          identifier_list
 %type <ast::clear_statement_p>          clear_statement
+%type <ast::identifier_list_p>          identifier_list
+%type <ast::expression_statement_p>     expression_statement
 //%type <ast::assignment_statement_p>     assignment_statement
 %type <ast::statement_p>                selection_statement
 %type <ast::if_statement_p>             if_statement
@@ -120,10 +121,10 @@
 %type <ast::try_statement_p>            try_catch_statement
 %type <ast::catch_statement_p>          catch_statement
 //%type <ast::naked_funcall_p>            naked_funcall
-//%type <ast::expression_statement_p>     expression_statement
 
 %type <ast::qualified_id_p>             qualified_id
 %type <ast::qualified_id_item_p>        qualified_id_item
+%type <ast::assignment_expression_p>    assignment_expression
 %type <ast::expression_p>               expression
 %type <ast::unary_expression_p>         unary_expression
 %type <ast::postfix_expression_p>       postfix_expression
@@ -239,7 +240,7 @@ identifier_list
         ;
 
 expression_statement
-        : expression eostmt_or_eof { }
+        : expression eostmt_or_eof { $$ = std::make_shared<ast::expression_statement>($1); }
         ;
 
 assignment_statement
@@ -361,7 +362,7 @@ naked_arg_list
  *****************************************************************************/
 
 assignment_expression
-        : postfix_expression EQUALS expression { }
+        : postfix_expression EQUALS expression { $$ = std::make_shared<ast::assignment_expression>($1, $3); }
         ;
 
 postfix_expression

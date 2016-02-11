@@ -165,13 +165,13 @@ eostmt_or_eof
  *****************************************************************************/
 
 function_declare
-        : FUNCTION function_declare_lhs eostmt statement_list optional_end { }
-        | FUNCTION func_return_list EQUALS function_declare_lhs eostmt statement_list optional_end { }
+        : FUNCTION function_declare_lhs eostmt statement_list optional_end eostmt_or_eof { }
+        | FUNCTION func_return_list EQUALS function_declare_lhs eostmt statement_list optional_end eostmt_or_eof { }
         ;
 
 optional_end
-        : END_KEYW eostmt_or_eof { }
-        | %empty { }
+        : END_KEYW
+        | %empty
         ;
 
 func_return_list

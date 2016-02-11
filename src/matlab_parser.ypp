@@ -223,14 +223,18 @@ global_statement
 
 clear_statement
         : CLEAR identifier_list eostmt_or_eof 
-            { /* $$ = std::make_shared<ast::clear_statement>($2); */ }
+            { $$ = std::make_shared<ast::clear_statement>($2); }
         | CLEAR eostmt_or_eof 
             { $$ = std::make_shared<ast::clear_statement>(); }
         ;
 
 identifier_list
-        : IDENTIFIER { }
-        | identifier_list IDENTIFIER { }
+        : IDENTIFIER { $$ = std::make_shared<ast::identifier_list>($1); }
+        | identifier_list IDENTIFIER
+        {
+            $1->add_front($2);
+            $$ = $1;
+        }
         ;
 
 expression_statement

@@ -108,7 +108,10 @@
 %type <ast::elseif_list_p>              elseif_list
 %type <ast::elseif_statement_p>         elseif_statement
 %type <ast::else_statement_p>           else_statement
-//%type <ast::switch_statement_p>         switch_statement
+%type <ast::switch_statement_p>         switch_statement
+%type <ast::case_list_p>                case_list
+%type <ast::case_statement_p>           case_statement
+%type <ast::otherwise_statement_p>      otherwise_statement
 %type <ast::block_statement_p>          iteration_statement
 %type <ast::for_statement_p>            for_statement
 %type <ast::while_statement_p>          while_statement
@@ -272,27 +275,33 @@ else_statement
         ;
 
 switch_statement
-        : SWITCH expression eostmt case_list otherwise_clause END_KEYW eostmt_or_eof
-            { }
+        : SWITCH expression eostmt case_list otherwise_statement END_KEYW eostmt_or_eof
+            { $$ = std::make_shared<ast::switch_statement>($2, $4, $5); }
         ;
 
 case_list
         : case_statement case_list
-            { }
+        {
+            if($1 != nullptr)
+                $2->add_front($1);
+            $$ = $2;
+        }
         | %empty
-            { }
+            { $$ = std::make_shared<ast::case_list>(); }
         ;
 
 case_statement
         : CASE expression eostmt statement_list
+            { $$ = std::make_shared<ast::case_statement>($2, $4); }
         | eostmt
+            { $$ = nullptr; }
         ;
 
-otherwise_clause
+otherwise_statement
         : OTHERWISE eostmt statement_list
-            { }
+            { $$ = std::make_shared<ast::otherwise_statement>($3); }
         | %empty
-            { }
+            { $$ = nullptr; }
         ;
 
 iteration_statement

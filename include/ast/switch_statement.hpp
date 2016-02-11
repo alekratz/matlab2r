@@ -13,7 +13,7 @@ public:
     typedef statement base_t;
 
 public:
-    switch_statement(expression_p expression, statement_list_p statements, case_list_p case_list,
+    switch_statement(expression_p expression, case_list_p case_list,
             otherwise_statement_p otherwise_statement)
         : base_t()
 		, expression(expression)

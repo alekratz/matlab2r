@@ -201,20 +201,31 @@ statement_list
         ;
 
 statement
-        : global_statement { $$ = $1; }
-        | clear_statement { $$ = $1; }
-        | assignment_statement { $$ = $1; }
-        | selection_statement { $$ = $1; }
-        | iteration_statement { $$ = $1; }
-        | jump_statement { $$ = $1; }
-        | try_catch_statement { $$ = $1; }
-        | naked_funcall { /* TODO */ }
-        | expression_statement { $$ = $1; }
-        | eostmt { /* do nothing on eostmt */ }
+        : global_statement 
+            { $$ = $1; }
+        | clear_statement 
+            { $$ = $1; }
+        | assignment_statement 
+            { $$ = $1; }
+        | selection_statement 
+            { $$ = $1; }
+        | iteration_statement 
+            { $$ = $1; }
+        | jump_statement 
+            { $$ = $1; }
+        | try_catch_statement 
+            { $$ = $1; }
+        | naked_funcall 
+            { /* TODO */ }
+        | expression_statement 
+            { $$ = $1; }
+        | eostmt 
+            { /* do nothing on eostmt */ }
         ;
 
 naked_funcall
-        : IDENTIFIER IDENTIFIER { driver.lexer->begin_naked_args(); } naked_arg_list eostmt_or_eof { }
+        : IDENTIFIER IDENTIFIER
+            { driver.lexer->begin_naked_args(); } naked_arg_list eostmt_or_eof { }
         | IDENTIFIER eostmt_or_eof
         ;
 
@@ -231,7 +242,8 @@ clear_statement
         ;
 
 identifier_list
-        : IDENTIFIER { $$ = std::make_shared<ast::identifier_list>($1); }
+        : IDENTIFIER
+            { $$ = std::make_shared<ast::identifier_list>($1); }
         | identifier_list IDENTIFIER
         {
             $1->add_front($2);
@@ -240,17 +252,20 @@ identifier_list
         ;
 
 expression_statement
-        : expression eostmt_or_eof { $$ = std::make_shared<ast::expression_statement>($1); }
+        : expression eostmt_or_eof
+            { $$ = std::make_shared<ast::expression_statement>($1); }
         ;
 
 assignment_statement
-        : assignment_expression eostmt_or_eof { $$ = std::make_shared<ast::assignment_statement>($1); }
+        : assignment_expression eostmt_or_eof
+            { $$ = std::make_shared<ast::assignment_statement>($1); }
         ;
 
 selection_statement
         : if_statement 
             { $$ = $1; }
-        | switch_statement { $$ = $1; }
+        | switch_statement
+            { $$ = $1; }
         ;
 
 if_statement

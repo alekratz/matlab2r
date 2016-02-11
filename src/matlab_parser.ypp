@@ -221,8 +221,8 @@ global_statement
         ;
 
 clear_statement
-        : CLEAR identifier_list eostmt_or_eof {  }
-        | CLEAR eostmt_or_eof { }
+        : CLEAR identifier_list eostmt_or_eof { $$ = std::make_shared<ast::clear_statement>($2); }
+        | CLEAR eostmt_or_eof { $$ = std::make_shared<ast::clear_statement>(); }
         ;
 
 identifier_list
@@ -239,7 +239,7 @@ assignment_statement
         ;
 
 selection_statement
-        : if_statement { }
+        : if_statement { $$ = $1; }
         | switch_statement { }
         ;
 

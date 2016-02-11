@@ -220,7 +220,7 @@ global_statement
 
 clear_statement
         : CLEAR identifier_list eostmt_or_eof 
-            { $$ = std::make_shared<ast::clear_statement>($2); }
+            { /* $$ = std::make_shared<ast::clear_statement>($2); */ }
         | CLEAR eostmt_or_eof 
             { $$ = std::make_shared<ast::clear_statement>(); }
         ;
@@ -251,7 +251,10 @@ if_statement
 
 elseif_list
         : elseif_statement elseif_list
-            { $2->add_front($1); }
+            { 
+                $2->add_front($1);
+                $$ = $2;
+            }
         | %empty 
             { $$ = std::make_shared<ast::elseif_list>(); }
         ;

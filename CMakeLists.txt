@@ -29,6 +29,9 @@ set(IM_SOURCES
     src/ast/if_statement.cpp
     src/ast/elseif_statement.cpp
     src/ast/else_statement.cpp
+    src/ast/switch_statement.cpp
+    src/ast/case_statement.cpp
+    src/ast/otherwise_statement.cpp
     src/ast/try_statement.cpp
     src/ast/catch_statement.cpp
     src/ast/naked_arg_list.cpp

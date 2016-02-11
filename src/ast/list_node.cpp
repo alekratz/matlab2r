@@ -30,6 +30,7 @@ DECLARE_SPECIALIZATION(array_row_list)      // array_col_list
 DECLARE_SPECIALIZATION(index_expression)    // index_expression_list
 DECLARE_SPECIALIZATION(statement)           // statement_list
 DECLARE_SPECIALIZATION(elseif_statement)    // elseif_list
+DECLARE_SPECIALIZATION(case_statement)		// case_list
 
 template <typename wrapped>
 void list_node<wrapped>::children_accept(visitor_p guest)

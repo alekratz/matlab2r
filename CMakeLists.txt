@@ -26,6 +26,7 @@ set(IM_SOURCES
     src/ast/block_statement.cpp
     src/ast/for_statement.cpp
     src/ast/while_statement.cpp
+    src/ast/function_declare.cpp
     src/ast/expression_statement.cpp
     src/ast/assignment_statement.cpp
     src/ast/if_statement.cpp

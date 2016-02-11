@@ -98,9 +98,9 @@
 %token <std::string>        STRING_LITERAL
 %token <std::string>        NAKED_ARG
 
-//%type <ast::function_declare_p>         function_declare
+%type <ast::function_declare_p>         function_declare
 %type <ast::identifier_list_p>          function_return_list
-//%type <ast::function_lhs_p>             function_lhs
+%type <ast::identifier_list_p>          function_args
 %type <ast::identifier_list_p>          function_ident_list
 %type <ast::statement_list_p>           statement_list
 %type <ast::statement_p>                statement
@@ -167,8 +167,10 @@ eostmt_or_eof
  *****************************************************************************/
 
 function_declare
-        : FUNCTION function_lhs eostmt statement_list optional_end eostmt_or_eof { }
-        | FUNCTION function_return_list EQUALS function_lhs eostmt statement_list optional_end eostmt_or_eof { }
+        : FUNCTION IDENTIFIER function_args eostmt statement_list optional_end eostmt_or_eof
+            { $$ = std::make_shared<ast::function_declare>($2, $3, $5); }
+        | FUNCTION function_return_list EQUALS IDENTIFIER function_args eostmt statement_list optional_end eostmt_or_eof
+            { $$ = std::make_shared<ast::function_declare>($2, $4, $5, $7); }
         ;
 
 optional_end
@@ -181,9 +183,9 @@ function_return_list
         | LBRACKET function_ident_list RBRACKET { $$ = $2; }
         ;
 
-function_lhs
-        : IDENTIFIER { }
-        | IDENTIFIER LPAREN function_ident_list RPAREN { }
+function_args
+        : LPAREN function_ident_list RPAREN { $$ = $2; }
+        | %empty { $$ = std::make_shared<ast::identifier_list>(); }
         ;
 
 function_ident_list

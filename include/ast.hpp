@@ -40,6 +40,7 @@ AST_ITEM(else_statement)
 AST_ITEM(switch_statement)
 AST_ITEM(case_statement)
 AST_ITEM(otherwise_statement)
+AST_ITEM(function_declare)
 
 AST_LIST_ITEM(expression, array_row_list)
 AST_LIST_ITEM(array_row_list, array_col_list)
@@ -83,6 +84,7 @@ typedef std::shared_ptr<visitor> visitor_p;
 #include "ast/case_statement.hpp"
 #include "ast/otherwise_statement.hpp"
 #include "ast/naked_funcall_statement.hpp"
+#include "ast/function_declare.hpp"
 
 /* Include visitor at the end so all classes have access to it */
 #include "visitor.hpp"

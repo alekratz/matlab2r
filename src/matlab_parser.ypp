@@ -363,11 +363,7 @@ naked_arg_list
 assignment_expression
         : postfix_expression EQUALS expression { }
         ;
-/*
-assignment_lhs
-        : IDENTIFIER
-        ;
-*/
+
 postfix_expression
         : primary_expression { $$ = std::make_shared<ast::postfix_expression>($1); }
         | postfix_expression TRANSPOSE

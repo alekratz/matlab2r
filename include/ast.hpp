@@ -20,6 +20,7 @@ AST_ITEM(postfix_expression)
 AST_ITEM(unary_expression)
 AST_ITEM(expression)
 AST_ITEM(index_expression)
+AST_ITEM(assignment_expression)
 AST_ITEM(statement)
 AST_ITEM(block_statement)
 AST_ITEM(naked_arg_list)
@@ -57,6 +58,7 @@ typedef std::shared_ptr<visitor> visitor_p;
 #include "ast/primary_expression.hpp"
 #include "ast/postfix_expression.hpp"
 #include "ast/unary_expression.hpp"
+#include "ast/assignment_expression.hpp"
 #include "ast/expression.hpp"
 #include "ast/index_expression.hpp"
 

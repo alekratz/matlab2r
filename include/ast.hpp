@@ -31,11 +31,15 @@ AST_ITEM(identifier_list)
 AST_ITEM(jump_statement)
 AST_ITEM(for_statement)
 AST_ITEM(while_statement)
+AST_ITEM(if_statement)
+AST_ITEM(elseif_statement)
+AST_ITEM(else_statement)
 
 AST_LIST_ITEM(expression, array_row_list)
 AST_LIST_ITEM(array_row_list, array_col_list)
 AST_LIST_ITEM(index_expression, index_expression_list)
 AST_LIST_ITEM(statement, statement_list)
+AST_LIST_ITEM(elseif_statement, elseif_list)
 }
 
 /* Forward declaration of the visitor class */
@@ -63,6 +67,9 @@ typedef std::shared_ptr<visitor> visitor_p;
 #include "ast/jump_statement.hpp"
 #include "ast/for_statement.hpp"
 #include "ast/while_statement.hpp"
+#include "ast/if_statement.hpp"
+#include "ast/elseif_statement.hpp"
+#include "ast/else_statement.hpp"
 
 /* Include visitor at the end so all classes have access to it */
 #include "visitor.hpp"

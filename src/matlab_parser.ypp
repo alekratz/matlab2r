@@ -104,7 +104,9 @@
 %type <ast::clear_statement_p>          clear_statement
 //%type <ast::assignment_statement_p>     assignment_statement
 %type <ast::block_statement_p>          selection_statement
-//%type <ast::if_statement_p>             if_statement
+%type <ast::if_statement_p>             if_statement
+%type <ast::elseif_statement_p>         elseif_statement
+%type <ast::else_statement_p>           else_statement
 //%type <ast::switch_statement_p>         switch_statement
 %type <ast::block_statement_p>          iteration_statement
 %type <ast::for_statement_p>            for_statement
@@ -241,16 +243,20 @@ selection_statement
         ;
 
 if_statement
-        : IF expression statement_list elseif_clause else_clause END_KEYW eostmt_or_eof { }
+        : IF expression statement_list elseif_list else_statement END_KEYW eostmt_or_eof { }
         ;
 
-else_clause
-        : ELSE statement_list { }
+elseif_list
+        : elseif_statement elseif_statement { }
         | %empty { }
         ;
 
-elseif_clause
-        : ELSEIF expression statement_list elseif_clause { }
+elseif_statement
+        : ELSEIF expression statement_list { }
+        ;
+
+else_statement
+        : ELSE statement_list { }
         | %empty { }
         ;
 

@@ -23,6 +23,7 @@ set(IM_SOURCES
     src/main.cpp
     src/matlab2r_driver.cpp
     src/ast/accept.cpp
+    src/ast/block_statement.cpp
     src/ast/for_statement.cpp
     src/ast/while_statement.cpp
     src/ast/if_statement.cpp

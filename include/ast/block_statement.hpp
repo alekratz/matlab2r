@@ -16,15 +16,15 @@ protected:
     block_statement(statement_list_p statement_list) 
         : statement_list(statement_list) { }
 public:
-    virtual ~block_statement() = default;
+    virtual ~block_statement() = 0;
 
     statement_list_p statement_list;
 
 public:
     virtual void accept(visitor_p guest) = 0;
-    virtual void children_accept(visitor_p guest) = 0;
-    virtual void traverse_top_down(visitor_p guest) = 0;
-    virtual void traverse_bottom_up(visitor_p guest) = 0;
+    virtual void children_accept(visitor_p guest);
+    virtual void traverse_top_down(visitor_p guest);
+    virtual void traverse_bottom_up(visitor_p guest);
 };
 
 } /* namespace ast */

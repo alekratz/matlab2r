@@ -13,8 +13,7 @@ public:
     typedef block_statement base_t;
 
 public:
-    elseif_statement(expression_p condition, statement_list_p statements, elseif_list_p elseif_list,
-            else_statement_p else_statement)
+    elseif_statement(expression_p condition, statement_list_p statements)
         : base_t(statements)
         , condition(condition) { }
     virtual ~elseif_statement() = default;

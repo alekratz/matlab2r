@@ -251,17 +251,20 @@ if_statement
         ;
 
 elseif_list
-        : elseif_statement elseif_statement { }
-        | %empty { }
+        : elseif_statement elseif_list
+        {
+            $2->add_front($1);
+        }
+        | %empty { $$ = std::make_shared<ast::elseif_list>(); }
         ;
 
 elseif_statement
-        : ELSEIF expression statement_list { }
+        : ELSEIF expression statement_list { $$ = std::make_shared<ast::elseif_statement>($2, $3); }
         ;
 
 else_statement
-        : ELSE statement_list { }
-        | %empty { }
+        : ELSE statement_list { $$ = std::make_shared<ast::else_statement>($2); }
+        | %empty { $$ = nullptr; }
         ;
 
 switch_statement

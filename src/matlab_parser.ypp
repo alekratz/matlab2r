@@ -99,11 +99,12 @@
 %token <std::string>        NAKED_ARG
 
 %type <ast::statement_list_p>           statement_list
+%type <ast::statement_p>                statement
 %type <ast::global_statement_p>         global_statement
 %type <ast::identifier_list_p>          identifier_list
 %type <ast::clear_statement_p>          clear_statement
 //%type <ast::assignment_statement_p>     assignment_statement
-%type <ast::block_statement_p>          selection_statement
+%type <ast::statement_p>                selection_statement
 %type <ast::if_statement_p>             if_statement
 %type <ast::elseif_list_p>              elseif_list
 %type <ast::elseif_statement_p>         elseif_statement
@@ -199,16 +200,16 @@ statement_list
         ;
 
 statement
-        : global_statement { }
-        | clear_statement { }
-        | assignment_statement { }
-        | selection_statement { }
-        | iteration_statement { }
-        | jump_statement { }
-        | try_catch_statement { }
-        | naked_funcall { }
-        | expression_statement { }
-        | eostmt { }
+        : global_statement { $$ = $1; }
+        | clear_statement { $$ = $1; }
+        | assignment_statement { /* TODO */ }
+        | selection_statement { $$ = $1; }
+        | iteration_statement { $$ = $1; }
+        | jump_statement { $$ = $1; }
+        | try_catch_statement { $$ = $1; }
+        | naked_funcall { /* TODO */ }
+        | expression_statement { /* TODO */ }
+        | eostmt { /* do nothing on eostmt */ }
         ;
 
 naked_funcall
@@ -248,7 +249,7 @@ assignment_statement
 selection_statement
         : if_statement 
             { $$ = $1; }
-        | switch_statement { }
+        | switch_statement { $$ = $1; }
         ;
 
 if_statement

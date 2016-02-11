@@ -105,6 +105,7 @@
 //%type <ast::assignment_statement_p>     assignment_statement
 %type <ast::block_statement_p>          selection_statement
 %type <ast::if_statement_p>             if_statement
+%type <ast::elseif_list_p>              elseif_list
 %type <ast::elseif_statement_p>         elseif_statement
 %type <ast::else_statement_p>           else_statement
 //%type <ast::switch_statement_p>         switch_statement
@@ -243,7 +244,10 @@ selection_statement
         ;
 
 if_statement
-        : IF expression statement_list elseif_list else_statement END_KEYW eostmt_or_eof { }
+        : IF expression statement_list elseif_list else_statement END_KEYW eostmt_or_eof
+        {
+            $$ = std::make_shared<ast::if_statement>($2, $3, $4, $5);
+        }
         ;
 
 elseif_list

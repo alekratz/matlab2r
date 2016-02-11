@@ -27,6 +27,8 @@ set(IM_SOURCES
     src/ast/for_statement.cpp
     src/ast/while_statement.cpp
     src/ast/if_statement.cpp
+    src/ast/elseif_statement.cpp
+    src/ast/else_statement.cpp
     src/ast/try_statement.cpp
     src/ast/catch_statement.cpp
     src/ast/naked_arg_list.cpp

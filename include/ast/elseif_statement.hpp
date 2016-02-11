@@ -6,7 +6,6 @@
 namespace ast
 {
 
-
 class elseif_statement
     : public block_statement
 {

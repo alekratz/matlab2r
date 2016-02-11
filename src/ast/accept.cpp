@@ -12,6 +12,7 @@ namespace ast
 TEMPLATED_ACCEPT_DECL(list_node<expression>, array_row_list)
 TEMPLATED_ACCEPT_DECL(list_node<array_row_list>, array_col_list)
 TEMPLATED_ACCEPT_DECL(list_node<index_expression>, index_expression_list)
+TEMPLATED_ACCEPT_DECL(list_node<elseif_statement>, elseif_list)
 
 VISITOR_ACCEPT_DECL(qualified_id_item)
 VISITOR_ACCEPT_DECL(qualified_id)
@@ -29,6 +30,9 @@ VISITOR_ACCEPT_DECL(while_statement)
 VISITOR_ACCEPT_DECL(jump_statement)
 VISITOR_ACCEPT_DECL(global_statement)
 VISITOR_ACCEPT_DECL(clear_statement)
+VISITOR_ACCEPT_DECL(if_statement)
+VISITOR_ACCEPT_DECL(elseif_statement)
+VISITOR_ACCEPT_DECL(else_statement)
 VISITOR_ACCEPT_DECL(identifier_list)
 
 } /* namespace ast */

@@ -152,14 +152,14 @@
 
 %start statement_list;
 
-eostmt  : COMMA { }
-        | SEMICOLON { }
-        | NEWLINE { }
+eostmt  : COMMA
+        | SEMICOLON
+        | NEWLINE
         ;
 
 eostmt_or_eof
-        : eostmt { }
-        | END { }
+        : eostmt
+        | END
         ;
 
 /******************************************************************************
@@ -195,7 +195,8 @@ function_ident_list
             $3->add_front($1);
             $$ = $3;
         }
-        | %empty { $$ = std::make_shared<ast::identifier_list>(); }
+        | %empty
+            { $$ = std::make_shared<ast::identifier_list>(); }
         ;
 
 /******************************************************************************
@@ -211,6 +212,7 @@ statement_list
         }
         | function_declare statement_list 
         {
+            $2->add_front($1);
             $$ = $2;
         }
         | %empty 

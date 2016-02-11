@@ -30,6 +30,7 @@ AST_ITEM(global_statement)
 AST_ITEM(clear_statement)
 AST_ITEM(identifier_list)
 AST_ITEM(expression_statement)
+AST_ITEM(assignment_statement)
 AST_ITEM(jump_statement)
 AST_ITEM(for_statement)
 AST_ITEM(while_statement)
@@ -72,6 +73,7 @@ typedef std::shared_ptr<visitor> visitor_p;
 #include "ast/global_statement.hpp"
 #include "ast/clear_statement.hpp"
 #include "ast/expression_statement.hpp"
+#include "ast/assignment_statement.hpp"
 #include "ast/jump_statement.hpp"
 #include "ast/for_statement.hpp"
 #include "ast/while_statement.hpp"

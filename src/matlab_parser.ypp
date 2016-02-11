@@ -104,7 +104,7 @@
 %type <ast::clear_statement_p>          clear_statement
 %type <ast::identifier_list_p>          identifier_list
 %type <ast::expression_statement_p>     expression_statement
-//%type <ast::assignment_statement_p>     assignment_statement
+%type <ast::assignment_statement_p>     assignment_statement
 %type <ast::statement_p>                selection_statement
 %type <ast::if_statement_p>             if_statement
 %type <ast::elseif_list_p>              elseif_list
@@ -203,13 +203,13 @@ statement_list
 statement
         : global_statement { $$ = $1; }
         | clear_statement { $$ = $1; }
-        | assignment_statement { /* TODO */ }
+        | assignment_statement { $$ = $1; }
         | selection_statement { $$ = $1; }
         | iteration_statement { $$ = $1; }
         | jump_statement { $$ = $1; }
         | try_catch_statement { $$ = $1; }
         | naked_funcall { /* TODO */ }
-        | expression_statement { /* TODO */ }
+        | expression_statement { $$ = $1; }
         | eostmt { /* do nothing on eostmt */ }
         ;
 
@@ -244,7 +244,7 @@ expression_statement
         ;
 
 assignment_statement
-        : assignment_expression eostmt_or_eof { }
+        : assignment_expression eostmt_or_eof { $$ = std::make_shared<ast::assignment_statement>($1); }
         ;
 
 selection_statement

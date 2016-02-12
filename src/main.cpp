@@ -113,7 +113,7 @@ int main(int argc, char **argv)
             if(ast != nullptr)
             {
                 codegen_visitor visitor;
-                ast->children_accept(&visitor);
+                visitor.visit(ast.get());
             }
             else
             {

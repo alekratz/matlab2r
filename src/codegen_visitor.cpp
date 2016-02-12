@@ -3,8 +3,10 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <cassert>
 
 using namespace std;
+using namespace ast;
 
 static string pad_commas(const vector<string>& list)
 {
@@ -23,18 +25,18 @@ codegen_visitor::codegen_visitor()
     , indent(0)
 { }
 
-/* void codegen_visitor::visit(ast::qualified_id*) { } */
-/* void codegen_visitor::visit(ast::qualified_id_item*) { } */
-void codegen_visitor::visit(ast::assignment_expression* expr) 
+/* void codegen_visitor::visit(qualified_id*) { } */
+/* void codegen_visitor::visit(qualified_id_item*) { } */
+void codegen_visitor::visit(assignment_expression* expr) 
 {
     auto lhs = expr->lhs;
     auto rhs = expr->rhs;
-    lhs->children_accept(this);
+    lhs->accept(this);
     cout << " = ";
-    rhs->children_accept(this);
+    rhs->accept(this);
 }
 
-void codegen_visitor::visit(ast::expression* expr)
+void codegen_visitor::visit(expression* expr)
 {
     auto lhs = expr->lhs;
     auto rhs = expr->rhs;
@@ -43,7 +45,7 @@ void codegen_visitor::visit(ast::expression* expr)
     {
         // visit left hand side and its operator
         lhs->accept(this);
-        // find the operator
+        // TODO : find the operator
         out << " OP ";
     }
 
@@ -52,48 +54,65 @@ void codegen_visitor::visit(ast::expression* expr)
     out << ')';
 }
 
-/* void codegen_visitor::visit(ast::unary_expression*) { } */
-/* void codegen_visitor::visit(ast::postfix_expression*) { } */
-/* void codegen_visitor::visit(ast::primary_expression*) { } */
-/* void codegen_visitor::visit(ast::array_col_list*) { } */
-/* void codegen_visitor::visit(ast::array_row_list*) { } */
-/* void codegen_visitor::visit(ast::index_expression*) { } */
-/* void codegen_visitor::visit(ast::index_expression_list*) { } */
-
-void codegen_visitor::visit(ast::function_declare* fundecl)
+void codegen_visitor::visit(unary_expression* unexpr)
 {
-    out << make_indent() << fundecl->name << " <- function (" << pad_commas(fundecl->args) << ") {" << endl;
+    switch(unexpr->op)
+    {
+        case unary_op::PLUS: out << "+";
+        case unary_op::MINUS: out << "-";
+        case unary_op::TILDE: out << "~";
+        case unary_op::NONE: break;
+        default: assert(false && "unknown unary_op type encountered");
+    }
+
+    auto expr = unexpr->expr;
+    assert(expr != nullptr && "unary_expression's wrapped expression should not be null");
+    expr->accept(this);
+}
+/* void codegen_visitor::visit(postfix_expression*) { } */
+/* void codegen_visitor::visit(primary_expression*) { } */
+/* void codegen_visitor::visit(array_col_list*) { } */
+/* void codegen_visitor::visit(array_row_list*) { } */
+/* void codegen_visitor::visit(index_expression*) { } */
+/* void codegen_visitor::visit(index_expression_list*) { } */
+
+void codegen_visitor::visit(function_declare* fundecl)
+{
+    out << fundecl->name << " <- function (" << pad_commas(fundecl->args) << ") {" << endl;
     indent++;
-    fundecl->children_accept(this);
+    fundecl->statement_list->accept(this);
     indent--;
-    out << make_indent() << "}" << endl;
+    out << "}" << endl;
 }
 
-/* void codegen_visitor::visit(ast::catch_statement*) { } */
-/* void codegen_visitor::visit(ast::try_statement*) { } */
-/* void codegen_visitor::visit(ast::for_statement*) { } */
-/* void codegen_visitor::visit(ast::while_statement*) { } */
-/* void codegen_visitor::visit(ast::jump_statement*) { } */
-/* void codegen_visitor::visit(ast::global_statement*) { } */
-/* void codegen_visitor::visit(ast::clear_statement*) { } */
-void codegen_visitor::visit(ast::expression_statement* stmt) { stmt->children_accept(this); }
-void codegen_visitor::visit(ast::assignment_statement* stmt) { stmt->children_accept(this); }
-/* void codegen_visitor::visit(ast::naked_funcall_statement*) { } */
-/* void codegen_visitor::visit(ast::identifier_list*) { } */
-/* void codegen_visitor::visit(ast::if_statement*) { } */
-/* void codegen_visitor::visit(ast::elseif_list*) { } */
-/* void codegen_visitor::visit(ast::elseif_statement*) { } */
-/* void codegen_visitor::visit(ast::else_statement*) { } */
-/* void codegen_visitor::visit(ast::switch_statement*) { } */
-/* void codegen_visitor::visit(ast::case_list*) { } */
-/* void codegen_visitor::visit(ast::case_statement*) { } */
-/* void codegen_visitor::visit(ast::otherwise_statement*) { } */
-/* void codegen_visitor::visit(ast::statement_list*) { } */
+/* void codegen_visitor::visit(catch_statement*) { } */
+/* void codegen_visitor::visit(try_statement*) { } */
+/* void codegen_visitor::visit(for_statement*) { } */
+/* void codegen_visitor::visit(while_statement*) { } */
+/* void codegen_visitor::visit(jump_statement*) { } */
+/* void codegen_visitor::visit(global_statement*) { } */
+/* void codegen_visitor::visit(clear_statement*) { } */
+void codegen_visitor::visit(expression_statement* stmt) { stmt->children_accept(this); }
+void codegen_visitor::visit(assignment_statement* stmt) { stmt->children_accept(this); }
+/* void codegen_visitor::visit(naked_funcall_statement*) { } */
+/* void codegen_visitor::visit(identifier_list*) { } */
+/* void codegen_visitor::visit(if_statement*) { } */
+/* void codegen_visitor::visit(elseif_list*) { } */
+/* void codegen_visitor::visit(elseif_statement*) { } */
+/* void codegen_visitor::visit(else_statement*) { } */
+/* void codegen_visitor::visit(switch_statement*) { } */
+/* void codegen_visitor::visit(case_list*) { } */
+/* void codegen_visitor::visit(case_statement*) { } */
+/* void codegen_visitor::visit(otherwise_statement*) { } */
 
-string codegen_visitor::make_indent()
+void codegen_visitor::visit(statement* stmt) { out << "STATEMENT"; }
+
+void codegen_visitor::visit(statement_list* stmt_list)
 {
-    string result;
-    for(size_t i = 0; i < indent; i++)
-        result += "   ";
-    return result;
+    for(auto stmt : stmt_list->items)
+    {
+        print_indent();
+        stmt->accept(this);
+        out << endl;
+    }
 }

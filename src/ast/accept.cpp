@@ -26,6 +26,7 @@ VISITOR_ACCEPT_DECL(primary_expression)
 VISITOR_ACCEPT_DECL(index_expression)
 
 VISITOR_ACCEPT_DECL(function_declare)
+VISITOR_ACCEPT_DECL(statement)
 VISITOR_ACCEPT_DECL(naked_funcall_statement)
 VISITOR_ACCEPT_DECL(catch_statement)
 VISITOR_ACCEPT_DECL(try_statement)

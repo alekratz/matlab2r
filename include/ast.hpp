@@ -86,6 +86,4 @@ typedef visitor* visitor_p;
 #include "ast/naked_funcall_statement.hpp"
 #include "ast/function_declare.hpp"
 
-/* Include visitor at the end so all classes have access to it */
-#include "visitor.hpp"
 #endif

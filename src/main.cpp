@@ -1,4 +1,5 @@
 #include "matlab2r_driver.hpp"
+#include "visitor.hpp"
 
 #include <getopt.h>
 #include <iostream>

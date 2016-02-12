@@ -48,7 +48,11 @@ void codegen_visitor::visit(qualified_id_item* q_id_item)
     break;
     }
 
-    //if(q_id_item->array_or_funcall_tail != nullptr)
+    if(q_id_item->array_index_list != nullptr)
+    {
+        /* TODO */
+        q_id_item->array_index_list->children_accept(this);
+    }
 }
 
 void codegen_visitor::visit(assignment_expression* expr) 
@@ -118,7 +122,7 @@ void codegen_visitor::visit(primary_expression* prim_expr)
     }
     break;
     case primary_expression_type::STRING_LIT:
-        out << '"' << prim_expr->string_lit << '"';
+        out << prim_expr->string_lit;
     break;
     case primary_expression_type::CONSTANT:
         out << prim_expr->constant;
@@ -164,7 +168,13 @@ void codegen_visitor::visit(function_declare* fundecl)
 /* void codegen_visitor::visit(clear_statement*) { } */
 void codegen_visitor::visit(expression_statement* stmt) { stmt->children_accept(this); }
 void codegen_visitor::visit(assignment_statement* stmt) { stmt->children_accept(this); }
-/* void codegen_visitor::visit(naked_funcall_statement*) { } */
+void codegen_visitor::visit(naked_funcall_statement* stmt)
+{
+    out << stmt->identifier;
+    out << "(";
+    out << pad_commas(stmt->args);
+    out << ")";
+}
 /* void codegen_visitor::visit(identifier_list*) { } */
 /* void codegen_visitor::visit(if_statement*) { } */
 /* void codegen_visitor::visit(elseif_list*) { } */

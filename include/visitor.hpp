@@ -79,7 +79,7 @@ public:
     virtual void visit(ast::clear_statement*) { }
     virtual void visit(ast::expression_statement*);
     virtual void visit(ast::assignment_statement*);
-    virtual void visit(ast::naked_funcall_statement*) { }
+    virtual void visit(ast::naked_funcall_statement*);
     virtual void visit(ast::identifier_list*) { }
     virtual void visit(ast::if_statement*) { }
     virtual void visit(ast::elseif_list*) { }

@@ -387,7 +387,7 @@ catch_statement
 
 naked_funcall_statement
         : IDENTIFIER IDENTIFIER { driver.lexer->begin_naked_args(); } naked_arg_list eostmt_or_eof 
-            { $$ = std::make_shared<ast::naked_funcall_statement>($1, $2, $4); }
+            { $$ = std::make_shared<ast::naked_funcall_statement>($1, "'" + $2 + "'", $4); }
         | IDENTIFIER eostmt_or_eof
             { $$ = std::make_shared<ast::naked_funcall_statement>($1); }
         ;
@@ -395,7 +395,7 @@ naked_funcall_statement
 naked_arg_list
         : NAKED_ARG naked_arg_list
         {
-            $2->add_front($1);
+            $2->add_front("'" + $1 + "'");
             $$ = $2;
         }
         | %empty

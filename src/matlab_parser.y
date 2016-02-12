@@ -138,8 +138,9 @@
 %type <ast::array_row_list_p>           array_row_list
 %type <ast::index_expression_p>         index_expression
 %type <ast::index_expression_list_p>    index_expression_list
-%type <ast::index_expression_list_p>    array_or_funcall_tail
-%type <ast::index_expression_list_p>    array_cell_tail
+%type <ast::array_index_p>              array_index
+%type <ast::array_index_p>              array_or_funcall
+%type <ast::array_index_p>              array_cell
 
 %left COLON
 %left VBAR
@@ -490,15 +491,25 @@ unary_expression
             { $$ = std::make_shared<ast::unary_expression>($1); }
         ;
 
-array_or_funcall_tail
-        : LPAREN index_expression_list RPAREN
-            { $$ = $2; }
+array_index_list
+        : array_index
+        | array_index array_index_list
         ;
 
-array_cell_tail
-        : LBRACE index_expression_list RBRACE
-            { $$ = $2; }
+array_index
+        : array_or_funcall { $$ = $1; }
+        | array_cell { $$ = $1; }
         ;
+
+array_or_funcall
+        : LPAREN index_expression_list RPAREN
+            { $$ = std::make_shared<ast::array_index>($2, ast::array_index_type::ARRAY_OR_FUNCALL); }
+        ; 
+
+array_cell
+        : LBRACE index_expression_list RBRACE
+            { $$ = std::make_shared<ast::array_index>($2, ast::array_index_type::ARRAY_CELL); }
+        ; 
 
 index_expression_list
         : index_expression
@@ -535,22 +546,15 @@ qualified_id
 qualified_id_item
         : IDENTIFIER 
         { 
-            $$ = std::make_shared<ast::qualified_id_item>();
-            $$->identifier = $1;
+            $$ = std::make_shared<ast::qualified_id_item>($1);
         }
         | LPAREN expression RPAREN // apparently this is allowed
         {
-            $$ = std::make_shared<ast::qualified_id_item>();
-            $$->expression = $2;
+            $$ = std::make_shared<ast::qualified_id_item>($2);
         }
-        | qualified_id_item array_or_funcall_tail
+        | qualified_id_item array_index_list
         {
-            $1->array_or_funcall_tail = $2;
-            $$ = $1;
-        }
-        | qualified_id_item array_cell_tail { }
-        {
-            $1->array_cell_tail = $2;
+            //$1->array_index_list = $2;
             $$ = $1;
         }
         ;

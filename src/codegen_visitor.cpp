@@ -25,8 +25,32 @@ codegen_visitor::codegen_visitor()
     , indent(0)
 { }
 
-/* void codegen_visitor::visit(qualified_id*) { } */
-/* void codegen_visitor::visit(qualified_id_item*) { } */
+void codegen_visitor::visit(qualified_id* q_id)
+{
+    auto items = q_id->items;
+    for(auto it = items.begin(); it != items.end(); it++)
+    {
+        (*it)->accept(this);
+        if(it + 1 != items.end())
+            out << "$";
+    }
+}
+
+void codegen_visitor::visit(qualified_id_item* q_id_item)
+{
+    switch(q_id_item->type)
+    {
+    case qualified_id_item_type::EXPRESSION:
+        q_id_item->expression->accept(this);
+    break;
+    case qualified_id_item_type::IDENTIFIER:
+        out << q_id_item->identifier;
+    break;
+    }
+
+    //if(q_id_item->array_or_funcall_tail != nullptr)
+}
+
 void codegen_visitor::visit(assignment_expression* expr) 
 {
     auto lhs = expr->lhs;
@@ -73,6 +97,7 @@ void codegen_visitor::visit(postfix_expression* post_expr)
 {
     auto expr = post_expr->expr;
     expr->accept(this);
+
     for(auto tp : post_expr->transposes)
     {
         switch(tp)
@@ -82,7 +107,40 @@ void codegen_visitor::visit(postfix_expression* post_expr)
         }
     }
 }
-/* void codegen_visitor::visit(primary_expression*) { } */
+void codegen_visitor::visit(primary_expression* prim_expr)
+{
+    switch(prim_expr->type)
+    {
+    case primary_expression_type::QUALIFIED_ID:
+    {
+        auto q_id = prim_expr->qualified_id;
+        q_id->children_accept(this);
+    }
+    break;
+    case primary_expression_type::STRING_LIT:
+        out << '"' << prim_expr->string_lit << '"';
+    break;
+    case primary_expression_type::CONSTANT:
+        out << prim_expr->constant;
+    break;
+    case primary_expression_type::MATRIX:
+        /* TODO */
+        out << "MATRIX";
+    break;
+    case primary_expression_type::CELL_ARRAY:
+        /* TODO */
+        out << "CELL_ARRAY";
+    break;
+    case primary_expression_type::EXPRESSION:
+        /* TODO */
+        out << "EXPRESSION";
+    break;
+    default:
+        assert(false && "unknown primary_expression_type encountered");
+        break;
+    }
+}
+
 /* void codegen_visitor::visit(array_col_list*) { } */
 /* void codegen_visitor::visit(array_row_list*) { } */
 /* void codegen_visitor::visit(index_expression*) { } */

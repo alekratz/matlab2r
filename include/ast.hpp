@@ -15,6 +15,7 @@ template<typename wrapped>
 class list_node;
 AST_ITEM(qualified_id_item)
 AST_ITEM(qualified_id)
+AST_ITEM(array_index)
 AST_ITEM(primary_expression)
 AST_ITEM(postfix_expression)
 AST_ITEM(unary_expression)
@@ -58,6 +59,7 @@ typedef visitor* visitor_p;
 #include "ast/list_node.hpp"
 #include "ast/qualified_id_item.hpp"
 #include "ast/qualified_id.hpp"
+#include "ast/array_index.hpp"
 #include "ast/primary_expression.hpp"
 #include "ast/postfix_expression.hpp"
 #include "ast/unary_expression.hpp"

@@ -45,6 +45,7 @@ set(IM_SOURCES
     src/ast/postfix_expression.cpp
     src/ast/primary_expression.cpp
     src/ast/index_expression.cpp
+    src/ast/array_index.cpp
     src/ast/qualified_id.cpp
     src/ast/list_node.cpp
     ${FLEX_matlab_lexer_OUTPUTS} 

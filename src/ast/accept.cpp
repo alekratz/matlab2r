@@ -18,6 +18,7 @@ TEMPLATED_ACCEPT_DECL(list_node<case_statement>, case_list)
 
 VISITOR_ACCEPT_DECL(qualified_id_item)
 VISITOR_ACCEPT_DECL(qualified_id)
+VISITOR_ACCEPT_DECL(array_index)
 VISITOR_ACCEPT_DECL(assignment_expression)
 VISITOR_ACCEPT_DECL(expression)
 VISITOR_ACCEPT_DECL(unary_expression)

@@ -1,6 +1,7 @@
 #ifndef AST_HPP
 #define AST_HPP
 
+#include <iostream>
 #include <memory>
 
 #define AST_ITEM(AST) class AST; \
@@ -10,46 +11,54 @@ typedef std::shared_ptr<CLASS> CLASS ## _p;
 
 namespace ast
 {
-AST_ITEM(node)
+AST_ITEM(node);
 template<typename wrapped>
 class list_node;
-AST_ITEM(qualified_id_item)
-AST_ITEM(qualified_id)
-AST_ITEM(array_index)
-AST_ITEM(primary_expression)
-AST_ITEM(postfix_expression)
-AST_ITEM(unary_expression)
-AST_ITEM(expression)
-AST_ITEM(index_expression)
-AST_ITEM(assignment_expression)
-AST_ITEM(statement)
-AST_ITEM(block_statement)
-AST_ITEM(naked_funcall_statement)
-AST_ITEM(catch_statement)
-AST_ITEM(try_statement)
-AST_ITEM(global_statement)
-AST_ITEM(clear_statement)
-AST_ITEM(identifier_list)
-AST_ITEM(expression_statement)
-AST_ITEM(assignment_statement)
-AST_ITEM(jump_statement)
-AST_ITEM(for_statement)
-AST_ITEM(while_statement)
-AST_ITEM(if_statement)
-AST_ITEM(elseif_statement)
-AST_ITEM(else_statement)
-AST_ITEM(switch_statement)
-AST_ITEM(case_statement)
-AST_ITEM(otherwise_statement)
-AST_ITEM(function_declare)
+AST_ITEM(qualified_id_item);
+AST_ITEM(qualified_id);
+AST_ITEM(array_index);
+AST_ITEM(primary_expression);
+AST_ITEM(postfix_expression);
+AST_ITEM(unary_expression);
+AST_ITEM(expression);
+AST_ITEM(index_expression);
+AST_ITEM(assignment_expression);
+AST_ITEM(statement);
+AST_ITEM(block_statement);
+AST_ITEM(naked_funcall_statement);
+AST_ITEM(catch_statement);
+AST_ITEM(try_statement);
+AST_ITEM(global_statement);
+AST_ITEM(clear_statement);
+AST_ITEM(identifier_list);
+AST_ITEM(expression_statement);
+AST_ITEM(assignment_statement);
+AST_ITEM(jump_statement);
+AST_ITEM(for_statement);
+AST_ITEM(while_statement);
+AST_ITEM(if_statement);
+AST_ITEM(elseif_statement);
+AST_ITEM(else_statement);
+AST_ITEM(switch_statement);
+AST_ITEM(case_statement);
+AST_ITEM(otherwise_statement);
+AST_ITEM(function_declare);
 
-AST_LIST_ITEM(expression, array_row_list)
-AST_LIST_ITEM(array_row_list, array_col_list)
-AST_LIST_ITEM(index_expression, index_expression_list)
-AST_LIST_ITEM(statement, statement_list)
-AST_LIST_ITEM(elseif_statement, elseif_list)
-AST_LIST_ITEM(case_statement, case_list)
-AST_LIST_ITEM(array_index, array_index_list)
+AST_LIST_ITEM(expression, array_row_list);
+AST_LIST_ITEM(array_row_list, array_col_list);
+AST_LIST_ITEM(index_expression, index_expression_list);
+AST_LIST_ITEM(statement, statement_list);
+AST_LIST_ITEM(elseif_statement, elseif_list);
+AST_LIST_ITEM(case_statement, case_list);
+AST_LIST_ITEM(array_index, array_index_list);
+
+enum class eostmt_type : uint32_t
+{
+    NEWLINE,
+    COMMA,
+    SEMICOLON,
+};
+
 }
 
 /* Forward declaration of the visitor class */

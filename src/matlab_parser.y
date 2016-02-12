@@ -16,6 +16,7 @@
     #include <string>
     #include <vector>
     #include <cstdint>
+    #include <iostream>
     #include "ast.hpp"
     class matlab2r_driver;
 }
@@ -30,6 +31,7 @@
 }
 
 %param { matlab2r_driver& driver }
+%printer { yyoutput << static_cast<std::underlying_type<ast::eostmt_type>::type>($$); } <ast::eostmt_type>;
 %printer { yyoutput << $$; } <*>;
 
 %initial-action
@@ -143,6 +145,9 @@
 %type <ast::array_index_p>              array_or_funcall
 %type <ast::array_index_p>              array_cell
 
+%type <ast::eostmt_type>                eostmt
+%type <ast::eostmt_type>                eostmt_or_eof
+
 %left COLON
 %left VBAR
 %left AMP
@@ -156,14 +161,14 @@
 
 unit    : statement_list { driver.ast = $1; }
 
-eostmt  : COMMA
-        | SEMICOLON
-        | NEWLINE
+eostmt  : COMMA { $$ = ast::eostmt_type::COMMA; }
+        | SEMICOLON { $$ = ast::eostmt_type::SEMICOLON; }
+        | NEWLINE { $$ = ast::eostmt_type::NEWLINE; }
         ;
 
 eostmt_or_eof
-        : eostmt
-        | END
+        : eostmt { $$ = $1; }
+        | END { $$ = ast::eostmt_type::NEWLINE; }
         ;
 
 /******************************************************************************

@@ -11,7 +11,7 @@ find_package(BISON REQUIRED)
 
 find_package(Boost REQUIRED COMPONENTS filesystem system)
 
-BISON_TARGET(matlab_parser src/matlab_parser.ypp ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp)
+BISON_TARGET(matlab_parser src/matlab_parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp)
 FLEX_TARGET(matlab_lexer src/matlab_lexer.ll ${CMAKE_CURRENT_BINARY_DIR}/lexer.cpp COMPILE_FLAGS "-+ --header")
 ADD_FLEX_BISON_DEPENDENCY(matlab_lexer matlab_parser)
 

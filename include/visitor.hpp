@@ -102,8 +102,8 @@ public:
 public:
     virtual void visit(ast::qualified_id*) { }
     virtual void visit(ast::qualified_id_item*) { }
-    virtual void visit(ast::assignment_expression*) { }
-    virtual void visit(ast::expression*) { }
+    virtual void visit(ast::assignment_expression*);
+    virtual void visit(ast::expression*);
     virtual void visit(ast::unary_expression*) { }
     virtual void visit(ast::postfix_expression*) { }
     virtual void visit(ast::primary_expression*) { }
@@ -119,8 +119,8 @@ public:
     virtual void visit(ast::jump_statement*) { }
     virtual void visit(ast::global_statement*) { }
     virtual void visit(ast::clear_statement*) { }
-    virtual void visit(ast::expression_statement*) { }
-    virtual void visit(ast::assignment_statement*) { }
+    virtual void visit(ast::expression_statement*);
+    virtual void visit(ast::assignment_statement*);
     virtual void visit(ast::naked_funcall_statement*) { }
     virtual void visit(ast::identifier_list*) { }
     virtual void visit(ast::if_statement*) { }

@@ -25,13 +25,33 @@ codegen_visitor::codegen_visitor()
 
 /* void codegen_visitor::visit(ast::qualified_id*) { } */
 /* void codegen_visitor::visit(ast::qualified_id_item*) { } */
-void codegen_visitor::visit(ast::assignment_expression*) 
+void codegen_visitor::visit(ast::assignment_expression* expr) 
 {
+    auto lhs = expr->lhs;
+    auto rhs = expr->rhs;
     lhs->children_accept(this);
     cout << " = ";
     rhs->children_accept(this);
 }
-/* void codegen_visitor::visit(ast::expression*) { } */
+
+void codegen_visitor::visit(ast::expression* expr)
+{
+    auto lhs = expr->lhs;
+    auto rhs = expr->rhs;
+    out << '(';
+    if(lhs != nullptr)
+    {
+        // visit left hand side and its operator
+        lhs->accept(this);
+        // find the operator
+        out << " OP ";
+    }
+
+    assert(rhs != nullptr && "right hand side of expression is null, when it should not be");
+    rhs->accept(this);
+    out << ')';
+}
+
 /* void codegen_visitor::visit(ast::unary_expression*) { } */
 /* void codegen_visitor::visit(ast::postfix_expression*) { } */
 /* void codegen_visitor::visit(ast::primary_expression*) { } */
@@ -56,7 +76,7 @@ void codegen_visitor::visit(ast::function_declare* fundecl)
 /* void codegen_visitor::visit(ast::jump_statement*) { } */
 /* void codegen_visitor::visit(ast::global_statement*) { } */
 /* void codegen_visitor::visit(ast::clear_statement*) { } */
-/* void codegen_visitor::visit(ast::expression_statement*) { } */
+void codegen_visitor::visit(ast::expression_statement* stmt) { stmt->children_accept(this); }
 void codegen_visitor::visit(ast::assignment_statement* stmt) { stmt->children_accept(this); }
 /* void codegen_visitor::visit(ast::naked_funcall_statement*) { } */
 /* void codegen_visitor::visit(ast::identifier_list*) { } */

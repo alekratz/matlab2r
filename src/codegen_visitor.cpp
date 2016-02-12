@@ -58,18 +58,30 @@ void codegen_visitor::visit(unary_expression* unexpr)
 {
     switch(unexpr->op)
     {
-        case unary_op::PLUS: out << "+";
-        case unary_op::MINUS: out << "-";
-        case unary_op::TILDE: out << "~";
-        case unary_op::NONE: break;
-        default: assert(false && "unknown unary_op type encountered");
+    case unary_op::PLUS: out << "+";
+    case unary_op::MINUS: out << "-";
+    case unary_op::TILDE: out << "~";
+    case unary_op::NONE: break;
+    default: assert(false && "unknown unary_op type encountered");
     }
 
     auto expr = unexpr->expr;
     assert(expr != nullptr && "unary_expression's wrapped expression should not be null");
     expr->accept(this);
 }
-/* void codegen_visitor::visit(postfix_expression*) { } */
+void codegen_visitor::visit(postfix_expression* post_expr)
+{
+    auto expr = post_expr->expr;
+    expr->accept(this);
+    for(auto tp : post_expr->transposes)
+    {
+        switch(tp)
+        {
+        case postfix_op::TRANSPOSE: /* TODO */ break;
+        case postfix_op::NCTRANSPOSE: /* TODO */ break;
+        }
+    }
+}
 /* void codegen_visitor::visit(primary_expression*) { } */
 /* void codegen_visitor::visit(array_col_list*) { } */
 /* void codegen_visitor::visit(array_row_list*) { } */

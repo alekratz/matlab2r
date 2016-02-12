@@ -15,6 +15,7 @@ TEMPLATED_ACCEPT_DECL(list_node<index_expression>, index_expression_list)
 TEMPLATED_ACCEPT_DECL(list_node<statement>, statement_list)
 TEMPLATED_ACCEPT_DECL(list_node<elseif_statement>, elseif_list)
 TEMPLATED_ACCEPT_DECL(list_node<case_statement>, case_list)
+TEMPLATED_ACCEPT_DECL(list_node<array_index>, array_index_list)
 
 VISITOR_ACCEPT_DECL(qualified_id_item)
 VISITOR_ACCEPT_DECL(qualified_id)

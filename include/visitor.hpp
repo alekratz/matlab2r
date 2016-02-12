@@ -14,6 +14,7 @@ public:
     virtual void visit(ast::qualified_id*) { }
     virtual void visit(ast::qualified_id_item*) { }
     virtual void visit(ast::array_index*) { }
+    virtual void visit(ast::array_index_list*) { }
     virtual void visit(ast::assignment_expression*) { }
     virtual void visit(ast::expression*) { }
     virtual void visit(ast::unary_expression*) { }
@@ -58,6 +59,7 @@ public:
     virtual void visit(ast::qualified_id*);
     virtual void visit(ast::qualified_id_item*);
     virtual void visit(ast::array_index*) { }
+    virtual void visit(ast::array_index_list*) { }
     virtual void visit(ast::assignment_expression*);
     virtual void visit(ast::expression*);
     virtual void visit(ast::unary_expression*);

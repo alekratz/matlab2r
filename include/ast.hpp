@@ -49,6 +49,7 @@ AST_LIST_ITEM(index_expression, index_expression_list)
 AST_LIST_ITEM(statement, statement_list)
 AST_LIST_ITEM(elseif_statement, elseif_list)
 AST_LIST_ITEM(case_statement, case_list)
+AST_LIST_ITEM(array_index, array_index_list)
 }
 
 /* Forward declaration of the visitor class */

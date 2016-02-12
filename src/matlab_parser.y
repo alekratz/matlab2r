@@ -138,6 +138,7 @@
 %type <ast::array_row_list_p>           array_row_list
 %type <ast::index_expression_p>         index_expression
 %type <ast::index_expression_list_p>    index_expression_list
+%type <ast::array_index_list_p>         array_index_list
 %type <ast::array_index_p>              array_index
 %type <ast::array_index_p>              array_or_funcall
 %type <ast::array_index_p>              array_cell
@@ -493,12 +494,22 @@ unary_expression
 
 array_index_list
         : array_index
+        { 
+            $$ = std::make_shared<ast::array_index_list>();
+            $$->add_front($1);
+        }
         | array_index array_index_list
+        {
+            $2->add_front($1);
+            $$ = $2;
+        }
         ;
 
 array_index
-        : array_or_funcall { $$ = $1; }
-        | array_cell { $$ = $1; }
+        : array_or_funcall
+            { $$ = $1; }
+        | array_cell
+            { $$ = $1; }
         ;
 
 array_or_funcall
@@ -545,16 +556,12 @@ qualified_id
 
 qualified_id_item
         : IDENTIFIER 
-        { 
-            $$ = std::make_shared<ast::qualified_id_item>($1);
-        }
+            { $$ = std::make_shared<ast::qualified_id_item>($1); }
         | LPAREN expression RPAREN // apparently this is allowed
-        {
-            $$ = std::make_shared<ast::qualified_id_item>($2);
-        }
+            { $$ = std::make_shared<ast::qualified_id_item>($2); }
         | qualified_id_item array_index_list
         {
-            //$1->array_index_list = $2;
+            $1->array_index_list = $2;
             $$ = $1;
         }
         ;

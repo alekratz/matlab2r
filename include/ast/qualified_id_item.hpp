@@ -22,17 +22,19 @@ class qualified_id_item
 public:
     qualified_id_item(expression_p expression)
         : expression(expression)
+        , array_index_list(nullptr)
         , type(qualified_id_item_type::EXPRESSION)
         { }
     qualified_id_item(cstref identifier)
         : identifier(identifier)
+        , array_index_list(nullptr)
         , type(qualified_id_item_type::IDENTIFIER)
         { }
     virtual ~qualified_id_item() = default;
     
     expression_p expression;
-    //array_index_list_p array_index_list;
     std::string identifier;
+    array_index_list_p array_index_list;
 
     qualified_id_item_type type;
 

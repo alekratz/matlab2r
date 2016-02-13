@@ -298,10 +298,10 @@ if_statement
 
 elseif_list
         : elseif_statement elseif_list
-            { 
-                $2->add_front($1);
-                $$ = $2;
-            }
+        { 
+            $2->add_front($1);
+            $$ = $2;
+        }
         | %empty 
             { $$ = std::make_shared<ast::elseif_list>(); }
         ;
@@ -446,43 +446,43 @@ primary_expression
 
 expression
         : unary_expression { $$ = std::make_shared<ast::expression>($1); }
-        | unary_expression COLON expression
+        | expression COLON expression
             { $$ = std::make_shared<ast::expression>($3, ast::expression_op::COLON, $1); }
-        | unary_expression VBAR expression
+        | expression VBAR expression
             { $$ = std::make_shared<ast::expression>($3, ast::expression_op::VBAR, $1); }
-        | unary_expression AMP expression
+        | expression AMP expression
             { $$ = std::make_shared<ast::expression>($3, ast::expression_op::AMP, $1); }
-        | unary_expression EQ_OP expression
+        | expression EQ_OP expression
             { $$ = std::make_shared<ast::expression>($3, ast::expression_op::EQ_OP, $1); }
-        | unary_expression NE_OP expression
+        | expression NE_OP expression
             { $$ = std::make_shared<ast::expression>($3, ast::expression_op::NE_OP, $1); }
-        | unary_expression LT_OP expression
+        | expression LT_OP expression
             { $$ = std::make_shared<ast::expression>($3, ast::expression_op::LT_OP, $1); }
-        | unary_expression GT_OP expression
+        | expression GT_OP expression
             { $$ = std::make_shared<ast::expression>($3, ast::expression_op::GT_OP, $1); }
-        | unary_expression LE_OP expression
+        | expression LE_OP expression
             { $$ = std::make_shared<ast::expression>($3, ast::expression_op::LE_OP, $1); }
-        | unary_expression GE_OP expression
+        | expression GE_OP expression
             { $$ = std::make_shared<ast::expression>($3, ast::expression_op::GE_OP, $1); }
-        | unary_expression PLUS expression
+        | expression PLUS expression
             { $$ = std::make_shared<ast::expression>($3, ast::expression_op::PLUS, $1); }
-        | unary_expression MINUS expression
+        | expression MINUS expression
             { $$ = std::make_shared<ast::expression>($3, ast::expression_op::MINUS, $1); }
-        | unary_expression TIMES expression
+        | expression TIMES expression
             { $$ = std::make_shared<ast::expression>($3, ast::expression_op::TIMES, $1); }
-        | unary_expression FSLASH expression
+        | expression FSLASH expression
             { $$ = std::make_shared<ast::expression>($3, ast::expression_op::FSLASH, $1); }
-        | unary_expression BSLASH expression
+        | expression BSLASH expression
             { $$ = std::make_shared<ast::expression>($3, ast::expression_op::BSLASH, $1); }
-        | unary_expression POW expression
+        | expression POW expression
             { $$ = std::make_shared<ast::expression>($3, ast::expression_op::POW, $1); }
-        | unary_expression AMUL expression
+        | expression AMUL expression
             { $$ = std::make_shared<ast::expression>($3, ast::expression_op::AMUL, $1); }
-        | unary_expression ADIV expression
+        | expression ADIV expression
             { $$ = std::make_shared<ast::expression>($3, ast::expression_op::ADIV, $1); }
-        | unary_expression ARDIV expression
+        | expression ARDIV expression
             { $$ = std::make_shared<ast::expression>($3, ast::expression_op::ARDIV, $1); }
-        | unary_expression APOW expression
+        | expression APOW expression
             { $$ = std::make_shared<ast::expression>($3, ast::expression_op::APOW, $1); }
         ;
 

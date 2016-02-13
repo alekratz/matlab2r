@@ -35,19 +35,23 @@ class expression
     : public node
 {
 public:
-    expression(unary_expression_p rhs) 
+    expression(unary_expression_p expr) 
         : lhs(nullptr)
         , op(expression_op::NONE)
-        , rhs(rhs) { }
-    expression(expression_p lhs, expression_op op, unary_expression_p rhs) 
+        , rhs(nullptr)
+        , expr(expr) { }
+    expression(expression_p lhs, expression_op op, expression_p rhs) 
         : lhs(lhs)
         , op(op)
-        , rhs(rhs) { assert(op != expression_op::NONE && "operator for expression must exist with a defined left hand side"); }
+        , rhs(rhs) 
+        , expr(nullptr) { assert(op != expression_op::NONE && "operator for expression must exist with a defined left hand side"); }
     virtual ~expression() = default;
     
     expression_p lhs;
     expression_op op;
-    unary_expression_p rhs;
+    expression_p rhs;
+
+    unary_expression_p expr;
 public:
     virtual void accept(visitor_p guest);
     virtual void children_accept(visitor_p guest);

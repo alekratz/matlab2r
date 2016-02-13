@@ -66,19 +66,46 @@ void codegen_visitor::visit(assignment_expression* expr)
 
 void codegen_visitor::visit(expression* expr)
 {
-    auto lhs = expr->lhs;
-    auto rhs = expr->rhs;
     out << '(';
-    if(lhs != nullptr)
+    if(expr->op != expression_op::NONE)
     {
+        auto lhs = expr->lhs;
+        auto rhs = expr->rhs;
+        assert(lhs != nullptr && "left hand side of expression is null, when it should not be");
+        assert(rhs != nullptr && "right hand side of expression is null, when it should not be");
         // visit left hand side and its operator
         lhs->accept(this);
-        // TODO : find the operator
-        out << " OP ";
+        switch(expr->op)
+        {
+        case expression_op::COLON: out << ":"; break;
+        case expression_op::VBAR: out << " | "; break;
+        case expression_op::AMP: out << " & "; break;
+        case expression_op::EQ_OP: out << " == "; break;
+        case expression_op::NE_OP: out << " != "; break;
+        case expression_op::LT_OP: out << " < "; break;
+        case expression_op::GT_OP: out << " > "; break;
+        case expression_op::LE_OP: out << " <= "; break;
+        case expression_op::GE_OP: out << " >= "; break;
+        case expression_op::PLUS: out << " + "; break;
+        case expression_op::MINUS: out << " - "; break;
+        case expression_op::TIMES: out << " * "; break;
+        case expression_op::FSLASH: out << " / "; break;
+        case expression_op::BSLASH: out << " \\ "; break;
+        case expression_op::POW: out << "^"; break;
+        case expression_op::AMUL: out << " AMUL_OPERATOR "; break;
+        case expression_op::ADIV: out << " ADIV_OPERATOR "; break;
+        case expression_op::ARDIV: out << " ARDIV_OPERATOR "; break;
+        case expression_op::APOW: out << " APOW_OPERATOR "; break;
+        default: assert(false && "unexpected expression_op encountered");
+        }
+        rhs->accept(this);
     }
-
-    assert(rhs != nullptr && "right hand side of expression is null, when it should not be");
-    rhs->accept(this);
+    else
+    {
+        auto unary_expr = expr->expr;
+        assert(unary_expr != nullptr && "unary expression portion of expession is null; this should not happen");
+        unary_expr->accept(this);
+    }
     out << ')';
 }
 

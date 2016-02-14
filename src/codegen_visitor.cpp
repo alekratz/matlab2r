@@ -66,14 +66,13 @@ void codegen_visitor::visit(assignment_expression* expr)
 
 void codegen_visitor::visit(expression* expr)
 {
-    out << '(';
     if(expr->op != expression_op::NONE)
     {
+        out << '(';
         auto lhs = expr->lhs;
         auto rhs = expr->rhs;
         assert(lhs != nullptr && "left hand side of expression is null, when it should not be");
         assert(rhs != nullptr && "right hand side of expression is null, when it should not be");
-        // visit left hand side and its operator
         lhs->accept(this);
         switch(expr->op)
         {
@@ -99,6 +98,7 @@ void codegen_visitor::visit(expression* expr)
         default: assert(false && "unexpected expression_op encountered");
         }
         rhs->accept(this);
+        out << ')';
     }
     else
     {
@@ -106,7 +106,6 @@ void codegen_visitor::visit(expression* expr)
         assert(unary_expr != nullptr && "unary expression portion of expession is null; this should not happen");
         unary_expr->accept(this);
     }
-    out << ')';
 }
 
 void codegen_visitor::visit(unary_expression* unexpr)
@@ -163,8 +162,10 @@ void codegen_visitor::visit(primary_expression* prim_expr)
         out << "CELL_ARRAY";
     break;
     case primary_expression_type::EXPRESSION:
-        /* TODO */
-        out << "EXPRESSION";
+    {
+        auto expr = prim_expr->expression;
+        expr->accept(this);
+    }
     break;
     default:
         assert(false && "unknown primary_expression_type encountered");
@@ -188,7 +189,19 @@ void codegen_visitor::visit(function_declare* fundecl)
 
 /* void codegen_visitor::visit(catch_statement*) { } */
 /* void codegen_visitor::visit(try_statement*) { } */
-/* void codegen_visitor::visit(for_statement*) { } */
+void codegen_visitor::visit(for_statement* for_stmt)
+{
+    auto range = for_stmt->range;
+    auto stmt_list = for_stmt->statement_list;
+    out << "for(" << for_stmt->variable << " in ";
+    range->accept(this);
+    out << ") {" << endl;
+    indent++;
+    stmt_list->accept(this);
+    indent--;
+    print_indent();
+    out << "}";
+}
 /* void codegen_visitor::visit(while_statement*) { } */
 /* void codegen_visitor::visit(jump_statement*) { } */
 /* void codegen_visitor::visit(global_statement*) { } */

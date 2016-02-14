@@ -394,7 +394,11 @@ naked_funcall_statement
         : IDENTIFIER IDENTIFIER { driver.lexer->begin_naked_args(); } naked_arg_list eostmt_or_eof 
             { $$ = std::make_shared<ast::naked_funcall_statement>($1, "'" + $2 + "'", $4); }
         | IDENTIFIER eostmt_or_eof
-            { $$ = std::make_shared<ast::naked_funcall_statement>($1); }
+        {
+            /* TODO : figure out if this is a naked funcall, or merely an identifier meant to be printed
+                      this could be an entire visitor class */
+            $$ = std::make_shared<ast::naked_funcall_statement>($1);
+        }
         ;
         
 naked_arg_list

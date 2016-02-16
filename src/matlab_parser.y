@@ -451,43 +451,43 @@ primary_expression
 expression
         : unary_expression { $$ = std::make_shared<ast::expression>($1); }
         | expression COLON expression
-            { $$ = std::make_shared<ast::expression>($3, ast::expression_op::COLON, $1); }
+            { $$ = std::make_shared<ast::expression>($1, ast::expression_op::COLON, $3); }
         | expression VBAR expression
-            { $$ = std::make_shared<ast::expression>($3, ast::expression_op::VBAR, $1); }
+            { $$ = std::make_shared<ast::expression>($1, ast::expression_op::VBAR, $3); }
         | expression AMP expression
-            { $$ = std::make_shared<ast::expression>($3, ast::expression_op::AMP, $1); }
+            { $$ = std::make_shared<ast::expression>($1, ast::expression_op::AMP, $3); }
         | expression EQ_OP expression
-            { $$ = std::make_shared<ast::expression>($3, ast::expression_op::EQ_OP, $1); }
+            { $$ = std::make_shared<ast::expression>($1, ast::expression_op::EQ_OP, $3); }
         | expression NE_OP expression
-            { $$ = std::make_shared<ast::expression>($3, ast::expression_op::NE_OP, $1); }
+            { $$ = std::make_shared<ast::expression>($1, ast::expression_op::NE_OP, $3); }
         | expression LT_OP expression
-            { $$ = std::make_shared<ast::expression>($3, ast::expression_op::LT_OP, $1); }
+            { $$ = std::make_shared<ast::expression>($1, ast::expression_op::LT_OP, $3); }
         | expression GT_OP expression
-            { $$ = std::make_shared<ast::expression>($3, ast::expression_op::GT_OP, $1); }
+            { $$ = std::make_shared<ast::expression>($1, ast::expression_op::GT_OP, $3); }
         | expression LE_OP expression
-            { $$ = std::make_shared<ast::expression>($3, ast::expression_op::LE_OP, $1); }
+            { $$ = std::make_shared<ast::expression>($1, ast::expression_op::LE_OP, $3); }
         | expression GE_OP expression
-            { $$ = std::make_shared<ast::expression>($3, ast::expression_op::GE_OP, $1); }
+            { $$ = std::make_shared<ast::expression>($1, ast::expression_op::GE_OP, $3); }
         | expression PLUS expression
-            { $$ = std::make_shared<ast::expression>($3, ast::expression_op::PLUS, $1); }
+            { $$ = std::make_shared<ast::expression>($1, ast::expression_op::PLUS, $3); }
         | expression MINUS expression
-            { $$ = std::make_shared<ast::expression>($3, ast::expression_op::MINUS, $1); }
+            { $$ = std::make_shared<ast::expression>($1, ast::expression_op::MINUS, $3); }
         | expression TIMES expression
-            { $$ = std::make_shared<ast::expression>($3, ast::expression_op::TIMES, $1); }
+            { $$ = std::make_shared<ast::expression>($1, ast::expression_op::TIMES, $3); }
         | expression FSLASH expression
-            { $$ = std::make_shared<ast::expression>($3, ast::expression_op::FSLASH, $1); }
+            { $$ = std::make_shared<ast::expression>($1, ast::expression_op::FSLASH, $3); }
         | expression BSLASH expression
-            { $$ = std::make_shared<ast::expression>($3, ast::expression_op::BSLASH, $1); }
+            { $$ = std::make_shared<ast::expression>($1, ast::expression_op::BSLASH, $3); }
         | expression POW expression
-            { $$ = std::make_shared<ast::expression>($3, ast::expression_op::POW, $1); }
+            { $$ = std::make_shared<ast::expression>($1, ast::expression_op::POW, $3); }
         | expression AMUL expression
-            { $$ = std::make_shared<ast::expression>($3, ast::expression_op::AMUL, $1); }
+            { $$ = std::make_shared<ast::expression>($1, ast::expression_op::AMUL, $3); }
         | expression ADIV expression
-            { $$ = std::make_shared<ast::expression>($3, ast::expression_op::ADIV, $1); }
+            { $$ = std::make_shared<ast::expression>($1, ast::expression_op::ADIV, $3); }
         | expression ARDIV expression
-            { $$ = std::make_shared<ast::expression>($3, ast::expression_op::ARDIV, $1); }
+            { $$ = std::make_shared<ast::expression>($1, ast::expression_op::ARDIV, $3); }
         | expression APOW expression
-            { $$ = std::make_shared<ast::expression>($3, ast::expression_op::APOW, $1); }
+            { $$ = std::make_shared<ast::expression>($1, ast::expression_op::APOW, $3); }
         ;
 
 unary_expression

@@ -209,14 +209,29 @@ void codegen_visitor::visit(while_statement* while_stmt)
     auto stmt_list = while_stmt->statement_list;
     out << "while(";
     condition->accept(this);
-    out << ") {";
+    out << ") {" << endl;
     indent++;
     stmt_list->accept(this);
     indent--;
     print_indent();
     out << "}";
 }
-/* void codegen_visitor::visit(jump_statement*) { } */
+void codegen_visitor::visit(jump_statement* jump_stmt)
+{
+    auto type = jump_stmt->type;
+    switch(type)
+    {
+    case jump_statement_type::BREAK:
+        out << "break";
+    break;
+    case jump_statement_type::CONTINUE:
+        out << "next";
+    break;
+    case jump_statement_type::RETURN:
+        /* TODO: get return statements working */
+    break;
+    }
+}
 /* void codegen_visitor::visit(global_statement*) { } */
 /* void codegen_visitor::visit(clear_statement*) { } */
 

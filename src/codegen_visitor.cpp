@@ -245,10 +245,49 @@ void codegen_visitor::visit(naked_funcall_statement* stmt)
     out << ")";
 }
 /* void codegen_visitor::visit(identifier_list*) { } */
-/* void codegen_visitor::visit(if_statement*) { } */
+void codegen_visitor::visit(if_statement* if_stmt)
+{
+    auto condition = if_stmt->condition;
+    auto stmt_list = if_stmt->statement_list;
+    auto elseifs = if_stmt->elseif_list;
+    auto else_stmt = if_stmt->else_statement;
+    out << "if ";
+    condition->accept(this);
+    out << " {" << endl;
+    indent++;
+    stmt_list->accept(this);
+    indent--;
+    print_indent();
+    out << "} ";
+
+    elseifs->children_accept(this);
+    if(else_stmt != nullptr)
+        else_stmt->accept(this);
+}
 /* void codegen_visitor::visit(elseif_list*) { } */
-/* void codegen_visitor::visit(elseif_statement*) { } */
-/* void codegen_visitor::visit(else_statement*) { } */
+void codegen_visitor::visit(elseif_statement* elseif_stmt)
+{
+    auto condition = elseif_stmt->condition;
+    auto stmt_list = elseif_stmt->statement_list;
+    out << "else if ";
+    condition->accept(this);
+    out << " {" << endl;
+    indent++;
+    stmt_list->accept(this);
+    indent--;
+    print_indent();
+    out << "} ";
+}
+void codegen_visitor::visit(else_statement* else_stmt)
+{
+    auto stmt_list = else_stmt->statement_list;
+    out << "else {" << endl;
+    indent++;
+    stmt_list->accept(this);
+    indent--;
+    print_indent();
+    out << "}";
+}
 /* void codegen_visitor::visit(switch_statement*) { } */
 /* void codegen_visitor::visit(case_list*) { } */
 /* void codegen_visitor::visit(case_statement*) { } */

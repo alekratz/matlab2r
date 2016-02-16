@@ -27,6 +27,8 @@ public:
     std::vector<wrapped_p> items;
 
     void add_front(wrapped_p item) { items.insert(items.begin(), item); }
+    size_t size() { return items.size(); }
+    auto begin() { return items.begin(); }
 
 public:
     virtual void accept(visitor_p guest);

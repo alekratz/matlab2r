@@ -175,10 +175,10 @@ public:
     virtual void visit(ast::assignment_statement*);
     virtual void visit(ast::naked_funcall_statement*);
     // virtual void visit(ast::identifier_list*);
-    // virtual void visit(ast::if_statement*);
+    virtual void visit(ast::if_statement*);
     // virtual void visit(ast::elseif_list*);
-    // virtual void visit(ast::elseif_statement*);
-    // virtual void visit(ast::else_statement*);
+    virtual void visit(ast::elseif_statement*);
+    virtual void visit(ast::else_statement*);
     // virtual void visit(ast::switch_statement*);
     // virtual void visit(ast::case_list*);
     // virtual void visit(ast::case_statement*);

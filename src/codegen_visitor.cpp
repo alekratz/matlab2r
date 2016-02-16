@@ -60,7 +60,7 @@ void codegen_visitor::visit(assignment_expression* expr)
     auto lhs = expr->lhs;
     auto rhs = expr->rhs;
     lhs->accept(this);
-    cout << " = ";
+    cout << " <- ";
     rhs->accept(this);
 }
 
@@ -202,10 +202,24 @@ void codegen_visitor::visit(for_statement* for_stmt)
     print_indent();
     out << "}";
 }
-/* void codegen_visitor::visit(while_statement*) { } */
+
+void codegen_visitor::visit(while_statement* while_stmt)
+{
+    auto condition = while_stmt->condition;
+    auto stmt_list = while_stmt->statement_list;
+    out << "while(";
+    condition->accept(this);
+    out << ") {";
+    indent++;
+    stmt_list->accept(this);
+    indent--;
+    print_indent();
+    out << "}";
+}
 /* void codegen_visitor::visit(jump_statement*) { } */
 /* void codegen_visitor::visit(global_statement*) { } */
 /* void codegen_visitor::visit(clear_statement*) { } */
+
 void codegen_visitor::visit(expression_statement* stmt) { stmt->children_accept(this); }
 void codegen_visitor::visit(assignment_statement* stmt) { stmt->children_accept(this); }
 void codegen_visitor::visit(naked_funcall_statement* stmt)

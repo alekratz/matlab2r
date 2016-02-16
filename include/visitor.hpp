@@ -167,7 +167,7 @@ public:
     // virtual void visit(ast::catch_statement*);
     // virtual void visit(ast::try_statement*);
     virtual void visit(ast::for_statement*);
-    // virtual void visit(ast::while_statement*);
+    virtual void visit(ast::while_statement*);
     // virtual void visit(ast::jump_statement*);
     // virtual void visit(ast::global_statement*);
     // virtual void visit(ast::clear_statement*);

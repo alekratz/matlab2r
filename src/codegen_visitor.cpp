@@ -326,7 +326,6 @@ void codegen_visitor::visit(switch_statement* switch_stmt)
 }
 // void codegen_visitor::visit(case_statement* case_stmt) { }
 // void codegen_visitor::visit(otherwise_statement*) { }
-void codegen_visitor::visit(statement* stmt) { out << "STATEMENT"; }
 
 void codegen_visitor::visit(statement_list* stmt_list)
 {

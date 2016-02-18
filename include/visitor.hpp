@@ -44,7 +44,6 @@ public:
 	virtual void visit(ast::case_list*) { }
 	virtual void visit(ast::case_statement*) { }
 	virtual void visit(ast::otherwise_statement*) { }
-    virtual void visit(ast::statement*) { }
     virtual void visit(ast::statement_list*) { }
 };
 
@@ -89,7 +88,6 @@ public:
     // virtual void visit(ast::case_list*) { }
     // virtual void visit(ast::case_statement*) { }
     // virtual void visit(ast::otherwise_statement*) { }
-    // virtual void visit(ast::statement*) { }
     // virtual void visit(ast::statement_list*) { }
 };
 
@@ -138,7 +136,6 @@ public:
     // virtual void visit(ast::case_list*) { }
     // virtual void visit(ast::case_statement*) { }
     // virtual void visit(ast::otherwise_statement*) { }
-    // virtual void visit(ast::statement*) { }
     // virtual void visit(ast::statement_list*) { }
 };
 
@@ -181,7 +178,6 @@ public:
     virtual void visit(ast::switch_statement*);
     //virtual void visit(ast::case_statement*);
     //virtual void visit(ast::otherwise_statement*);
-    virtual void visit(ast::statement*);
     virtual void visit(ast::statement_list*);
 
 private:

@@ -29,6 +29,7 @@ public:
     void add_front(wrapped_p item) { items.insert(items.begin(), item); }
     size_t size() { return items.size(); }
     auto begin() { return items.begin(); }
+    auto end() { return items.end(); }
 
 public:
     virtual void accept(visitor_p guest);

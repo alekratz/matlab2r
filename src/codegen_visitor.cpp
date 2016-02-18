@@ -288,11 +288,44 @@ void codegen_visitor::visit(else_statement* else_stmt)
     print_indent();
     out << "}";
 }
-/* void codegen_visitor::visit(switch_statement*) { } */
-/* void codegen_visitor::visit(case_list*) { } */
-/* void codegen_visitor::visit(case_statement*) { } */
-/* void codegen_visitor::visit(otherwise_statement*) { } */
+void codegen_visitor::visit(switch_statement* switch_stmt)
+{
+    auto expr = switch_stmt->expression;
+    auto case_list = switch_stmt->case_list;
+    auto otherwise_stmt = switch_stmt->otherwise_statement;
+    assert(expr != nullptr && "expression in switch statement must not be null");
 
+    for(auto case_iter = case_list->begin(); case_iter != case_list->end(); case_iter++)
+    {
+        auto case_ptr = *case_iter;
+        out << "if (";
+        expr->accept(this);
+        out << " == ";
+        // TODO : assert this isn't nullptr
+        case_ptr->condition->accept(this);
+        out << ") {" << endl;
+        indent++;
+        case_ptr->statement_list->accept(this);
+        indent--;
+        print_indent();
+        out << "} ";
+        if(case_iter + 1 != case_list->end() || otherwise_stmt != nullptr)
+            out << "else ";
+    }
+
+    if(otherwise_stmt != nullptr)
+    {
+        out << "{" << endl;
+        indent++;
+        otherwise_stmt->statement_list->accept(this);
+        indent--;
+        print_indent();
+        out << "}";
+    }
+    out << endl;
+}
+// void codegen_visitor::visit(case_statement* case_stmt) { }
+// void codegen_visitor::visit(otherwise_statement*) { }
 void codegen_visitor::visit(statement* stmt) { out << "STATEMENT"; }
 
 void codegen_visitor::visit(statement_list* stmt_list)

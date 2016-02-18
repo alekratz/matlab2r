@@ -7,12 +7,6 @@
 namespace ast
 {
 
-template <typename wrapped>
-class list_node;
-class expression;
-class index_expression;
-class statement;
-
 template<typename wrapped>
 class list_node :
     public node

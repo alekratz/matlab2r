@@ -226,7 +226,7 @@ statement_list
         }
         | %empty 
             { $$ = std::make_shared<ast::statement_list>(); }
-        | error { yyerrok; }
+        //| error /* { yyerrok; } eostmt_or_eof */
         ;
 
 statement
@@ -393,12 +393,14 @@ catch_statement
 naked_funcall_statement
         : IDENTIFIER IDENTIFIER { driver.lexer->begin_naked_args(); } naked_arg_list eostmt_or_eof 
             { $$ = std::make_shared<ast::naked_funcall_statement>($1, "'" + $2 + "'", $4); }
+        /*
         | IDENTIFIER eostmt_or_eof
         {
             /* TODO : figure out if this is a naked funcall, or merely an identifier meant to be printed
-                      this could be an entire visitor class */
+                      this could be an entire visitor class
             $$ = std::make_shared<ast::naked_funcall_statement>($1);
         }
+        */
         ;
         
 naked_arg_list

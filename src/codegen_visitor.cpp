@@ -186,9 +186,37 @@ void codegen_visitor::visit(function_declare* fundecl)
     indent--;
     out << "}" << endl;
 }
-
-/* void codegen_visitor::visit(catch_statement*) { } */
-/* void codegen_visitor::visit(try_statement*) { } */
+void codegen_visitor::visit(catch_statement* catch_stmt)
+{
+    auto stmt_list = catch_stmt->statement_list;
+    auto ident = catch_stmt->identifier;
+    out << "function(" << ident << ") {" << endl;
+    indent++;
+    stmt_list->accept(this);
+    indent--;
+    print_indent();
+    out << "}";
+}
+void codegen_visitor::visit(try_statement* try_stmt)
+{
+    auto stmt_list = try_stmt->statement_list;
+    auto catch_stmt = try_stmt->catch_statement;
+    if(catch_stmt != nullptr)
+        out << "tryCatch({" << endl;
+    else
+        out << "try({" << endl;
+    indent++;
+    stmt_list->accept(this);
+    indent--;
+    print_indent();
+    out << "}";
+    if(catch_stmt != nullptr)
+    {
+        out << ", error = ";
+        catch_stmt->accept(this);
+    }
+    out << ")";
+}
 void codegen_visitor::visit(for_statement* for_stmt)
 {
     auto range = for_stmt->range;
@@ -322,7 +350,6 @@ void codegen_visitor::visit(switch_statement* switch_stmt)
         print_indent();
         out << "}";
     }
-    out << endl;
 }
 // void codegen_visitor::visit(case_statement* case_stmt) { }
 // void codegen_visitor::visit(otherwise_statement*) { }

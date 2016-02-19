@@ -161,8 +161,8 @@ public:
     // virtual void visit(ast::index_expression*);
     // virtual void visit(ast::index_expression_list*);
     virtual void visit(ast::function_declare*);
-    // virtual void visit(ast::catch_statement*);
-    // virtual void visit(ast::try_statement*);
+    virtual void visit(ast::catch_statement*);
+    virtual void visit(ast::try_statement*);
     virtual void visit(ast::for_statement*);
     virtual void visit(ast::while_statement*);
     virtual void visit(ast::jump_statement*);

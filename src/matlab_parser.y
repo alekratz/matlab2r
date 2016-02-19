@@ -148,6 +148,9 @@
 %type <ast::eostmt_type>                eostmt
 %type <ast::eostmt_type>                eostmt_or_eof
 
+%precedence expression_statement
+%precedence naked_funcall_statement
+
 %left COLON
 %left VBAR
 %left AMP
@@ -384,8 +387,8 @@ try_catch_statement
         ;
 
 catch_statement
-        : CATCH IDENTIFIER statement_list
-            { $$ = std::make_shared<ast::catch_statement>($2, $3); }
+        : CATCH IDENTIFIER eostmt statement_list
+            { $$ = std::make_shared<ast::catch_statement>($2, $4); }
         | CATCH statement_list
             { $$ = std::make_shared<ast::catch_statement>($2); }
         ;

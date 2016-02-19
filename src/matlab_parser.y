@@ -148,9 +148,6 @@
 %type <ast::eostmt_type>                eostmt
 %type <ast::eostmt_type>                eostmt_or_eof
 
-%precedence expression_statement
-%precedence naked_funcall_statement
-
 %left COLON
 %left VBAR
 %left AMP
@@ -567,7 +564,7 @@ qualified_id
         ;
 
 qualified_id_item
-        : IDENTIFIER 
+        : IDENTIFIER
             { $$ = std::make_shared<ast::qualified_id_item>($1); }
         | LPAREN expression RPAREN // apparently this is allowed
             { $$ = std::make_shared<ast::qualified_id_item>($2); }

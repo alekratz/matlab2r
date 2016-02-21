@@ -1,4 +1,6 @@
-# matlab2r
+# matlab2r 
+**v0.1.0-proto**
+
 matlab2r attempts to be a fully-featured transpiler, from the MATLAB language to the R language. It is currently a work in progress.
 
 # Building
@@ -14,6 +16,7 @@ Make sure that these are in a place that CMake can find them.
 1. Make a directory called "build" in the project root.
 2. Open a terminal and navigate to the build directory.
 3. Run `cmake ..`. Hopefully everything will work.
+    * **Note**: By default, the CMake project builds with a Git commit hash baked in. If you don't want this, pass `-DUSE_GIT_VERSIONING=0` to your CMake command.
 4. Run `make`. Optionally, if you have some extra CPU cycles to spare, you can run `make -jX`, where X is the number of jobs you want to run simultaneously.
 
 Provided that `make` succeeded, there should be a matlab2r executable in the build directory. Yay!

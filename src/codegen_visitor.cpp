@@ -141,7 +141,7 @@ void codegen_visitor::visit(postfix_expression* post_expr)
     typedef vector<postfix_op>::const_iterator transpose_iter;
     auto expr = post_expr->expr;
     const auto& tp_list = post_expr->transposes;
-    
+
     function<void(transpose_iter)> tp = [&](transpose_iter here) {
         if(here == tp_list.end())
             expr->accept(this);
@@ -177,8 +177,24 @@ void codegen_visitor::visit(primary_expression* prim_expr)
         out << prim_expr->constant;
     break;
     case primary_expression_type::MATRIX:
-        /* TODO */
-        out << "MATRIX";
+    {
+        auto cols = prim_expr->array;
+        if(cols->size() == 0) out << "NULL";
+        else if(cols->size() == 1)
+        {
+            out << "c(";
+            cols->accept(this);
+            out << ")";
+        }
+        else
+        {
+            size_t colsize = cols->size();
+            size_t rowsize = (*cols->begin())->size();
+            out << "matrix(c(";
+            cols->accept(this);
+            out << "), " << colsize << ", " << rowsize << ")";
+        }
+    }
     break;
     case primary_expression_type::CELL_ARRAY:
         /* TODO */
@@ -195,9 +211,26 @@ void codegen_visitor::visit(primary_expression* prim_expr)
         break;
     }
 }
-
-/* void codegen_visitor::visit(array_col_list*) { } */
-/* void codegen_visitor::visit(array_row_list*) { } */
+void codegen_visitor::visit(array_col_list* col_list)
+{
+    for(auto iter = col_list->begin(); iter != col_list->end(); iter++)
+    {
+        auto col = *iter;
+        col->accept(this);
+        if(iter + 1 != col_list->end())
+            out << ", ";
+    }
+}
+void codegen_visitor::visit(array_row_list* row_list)
+{
+    for(auto iter = row_list->begin(); iter != row_list->end(); iter++)
+    {
+        auto row = *iter;
+        row->accept(this);
+        if(iter + 1 != row_list->end())
+            out << ", ";
+    }
+}
 /* void codegen_visitor::visit(index_expression*) { } */
 /* void codegen_visitor::visit(index_expression_list*) { } */
 
@@ -287,11 +320,11 @@ void codegen_visitor::visit(jump_statement* jump_stmt)
 void codegen_visitor::visit(clear_statement* clear_stmt)
 {
     const auto& id_list = clear_stmt->identifier_list;
-    out << "rm(";
+    out << "rm(list=";
     if(id_list.size() == 0)
-        out << "setdiff(ls(), lsf().str())";
+        out << "setdiff(ls(), lsf.str())";
     else
-        out << "intersect(c(" << pad_commas<map_wrap_quotes>(id_list) << "), setdiff(ls(), lsf().str()))";
+        out << "intersect(c(" << pad_commas<map_wrap_quotes>(id_list) << "), setdiff(ls(), lsf.str()))";
     out << ")";
 }
 void codegen_visitor::visit(expression_statement* stmt) { stmt->children_accept(this); }

@@ -1,0 +1,10 @@
+set(TEST_BUILD_DIR ${PROJECT_BINARY_DIR}/tests)
+function(add_boost_test test_name)
+    add_executable(${test_name} ${M2R_SOURCES} ${CMAKE_SOURCE_DIR}/tests/src/${test_name}.cpp)
+    target_link_libraries(${test_name} "${Boost_LIBRARIES}")
+    add_test(${test_name} ${TEST_BUILD_DIR}/${test_name})
+endfunction(add_boost_test)
+
+message(STATUS "Building tests")
+add_definitions(-DBOOST_TEST_DYN_LINK) 
+add_boost_test(test_parser)

@@ -30,48 +30,49 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 find_package(FLEX REQUIRED)
 find_package(BISON REQUIRED)
 
-find_package(Boost REQUIRED COMPONENTS filesystem system)
+find_package(Boost REQUIRED COMPONENTS filesystem system unit_test_framework)
 
 BISON_TARGET(matlab_parser src/matlab_parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp)
 FLEX_TARGET(matlab_lexer src/matlab_lexer.l ${CMAKE_CURRENT_BINARY_DIR}/lexer.cpp COMPILE_FLAGS "-+ --header")
 ADD_FLEX_BISON_DEPENDENCY(matlab_lexer matlab_parser)
 
 include_directories("${CMAKE_CURRENT_BINARY_DIR}" "include")
-
 set(CMAKE_CXX_FLAGS "-g -Wall --std=c++14")
 
-set(IM_SOURCES 
-    src/main.cpp
-    src/matlab2r_driver.cpp
-    src/codegen_visitor.cpp
-    src/function_name_visitor.cpp
+set(M2R_SOURCES 
+    ${CMAKE_SOURCE_DIR}/src/matlab2r_driver.cpp
+    ${CMAKE_SOURCE_DIR}/src/codegen_visitor.cpp
+    ${CMAKE_SOURCE_DIR}/src/function_name_visitor.cpp
 
-    src/ast/accept.cpp
-    src/ast/block_statement.cpp
-    src/ast/for_statement.cpp
-    src/ast/while_statement.cpp
-    src/ast/function_declare.cpp
-    src/ast/expression_statement.cpp
-    src/ast/assignment_statement.cpp
-    src/ast/if_statement.cpp
-    src/ast/elseif_statement.cpp
-    src/ast/else_statement.cpp
-    src/ast/switch_statement.cpp
-    src/ast/case_statement.cpp
-    src/ast/otherwise_statement.cpp
-    src/ast/try_statement.cpp
-    src/ast/catch_statement.cpp
-    src/ast/assignment_expression.cpp
-    src/ast/expression.cpp
-    src/ast/unary_expression.cpp
-    src/ast/postfix_expression.cpp
-    src/ast/primary_expression.cpp
-    src/ast/index_expression.cpp
-    src/ast/array_index.cpp
-    src/ast/qualified_id.cpp
-    src/ast/list_node.cpp
+    ${CMAKE_SOURCE_DIR}/src/ast/accept.cpp
+    ${CMAKE_SOURCE_DIR}/src/ast/block_statement.cpp
+    ${CMAKE_SOURCE_DIR}/src/ast/for_statement.cpp
+    ${CMAKE_SOURCE_DIR}/src/ast/while_statement.cpp
+    ${CMAKE_SOURCE_DIR}/src/ast/function_declare.cpp
+    ${CMAKE_SOURCE_DIR}/src/ast/expression_statement.cpp
+    ${CMAKE_SOURCE_DIR}/src/ast/assignment_statement.cpp
+    ${CMAKE_SOURCE_DIR}/src/ast/if_statement.cpp
+    ${CMAKE_SOURCE_DIR}/src/ast/elseif_statement.cpp
+    ${CMAKE_SOURCE_DIR}/src/ast/else_statement.cpp
+    ${CMAKE_SOURCE_DIR}/src/ast/switch_statement.cpp
+    ${CMAKE_SOURCE_DIR}/src/ast/case_statement.cpp
+    ${CMAKE_SOURCE_DIR}/src/ast/otherwise_statement.cpp
+    ${CMAKE_SOURCE_DIR}/src/ast/try_statement.cpp
+    ${CMAKE_SOURCE_DIR}/src/ast/catch_statement.cpp
+    ${CMAKE_SOURCE_DIR}/src/ast/assignment_expression.cpp
+    ${CMAKE_SOURCE_DIR}/src/ast/expression.cpp
+    ${CMAKE_SOURCE_DIR}/src/ast/unary_expression.cpp
+    ${CMAKE_SOURCE_DIR}/src/ast/postfix_expression.cpp
+    ${CMAKE_SOURCE_DIR}/src/ast/primary_expression.cpp
+    ${CMAKE_SOURCE_DIR}/src/ast/index_expression.cpp
+    ${CMAKE_SOURCE_DIR}/src/ast/array_index.cpp
+    ${CMAKE_SOURCE_DIR}/src/ast/qualified_id.cpp
+    ${CMAKE_SOURCE_DIR}/src/ast/list_node.cpp
     ${FLEX_matlab_lexer_OUTPUTS} 
     ${BISON_matlab_parser_OUTPUTS})
 
-add_executable(matlab2r ${IM_SOURCES})
-target_link_libraries(matlab2r "${Boost_LIBRARIES}")
+enable_testing()
+add_subdirectory(tests)
+
+add_executable(matlab2r ${CMAKE_SOURCE_DIR}/src/main.cpp ${M2R_SOURCES})
+target_link_libraries(matlab2r ${Boost_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY})

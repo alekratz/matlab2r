@@ -8,12 +8,25 @@
 using namespace std;
 using namespace ast;
 
+template<typename map_from, typename map_to>
+struct map_function
+    { virtual map_to operator()(const map_from&) = 0; };
+
+template<typename same>
+struct map_identity : map_function<same, same>
+    { virtual same operator()(const same& in) { return in; } };
+
+struct map_wrap_quotes : map_identity<string>
+    { virtual string operator()(const string& in) { return "'" + in + "'"; } };
+
+template<typename map_function_t=map_identity<string>>
 static string pad_commas(const vector<string>& list)
 {
     string result;
+    auto map = map_function_t();
     for(auto it = list.begin(); it != list.end(); it++)
     {
-        result += *it;
+        result += map(*it);
         if(it + 1 != list.end())
             result += ", ";
     }
@@ -261,8 +274,16 @@ void codegen_visitor::visit(jump_statement* jump_stmt)
     }
 }
 /* void codegen_visitor::visit(global_statement*) { } */
-/* void codegen_visitor::visit(clear_statement*) { } */
-
+void codegen_visitor::visit(clear_statement* clear_stmt)
+{
+    const auto& id_list = clear_stmt->identifier_list;
+    out << "rm(";
+    if(id_list.size() == 0)
+        out << "setdiff(ls(), lsf().str())";
+    else
+        out << "intersect(c(" << pad_commas<map_wrap_quotes>(id_list) << "), setdiff(ls(), lsf().str()))";
+    out << ")";
+}
 void codegen_visitor::visit(expression_statement* stmt) { stmt->children_accept(this); }
 void codegen_visitor::visit(assignment_statement* stmt) { stmt->children_accept(this); }
 void codegen_visitor::visit(naked_funcall_statement* stmt)

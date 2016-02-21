@@ -7,6 +7,8 @@ namespace ast
 enum class array_index_type
 {
     ARRAY_OR_FUNCALL,
+    ARRAY,
+    FUNCALL,
     ARRAY_CELL,
 };
 

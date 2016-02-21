@@ -33,9 +33,10 @@ static string pad_commas(const vector<string>& list)
     return result;
 }
 
-codegen_visitor::codegen_visitor()
+codegen_visitor::codegen_visitor(unordered_set<string> function_names)
     : out(cout)
     , indent(0)
+    , function_names(function_names)
 { }
 
 void codegen_visitor::visit(qualified_id* q_id)
@@ -51,6 +52,8 @@ void codegen_visitor::visit(qualified_id* q_id)
 
 void codegen_visitor::visit(qualified_id_item* q_id_item)
 {
+    auto ary_idx_list = q_id_item->array_index_list;
+
     switch(q_id_item->type)
     {
     case qualified_id_item_type::EXPRESSION:
@@ -58,13 +61,54 @@ void codegen_visitor::visit(qualified_id_item* q_id_item)
     break;
     case qualified_id_item_type::IDENTIFIER:
         out << q_id_item->identifier;
+        //          this gets whether we're making a function call or accessing an array
+        bool funcall = (function_names.find(q_id_item->identifier) != function_names.end());
+        if(ary_idx_list != nullptr)
+        {
+            for(auto ary_idx : ary_idx_list->items)
+            {
+                assert(ary_idx != nullptr && "array indexer (or funcall) is null when it should not be");
+                // Only mess with unresolved types
+                if(ary_idx->type == array_index_type::ARRAY_OR_FUNCALL)
+                    ary_idx->type = funcall ? array_index_type::FUNCALL : array_index_type::ARRAY;
+            }
+        }
     break;
     }
 
-    if(q_id_item->array_index_list != nullptr)
+    if(ary_idx_list != nullptr)
+        ary_idx_list->accept(this);
+}
+
+void codegen_visitor::visit(array_index_list* ary_idx_list)
+{
+    for(auto ary_idx : ary_idx_list->items)
     {
-        /* TODO */
-        q_id_item->array_index_list->children_accept(this);
+        assert(ary_idx != nullptr && "array indexer (or funcall) is null when it should not be");
+        ary_idx->accept(this);
+    }
+}
+
+void codegen_visitor::visit(array_index* ary_idx)
+{
+    auto expr_list = ary_idx->index_expression_list;
+    auto type = ary_idx->type;
+    switch(type)
+    {
+    case array_index_type::ARRAY_OR_FUNCALL:
+        assert(false && "unresolved array or funcall type");
+    break;
+    case array_index_type::ARRAY_CELL:
+    case array_index_type::ARRAY:
+        out << "[";
+        expr_list->accept(this);
+        out << "]";
+    break;
+    case array_index_type::FUNCALL:
+        out << "(";
+        expr_list->accept(this);
+        out << ")";
+    break;
     }
 }
 
@@ -197,8 +241,24 @@ void codegen_visitor::visit(primary_expression* prim_expr)
     }
     break;
     case primary_expression_type::CELL_ARRAY:
-        /* TODO */
-        out << "CELL_ARRAY";
+    {
+        auto cols = prim_expr->array;
+        if(cols->size() == 0) out << "NULL";
+        else if(cols->size() == 1)
+        {
+            out << "list(";
+            cols->accept(this);
+            out << ")";
+        }
+        else
+        {
+            size_t colsize = cols->size();
+            size_t rowsize = (*cols->begin())->size();
+            out << "matrix(list(";
+            cols->accept(this);
+            out << "), " << colsize << ", " << rowsize << ")";
+        }
+    }
     break;
     case primary_expression_type::EXPRESSION:
     {
@@ -231,8 +291,28 @@ void codegen_visitor::visit(array_row_list* row_list)
             out << ", ";
     }
 }
-/* void codegen_visitor::visit(index_expression*) { } */
-/* void codegen_visitor::visit(index_expression_list*) { } */
+void codegen_visitor::visit(index_expression* idx_expr)
+{
+    if(idx_expr->is_colon_op)
+    {
+        // TODO: colon operator, aka select all
+    }
+    else
+    {
+        auto expr = idx_expr->expr;
+        assert(expr != nullptr && "index expression is null when it should not be");
+        expr->accept(this);
+    }
+}
+void codegen_visitor::visit(index_expression_list* expr_list)
+{
+    for(auto iter = expr_list->begin(); iter != expr_list->end(); iter++)
+    {
+        (*iter)->accept(this);
+        if(iter + 1 != expr_list->end())
+            out << ", ";
+    }
+}
 
 void codegen_visitor::visit(function_declare* fundecl)
 {

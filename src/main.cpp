@@ -113,8 +113,10 @@ int main(int argc, char **argv)
             auto ast = the_driver.ast;
             if(ast != nullptr)
             {
-                codegen_visitor visitor;
-                visitor.visit(ast.get());
+                function_name_visitor fun_namer;
+                fun_namer.visit(ast.get());
+                codegen_visitor generator = codegen_visitor(fun_namer.get_function_names());
+                generator.visit(ast.get());
             }
             else
             {

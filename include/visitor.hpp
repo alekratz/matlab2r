@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include <stack>
+#include <unordered_set>
 
 class visitor
 {
@@ -48,6 +49,29 @@ public:
 	virtual void visit(ast::case_statement*) { }
 	virtual void visit(ast::otherwise_statement*) { }
     virtual void visit(ast::statement_list*) { }
+};
+
+/**
+ * This visitor gets a list of all function names used in the program. This is
+ * used to help the code generator differentiate between matrix indexing and
+ * function calls (because they are ambiguous).
+ */
+class function_name_visitor
+    : public visitor
+{
+public:
+    function_name_visitor();
+    virtual ~function_name_visitor() = default;
+
+public:
+    virtual void visit(ast::function_declare*);
+    virtual void visit(ast::statement_list*);
+
+    const std::unordered_set<std::string>& get_function_names() const 
+        { return function_names; }
+
+private:
+    std::unordered_set<std::string> function_names;
 };
 
 class rename_visitor
@@ -149,14 +173,14 @@ private:
     typedef std::vector<std::string> fun_return_list;
 
 public:
-    codegen_visitor();
+    codegen_visitor(std::unordered_set<std::string> function_names);
     virtual ~codegen_visitor() = default;
 
 public:
     virtual void visit(ast::qualified_id*);
     virtual void visit(ast::qualified_id_item*);
-    // virtual void visit(ast::array_index*);
-    // virtual void visit(ast::array_index_list*);
+    virtual void visit(ast::array_index*);
+    virtual void visit(ast::array_index_list*);
     virtual void visit(ast::assignment_expression*);
     virtual void visit(ast::expression*);
     virtual void visit(ast::unary_expression*);
@@ -164,8 +188,8 @@ public:
     virtual void visit(ast::primary_expression*);
     virtual void visit(ast::array_col_list*);
     virtual void visit(ast::array_row_list*);
-    // virtual void visit(ast::index_expression*);
-    // virtual void visit(ast::index_expression_list*);
+    virtual void visit(ast::index_expression*);
+    virtual void visit(ast::index_expression_list*);
     virtual void visit(ast::function_declare*);
     virtual void visit(ast::catch_statement*);
     virtual void visit(ast::try_statement*);
@@ -190,6 +214,7 @@ private:
     std::ostream& out;
     size_t indent;
     std::stack<fun_return_list> fun_return_stack;
+    std::unordered_set<std::string> function_names;
 
     void print_indent() { for(size_t i = 0; i < indent; i++) out << "   "; }
 };

@@ -23,6 +23,7 @@ set(IM_SOURCES
     src/main.cpp
     src/matlab2r_driver.cpp
     src/codegen_visitor.cpp
+    src/function_name_visitor.cpp
 
     src/ast/accept.cpp
     src/ast/block_statement.cpp

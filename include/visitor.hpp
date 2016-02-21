@@ -4,6 +4,9 @@
 #include "ast.hpp"
 #include <memory>
 #include <iostream>
+#include <vector>
+#include <string>
+#include <stack>
 
 class visitor
 {
@@ -142,6 +145,9 @@ public:
 class codegen_visitor
     : public visitor
 {
+private:
+    typedef std::vector<std::string> fun_return_list;
+
 public:
     codegen_visitor();
     virtual ~codegen_visitor() = default;
@@ -183,6 +189,7 @@ public:
 private:
     std::ostream& out;
     size_t indent;
+    std::stack<fun_return_list> fun_return_stack;
 
     void print_indent() { for(size_t i = 0; i < indent; i++) out << "   "; }
 };

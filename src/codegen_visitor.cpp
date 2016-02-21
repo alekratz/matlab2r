@@ -236,11 +236,24 @@ void codegen_visitor::visit(array_row_list* row_list)
 
 void codegen_visitor::visit(function_declare* fundecl)
 {
+    fun_return_stack.push(fundecl->returns);
     out << fundecl->name << " <- function (" << pad_commas(fundecl->args) << ") {" << endl;
+
     indent++;
     fundecl->statement_list->accept(this);
+
+    print_indent();
+    size_t ret_count = fun_return_stack.top().size();
+    if(ret_count > 1)
+        out << "c(" << pad_commas(fun_return_stack.top()) << ")";
+    else if(ret_count == 1)
+        out << *(fun_return_stack.top().cbegin());
+    out << endl;
+
     indent--;
+
     out << "}" << endl;
+    fun_return_stack.pop();
 }
 void codegen_visitor::visit(catch_statement* catch_stmt)
 {
@@ -312,7 +325,7 @@ void codegen_visitor::visit(jump_statement* jump_stmt)
         out << "next";
     break;
     case jump_statement_type::RETURN:
-        /* TODO: get return statements working */
+        out << "return(" << pad_commas(fun_return_stack.top()) << ")";
     break;
     }
 }

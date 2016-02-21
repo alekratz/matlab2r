@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <cstring>
 #include <boost/filesystem.hpp>
 
 #define VCOUT if(verbose) cout
@@ -20,6 +21,7 @@ static vector<string> filenames;
 
 static bool parse_opts(int, char**);
 static void usage(int, char**);
+static void print_version();
 
 static bool parse_opts(int argc, char **argv)
 {
@@ -28,6 +30,7 @@ static bool parse_opts(int argc, char **argv)
         { "trace-scanning", no_argument, nullptr, 's' },
         { "trace-parsing",  no_argument, nullptr, 'p' },
         { "verbose",        no_argument, nullptr, 'v' },
+        { "version",        no_argument, nullptr, 0   },
         { nullptr, 0, nullptr, 0 },
     };
 
@@ -37,19 +40,26 @@ static bool parse_opts(int argc, char **argv)
     {
         switch(c)
         {
-            // GNU will print out the error for us. Thanks, GNU!
-            case '?': return false;
-            case 'v':
-                verbose = true;
-                break;
-            case 's':
-                trace_scanning = true;
-                break;
-            case 'p':
-                trace_parsing = true;
-                break;
-            default:
-                break;
+        // GNU will print out the error for us. Thanks, GNU!
+        case '?': return false;
+        case 'v':
+            verbose = true;
+            break;
+        case 's':
+            trace_scanning = true;
+            break;
+        case 'p':
+            trace_parsing = true;
+            break;
+        case 0:
+            // print version and exit immediately
+            if(strcmp(lopts[option_index].name, "version") == 0)
+            {
+                print_version();
+                exit(0);
+            }
+        default:
+            break;
         }
     }
     while(optind < argc)
@@ -67,7 +77,17 @@ static void usage(int argc, char **argv)
 "-s | --trace-scanning                      traces the scanning of the input " << endl <<
 "-p | --trace-parsing                       traces the parsing of the input  " << endl <<
 "-v | --verbose                             verbose output                   " << endl <<
+"--version                                  prints the version, and immediately exists." << endl <<
     endl;
+}
+
+static void print_version()
+{
+    cout << "matlab2r " VERSION_STR;
+#if WITH_GIT_INFO
+    cout << " (" GIT_COMMIT_STR ")";
+#endif /* WITH_GIT_INFO */
+    cout << endl;
 }
 
 int main(int argc, char **argv)

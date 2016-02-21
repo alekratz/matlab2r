@@ -138,17 +138,27 @@ void codegen_visitor::visit(unary_expression* unexpr)
 }
 void codegen_visitor::visit(postfix_expression* post_expr)
 {
+    typedef vector<postfix_op>::const_iterator transpose_iter;
     auto expr = post_expr->expr;
-    expr->accept(this);
-
-    for(auto tp : post_expr->transposes)
-    {
-        switch(tp)
+    const auto& tp_list = post_expr->transposes;
+    
+    function<void(transpose_iter)> tp = [&](transpose_iter here) {
+        if(here == tp_list.end())
+            expr->accept(this);
+        else
         {
-        case postfix_op::TRANSPOSE: /* TODO */ break;
-        case postfix_op::NCTRANSPOSE: /* TODO */ break;
+            switch((*here))
+            {
+            case postfix_op::TRANSPOSE: 
+                out << "t(";
+                tp(here + 1);
+                out << ")";
+            break;
+            case postfix_op::NCTRANSPOSE: /* TODO */ break;
+            }
         }
-    }
+    };
+    tp(tp_list.cbegin());
 }
 void codegen_visitor::visit(primary_expression* prim_expr)
 {

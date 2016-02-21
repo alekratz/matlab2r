@@ -1,5 +1,6 @@
 #include "matlab2r_driver.hpp"
 #include <fstream>
+#include <sstream>
 
 using namespace std;
 
@@ -17,13 +18,11 @@ bool matlab2r_driver::parse_stream(istream& in, cstref sname, ostream& out)
     return success;
 }
 
-/*
 bool matlab2r_driver::parse_string(cstref line, cstref sname, std::ostream& out)
 {
     istringstream iss(line);
     return parse_stream(iss, sname);
 }
-*/
 
 bool matlab2r_driver::parse_file(cstref filename, std::ostream& out)
 {

@@ -22,6 +22,7 @@ public:
 
 public:
     bool parse_stream(std::istream& in, cstref streamname, std::ostream& out = std::cout);
+    bool parse_string(cstref line, cstref sname, std::ostream& out = std::cout);
     bool parse_file(cstref filename, std::ostream& out = std::cout);
     void error(const yy::location& l, cstref m, cstref t);
     void error(const yy::location& l, cstref m);

@@ -5,15 +5,267 @@
 #include <boost/test/unit_test.hpp>
 
 using namespace std;
+using namespace ast;
+
+#define AUTO_REQUIRE(A, B) auto A = B; \
+    BOOST_REQUIRE(A != nullptr)
+#define EXPR_TO_PRIMARY(E) AUTO_REQUIRE(unary_ ## E, E->expr); \
+        AUTO_REQUIRE(postfix_ ## E, unary_ ## E ->expr); \
+        AUTO_REQUIRE(primary_ ## E, postfix_ ## E ->expr)
+
+BOOST_AUTO_TEST_CASE(test_function_declare)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_function_return_list)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_function_args)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_function_ident_list)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_statement_list)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_statement)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_global_statement)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_clear_statement)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_identifier_list)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_expression_statement)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_assignment_statement)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_selection_statement)
+{
+
+}
 
 BOOST_AUTO_TEST_CASE(test_if_statement)
 {
     matlab2r_driver the_driver;
-    BOOST_REQUIRE(the_driver.parse_string(
-        string("if a == b \n"
-        "   'fun'\n"
-        "end"), 
-        "test"
-    ));
-    
+
+    // Basic IF statement
+    {
+        BOOST_REQUIRE(the_driver.parse_string(
+            string(
+            "if a == b \n"
+            "   'fun'\n"
+            "end"), 
+            "test"
+        ));
+
+        auto ast = the_driver.ast;
+        BOOST_REQUIRE(ast->size() == 1);
+        AUTO_REQUIRE(if_stmt, dynamic_pointer_cast<if_statement>(*ast->begin()));
+        AUTO_REQUIRE(cond, dynamic_pointer_cast<expression>(if_stmt->condition));
+        BOOST_REQUIRE(cond->op != expression_op::NONE);
+        BOOST_CHECK(cond->op == expression_op::EQ_OP);
+        AUTO_REQUIRE(lhs, cond->lhs);
+        AUTO_REQUIRE(rhs, cond->rhs);
+        EXPR_TO_PRIMARY(lhs);
+        EXPR_TO_PRIMARY(rhs);
+        BOOST_CHECK(unary_lhs->op == unary_op::NONE);
+        BOOST_CHECK(unary_rhs->op == unary_op::NONE);
+        BOOST_CHECK(postfix_lhs->transposes.size() == 0);
+        BOOST_CHECK(postfix_rhs->transposes.size() == 0);
+        AUTO_REQUIRE(qid_list_lhs, primary_lhs->qualified_id);
+        AUTO_REQUIRE(qid_list_rhs, primary_rhs->qualified_id);
+        AUTO_REQUIRE(qid_item_lhs, *qid_list_lhs->items.begin());
+        AUTO_REQUIRE(qid_item_rhs, *qid_list_rhs->items.begin());
+        BOOST_CHECK(qid_item_lhs->type == qualified_id_item_type::IDENTIFIER);
+        BOOST_CHECK(qid_item_rhs->type == qualified_id_item_type::IDENTIFIER);
+        BOOST_CHECK(qid_item_lhs->identifier == "a");
+        BOOST_CHECK(qid_item_rhs->identifier == "b");
+
+        AUTO_REQUIRE(if_block, if_stmt->statement_list);
+        BOOST_REQUIRE(if_block->size() == 1);
+        AUTO_REQUIRE(strlit_stmt, dynamic_pointer_cast<expression_statement>(*if_block->begin()));
+        AUTO_REQUIRE(strlit, strlit_stmt->expression);
+        EXPR_TO_PRIMARY(strlit);
+        BOOST_CHECK(primary_strlit->type == primary_expression_type::STRING_LIT);
+        BOOST_CHECK(primary_strlit->string_lit == "'fun'");
+    }
+}
+
+BOOST_AUTO_TEST_CASE(test_elseif_list)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_elseif_statement)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_else_statement)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_switch_statement)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_case_list)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_case_statement)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_otherwise_statement)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_iteration_statement)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_for_statement)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_while_statement)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_jump_statement)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_try_catch_statement)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_catch_statement)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_naked_funcall_statement)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_naked_arg_list)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_qualified_id)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_qualified_id_item)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_assignment_expression)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_expression)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_unary_expression)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_postfix_expression)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_primary_expression)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_array_col_list)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_array_row_list)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_index_expression)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_index_expression_list)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_array_index_list)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_array_index)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_array_or_funcall)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(test_array_cell)
+{
+
 }

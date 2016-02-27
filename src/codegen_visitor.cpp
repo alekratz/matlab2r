@@ -486,30 +486,34 @@ void codegen_visitor::visit(switch_statement* switch_stmt)
         out << "if (";
         expr->accept(this);
         out << " == ";
-        // TODO : assert this isn't nullptr
+        assert(case_ptr->condition != nullptr);
         case_ptr->condition->accept(this);
-        out << ") {" << endl;
-        indent++;
-        case_ptr->statement_list->accept(this);
-        indent--;
-        print_indent();
-        out << "} ";
+        out << ") ";
+        case_ptr->accept(this);    
         if(case_iter + 1 != case_list->end() || otherwise_stmt != nullptr)
             out << "else ";
     }
 
-    if(otherwise_stmt != nullptr)
-    {
-        out << "{" << endl;
-        indent++;
-        otherwise_stmt->statement_list->accept(this);
-        indent--;
-        print_indent();
-        out << "}";
-    }
+    if(otherwise_stmt != nullptr) otherwise_stmt->accept(this);
 }
-// void codegen_visitor::visit(case_statement* case_stmt) { }
-// void codegen_visitor::visit(otherwise_statement*) { }
+void codegen_visitor::visit(case_statement* case_stmt)
+{
+    out << "{" << endl;
+    indent++;
+    case_stmt->statement_list->accept(this);
+    indent--;
+    print_indent();
+    out << "} ";
+}
+void codegen_visitor::visit(otherwise_statement* otherwise_stmt)
+{
+    out << "{" << endl;
+    indent++;
+    otherwise_stmt->statement_list->accept(this);
+    indent--;
+    print_indent();
+    out << "}";
+}
 
 void codegen_visitor::visit(statement_list* stmt_list)
 {

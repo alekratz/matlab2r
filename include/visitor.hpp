@@ -182,8 +182,8 @@ public:
     virtual void visit(ast::elseif_statement*);
     virtual void visit(ast::else_statement*);
     virtual void visit(ast::switch_statement*);
-    //virtual void visit(ast::case_statement*);
-    //virtual void visit(ast::otherwise_statement*);
+    virtual void visit(ast::case_statement*);
+    virtual void visit(ast::otherwise_statement*);
     virtual void visit(ast::statement_list*);
 
 private:

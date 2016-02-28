@@ -16,7 +16,11 @@ using namespace ast;
 
 BOOST_AUTO_TEST_CASE(test_function_declare)
 {
+    matlab2r_driver the_driver;
 
+    BOOST_REQUIRE(the_driver.parse_string(string(
+        ""
+    )));
 }
 
 BOOST_AUTO_TEST_CASE(test_function_return_list)
@@ -35,11 +39,6 @@ BOOST_AUTO_TEST_CASE(test_function_ident_list)
 }
 
 BOOST_AUTO_TEST_CASE(test_statement_list)
-{
-
-}
-
-BOOST_AUTO_TEST_CASE(test_statement)
 {
 
 }

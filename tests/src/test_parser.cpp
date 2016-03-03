@@ -533,7 +533,7 @@ BOOST_AUTO_TEST_CASE(test_else_statement)
 BOOST_AUTO_TEST_CASE(test_switch_statement)
 {
     matlab2r_driver the_driver;
-    // basic assignment statement
+    // basic switch statement
     {
         BOOST_REQUIRE(the_driver.parse_string(
             string(
@@ -588,7 +588,68 @@ BOOST_AUTO_TEST_CASE(test_switch_statement)
 
 BOOST_AUTO_TEST_CASE(test_otherwise_statement)
 {
-
+    matlab2r_driver the_driver;
+    // basic switch statement with otherwise
+    {
+        BOOST_REQUIRE(the_driver.parse_string(
+            string(
+            "switch a\n"
+            "   case 1\n"
+            "       'case 1'\n"
+            "   case 2\n"
+            "       'case 2'\n"
+            "   otherwise\n"
+            "       'otherwise clause'\n"
+            "end"
+            ),
+            "test"
+        ));
+        auto ast = the_driver.ast;
+        BOOST_REQUIRE(ast->size() == 1);
+        AUTO_REQUIRE(switch_stmt, dynamic_pointer_cast<switch_statement>(*ast->begin()));
+        AUTO_REQUIRE(switch_expr, switch_stmt->expression);
+        EXPR_TO_PRIMARY(switch_expr);
+        BOOST_REQUIRE(primary_switch_expr->type == primary_expression_type::QUALIFIED_ID);
+        AUTO_REQUIRE(qid_switch_expr, primary_switch_expr->qualified_id);
+        BOOST_REQUIRE(qid_switch_expr->items.size() == 1);
+        AUTO_REQUIRE(qid_item_switch_expr, qid_switch_expr->items[0]);
+        BOOST_REQUIRE(qid_item_switch_expr->type == qualified_id_item_type::IDENTIFIER);
+        BOOST_CHECK(qid_item_switch_expr->identifier == "a");
+        
+        AUTO_REQUIRE(case_list, switch_stmt->case_list);
+        BOOST_REQUIRE(case_list->items.size() == 2);
+        AUTO_REQUIRE(case1, case_list->items[0]);
+        AUTO_REQUIRE(case1_cond, case1->condition);
+        EXPR_TO_PRIMARY(case1_cond);
+        BOOST_REQUIRE(primary_case1_cond->type == primary_expression_type::CONSTANT);
+        BOOST_CHECK(primary_case1_cond->constant == 1);
+        BOOST_REQUIRE(case1->statement_list->size() == 1);
+        AUTO_REQUIRE(case1_item, dynamic_pointer_cast<expression_statement>(*case1->statement_list->begin()));
+        AUTO_REQUIRE(case1_expr, case1_item->expression);
+        EXPR_TO_PRIMARY(case1_expr);
+        BOOST_REQUIRE(primary_case1_expr->type == primary_expression_type::STRING_LIT);
+        BOOST_REQUIRE(primary_case1_expr->string_lit == "'case 1'");
+        
+        AUTO_REQUIRE(case2, case_list->items[1]);
+        AUTO_REQUIRE(case2_cond, case2->condition);
+        EXPR_TO_PRIMARY(case2_cond);
+        BOOST_REQUIRE(primary_case2_cond->type == primary_expression_type::CONSTANT);
+        BOOST_CHECK(primary_case2_cond->constant == 2);
+        BOOST_REQUIRE(case2->statement_list->size() == 1);
+        AUTO_REQUIRE(case2_item, dynamic_pointer_cast<expression_statement>(*case2->statement_list->begin()));
+        AUTO_REQUIRE(case2_expr, case2_item->expression);
+        EXPR_TO_PRIMARY(case2_expr);
+        BOOST_REQUIRE(primary_case2_expr->type == primary_expression_type::STRING_LIT);
+        BOOST_REQUIRE(primary_case2_expr->string_lit == "'case 2'");
+        
+        AUTO_REQUIRE(otherwise, switch_stmt->otherwise_statement);
+        BOOST_REQUIRE(otherwise->statement_list->size() == 1);
+        AUTO_REQUIRE(ow_item, dynamic_pointer_cast<expression_statement>(*otherwise->statement_list->begin()));
+        AUTO_REQUIRE(ow_expr, ow_item->expression);
+        EXPR_TO_PRIMARY(ow_expr);
+        BOOST_REQUIRE(primary_ow_expr->type == primary_expression_type::STRING_LIT);
+        BOOST_CHECK(primary_ow_expr->string_lit == "'otherwise clause'");
+    }
 }
 
 BOOST_AUTO_TEST_CASE(test_iteration_statement)

@@ -157,12 +157,128 @@ BOOST_AUTO_TEST_CASE(test_global_statement)
 
 BOOST_AUTO_TEST_CASE(test_clear_statement)
 {
-
+    matlab2r_driver the_driver;
+    // clear statement with no argument
+    {
+        BOOST_REQUIRE(the_driver.parse_string(
+            string("clear\n"),
+            "test"
+        ));
+        auto ast = the_driver.ast;
+        BOOST_REQUIRE(ast->size() == 1);
+        AUTO_REQUIRE(clear_stmt, dynamic_pointer_cast<clear_statement>(*ast->begin()));
+        BOOST_CHECK(clear_stmt->identifier_list.size() == 0);
+    }
+    
+    // clear statement with one argument
+    {
+        BOOST_REQUIRE(the_driver.parse_string(
+            string("clear a\n"),
+            "test"
+        ));
+        auto ast = the_driver.ast;
+        BOOST_REQUIRE(ast->size() == 1);
+        AUTO_REQUIRE(clear_stmt, dynamic_pointer_cast<clear_statement>(*ast->begin()));
+        BOOST_REQUIRE(clear_stmt->identifier_list.size() == 1);
+        BOOST_CHECK(clear_stmt->identifier_list[0] == "a");
+    }
+    
+    // clear statement with many arguments
+    {
+        BOOST_REQUIRE(the_driver.parse_string(
+            string("clear a b c d\n"),
+            "test"
+        ));
+        auto ast = the_driver.ast;
+        BOOST_REQUIRE(ast->size() == 1);
+        AUTO_REQUIRE(clear_stmt, dynamic_pointer_cast<clear_statement>(*ast->begin()));
+        BOOST_REQUIRE(clear_stmt->identifier_list.size() == 4);
+        BOOST_CHECK(clear_stmt->identifier_list[0] == "a");
+        BOOST_CHECK(clear_stmt->identifier_list[1] == "b");
+        BOOST_CHECK(clear_stmt->identifier_list[2] == "c");
+        BOOST_CHECK(clear_stmt->identifier_list[3] == "d");
+    }
 }
 
 BOOST_AUTO_TEST_CASE(test_assignment_statement)
 {
-
+    matlab2r_driver the_driver;
+    // basic assignment statement
+    {
+        BOOST_REQUIRE(the_driver.parse_string(
+            string("a = b\n"),
+            "test"
+        ));
+        auto ast = the_driver.ast;
+        BOOST_REQUIRE(ast->size() == 1);
+        AUTO_REQUIRE(assign_stmt, dynamic_pointer_cast<assignment_statement>(*ast->begin()));
+        AUTO_REQUIRE(assign_expr, assign_stmt->expression);
+        AUTO_REQUIRE(lhs, assign_expr->lhs);
+        AUTO_REQUIRE(rhs, assign_expr->rhs);
+        
+        BOOST_CHECK(lhs->transposes.size() == 0);
+        AUTO_REQUIRE(primary_lhs, lhs->expr);
+        BOOST_REQUIRE(primary_lhs->type == primary_expression_type::QUALIFIED_ID);
+        AUTO_REQUIRE(qid_lhs, primary_lhs->qualified_id);
+        BOOST_REQUIRE(qid_lhs->items.size() == 1);
+        AUTO_REQUIRE(qid_item_lhs, qid_lhs->items[0]);
+        BOOST_REQUIRE(qid_item_lhs->type == qualified_id_item_type::IDENTIFIER);
+        BOOST_CHECK(qid_item_lhs->identifier == "a");
+        
+        EXPR_TO_PRIMARY(rhs);
+        BOOST_REQUIRE(primary_rhs->type == primary_expression_type::QUALIFIED_ID);
+        AUTO_REQUIRE(qid_rhs, primary_rhs->qualified_id);
+        BOOST_REQUIRE(qid_rhs->items.size() == 1);
+        AUTO_REQUIRE(qid_item_rhs, qid_rhs->items[0]);
+        BOOST_REQUIRE(qid_item_rhs->type == qualified_id_item_type::IDENTIFIER);
+        BOOST_CHECK(qid_item_rhs->identifier == "b");
+    }
+    
+    // multi-assign statement
+    {
+        BOOST_REQUIRE(the_driver.parse_string(
+            string("[a, b] = c\n"),
+            "test"
+        ));
+        auto ast = the_driver.ast;
+        BOOST_REQUIRE(ast->size() == 1);
+        AUTO_REQUIRE(assign_stmt, dynamic_pointer_cast<assignment_statement>(*ast->begin()));
+        AUTO_REQUIRE(assign_expr, assign_stmt->expression);
+        AUTO_REQUIRE(lhs, assign_expr->lhs);
+        AUTO_REQUIRE(rhs, assign_expr->rhs);
+        
+        BOOST_CHECK(lhs->transposes.size() == 0);
+        AUTO_REQUIRE(primary_lhs, lhs->expr);
+        BOOST_REQUIRE(primary_lhs->type == primary_expression_type::MATRIX);
+        AUTO_REQUIRE(array_lhs, primary_lhs->array);
+        BOOST_REQUIRE(array_lhs->items.size() == 1);
+        BOOST_REQUIRE(array_lhs->items[0]->items.size() == 2);
+        AUTO_REQUIRE(first_lhs, array_lhs->items[0]->items[0]);
+        AUTO_REQUIRE(second_lhs, array_lhs->items[0]->items[1]);
+        EXPR_TO_PRIMARY(first_lhs);
+        EXPR_TO_PRIMARY(second_lhs);
+        BOOST_REQUIRE(primary_first_lhs->type == primary_expression_type::QUALIFIED_ID);
+        AUTO_REQUIRE(qid_first_lhs, primary_first_lhs->qualified_id);
+        BOOST_REQUIRE(qid_first_lhs->items.size() == 1);
+        AUTO_REQUIRE(qid_first_lhs_item, qid_first_lhs->items[0]);
+        BOOST_REQUIRE(qid_first_lhs_item->type == qualified_id_item_type::IDENTIFIER);
+        BOOST_CHECK(qid_first_lhs_item->identifier == "a");
+        
+        BOOST_REQUIRE(primary_second_lhs->type == primary_expression_type::QUALIFIED_ID);
+        AUTO_REQUIRE(qid_second_lhs, primary_second_lhs->qualified_id);
+        BOOST_REQUIRE(qid_second_lhs->items.size() == 1);
+        AUTO_REQUIRE(qid_second_lhs_item, qid_second_lhs->items[0]);
+        BOOST_REQUIRE(qid_second_lhs_item->type == qualified_id_item_type::IDENTIFIER);
+        BOOST_CHECK(qid_second_lhs_item->identifier == "b");
+        
+        EXPR_TO_PRIMARY(rhs);
+        BOOST_REQUIRE(primary_rhs->type == primary_expression_type::QUALIFIED_ID);
+        AUTO_REQUIRE(qid_rhs, primary_rhs->qualified_id);
+        BOOST_REQUIRE(qid_rhs->items.size() == 1);
+        AUTO_REQUIRE(qid_item_rhs, qid_rhs->items[0]);
+        BOOST_REQUIRE(qid_item_rhs->type == qualified_id_item_type::IDENTIFIER);
+        BOOST_CHECK(qid_item_rhs->identifier == "c");
+    }
 }
 
 BOOST_AUTO_TEST_CASE(test_selection_statement)

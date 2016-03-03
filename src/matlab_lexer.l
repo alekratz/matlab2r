@@ -69,9 +69,30 @@ try                     { BEGIN string_lit; return yy::matlab_parser::make_TRY(l
 while                   { BEGIN string_lit; return yy::matlab_parser::make_WHILE(loc); }
 
 {identifier}            { BEGIN transpose; return yy::matlab_parser::make_IDENTIFIER(yytext, loc); }
-{D}+({E})?              { BEGIN transpose; return yy::matlab_parser::make_CONSTANT(yytext, loc); }
-{D}*{dot}{D}+({E})?     { BEGIN transpose; return yy::matlab_parser::make_CONSTANT(yytext, loc); }
-{D}+{dot}{D}*({E})?     { BEGIN transpose; return yy::matlab_parser::make_CONSTANT(yytext, loc); }
+
+{D}+({E})?              { 
+                            BEGIN transpose;
+                            std::stringstream ss(yytext);
+                            double result;
+                            ss >> result;
+                            return yy::matlab_parser::make_CONSTANT(result, loc);
+                        }
+                        
+{D}*{dot}{D}+({E})?     { 
+                            BEGIN transpose;
+                            std::stringstream ss(yytext);
+                            double result;
+                            ss >> result;
+                            return yy::matlab_parser::make_CONSTANT(result, loc);
+                        }
+                        
+{D}+{dot}{D}*({E})?     { 
+                            BEGIN transpose;
+                            std::stringstream ss(yytext);
+                            double result;
+                            ss >> result;
+                            return yy::matlab_parser::make_CONSTANT(result, loc);
+                        }
 
 <string_lit>'[^'\n]*'/' { BEGIN string_lit; return yy::matlab_parser::make_STRING_LITERAL(yytext, loc); }
 <string_lit>'[^'\n]*'   { BEGIN string_lit; return yy::matlab_parser::make_STRING_LITERAL(yytext, loc); }

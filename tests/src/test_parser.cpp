@@ -18,108 +18,111 @@ BOOST_AUTO_TEST_CASE(test_function_declare)
 {
     matlab2r_driver the_driver;
     // function declare statement with no returns or parameters
-    {
-        BOOST_REQUIRE(the_driver.parse_string(
-            string(
-            "function test_funcall()\n"
-            "   123\n"
-            "end"),
-            "test"
-        ));
-        auto ast = the_driver.ast;
-        BOOST_REQUIRE(ast->size() == 1);
-        AUTO_REQUIRE(fundecl_stmt, dynamic_pointer_cast<function_declare>(*ast->begin()));
-        BOOST_CHECK(fundecl_stmt->returns.size() == 0);
-        BOOST_CHECK(fundecl_stmt->args.size() == 0);
-        BOOST_CHECK(fundecl_stmt->statement_list->size() == 1);
-        BOOST_CHECK(fundecl_stmt->name == "test_funcall");
-        AUTO_REQUIRE(constant_stmt, dynamic_pointer_cast<expression_statement>(*fundecl_stmt->statement_list->begin()));
-        AUTO_REQUIRE(constant, constant_stmt->expression);
-        BOOST_REQUIRE(constant->op == expression_op::NONE);
-        EXPR_TO_PRIMARY(constant);
-        BOOST_CHECK(primary_constant->type == primary_expression_type::CONSTANT);
-        BOOST_CHECK(primary_constant->constant == 123.0);
-    }
-    
+    BOOST_REQUIRE(the_driver.parse_string(
+        string(
+        "function test_funcall()\n"
+        "   123\n"
+        "end"),
+        "test"
+    ));
+    auto ast = the_driver.ast;
+    BOOST_REQUIRE(ast->size() == 1);
+    AUTO_REQUIRE(fundecl_stmt, dynamic_pointer_cast<function_declare>(*ast->begin()));
+    BOOST_CHECK(fundecl_stmt->returns.size() == 0);
+    BOOST_CHECK(fundecl_stmt->args.size() == 0);
+    BOOST_CHECK(fundecl_stmt->statement_list->size() == 1);
+    BOOST_CHECK(fundecl_stmt->name == "test_funcall");
+    AUTO_REQUIRE(constant_stmt, dynamic_pointer_cast<expression_statement>(*fundecl_stmt->statement_list->begin()));
+    AUTO_REQUIRE(constant, constant_stmt->expression);
+    BOOST_REQUIRE(constant->op == expression_op::NONE);
+    EXPR_TO_PRIMARY(constant);
+    BOOST_CHECK(primary_constant->type == primary_expression_type::CONSTANT);
+    BOOST_CHECK(primary_constant->constant == 123.0);
+}
+
+BOOST_AUTO_TEST_CASE(test_function_declare_rets_no_params)
+{
+    matlab2r_driver the_driver;
     // function declare statement with returns, but no parameters
-    {
-        BOOST_REQUIRE(the_driver.parse_string(
-            string(
-            "function [a, b] = test_funcall()\n"
-            "   123\n"
-            "end"),
-            "test"
-        ));
-        auto ast = the_driver.ast;
-        BOOST_REQUIRE(ast->size() == 1);
-        AUTO_REQUIRE(fundecl_stmt, dynamic_pointer_cast<function_declare>(*ast->begin()));
-        BOOST_REQUIRE(fundecl_stmt->returns.size() == 2);
-        BOOST_CHECK(fundecl_stmt->args.size() == 0);
-        BOOST_CHECK(fundecl_stmt->returns[0] == "a");
-        BOOST_CHECK(fundecl_stmt->returns[1] == "b");
-        BOOST_CHECK(fundecl_stmt->statement_list->size() == 1);
-        BOOST_CHECK(fundecl_stmt->name == "test_funcall");
-        AUTO_REQUIRE(constant_stmt, dynamic_pointer_cast<expression_statement>(*fundecl_stmt->statement_list->begin()));
-        AUTO_REQUIRE(constant, constant_stmt->expression);
-        BOOST_REQUIRE(constant->op == expression_op::NONE);
-        EXPR_TO_PRIMARY(constant);
-        BOOST_CHECK(primary_constant->type == primary_expression_type::CONSTANT);
-        BOOST_CHECK(primary_constant->constant == 123.0);
-    }
-    
+    BOOST_REQUIRE(the_driver.parse_string(
+        string(
+        "function [a, b] = test_funcall()\n"
+        "   123\n"
+        "end"),
+        "test"
+    ));
+    auto ast = the_driver.ast;
+    BOOST_REQUIRE(ast->size() == 1);
+    AUTO_REQUIRE(fundecl_stmt, dynamic_pointer_cast<function_declare>(*ast->begin()));
+    BOOST_REQUIRE(fundecl_stmt->returns.size() == 2);
+    BOOST_CHECK(fundecl_stmt->args.size() == 0);
+    BOOST_CHECK(fundecl_stmt->returns[0] == "a");
+    BOOST_CHECK(fundecl_stmt->returns[1] == "b");
+    BOOST_CHECK(fundecl_stmt->statement_list->size() == 1);
+    BOOST_CHECK(fundecl_stmt->name == "test_funcall");
+    AUTO_REQUIRE(constant_stmt, dynamic_pointer_cast<expression_statement>(*fundecl_stmt->statement_list->begin()));
+    AUTO_REQUIRE(constant, constant_stmt->expression);
+    BOOST_REQUIRE(constant->op == expression_op::NONE);
+    EXPR_TO_PRIMARY(constant);
+    BOOST_CHECK(primary_constant->type == primary_expression_type::CONSTANT);
+    BOOST_CHECK(primary_constant->constant == 123.0);
+}
+BOOST_AUTO_TEST_CASE(test_function_declare_params_no_rets)
+{
+    matlab2r_driver the_driver;
     // function declare statement without returns, but with parameters
-    {
-        BOOST_REQUIRE(the_driver.parse_string(
-            string(
-            "function test_funcall(c, d)\n"
-            "   123\n"
-            "end"),
-            "test"
-        ));
-        auto ast = the_driver.ast;
-        BOOST_REQUIRE(ast->size() == 1);
-        AUTO_REQUIRE(fundecl_stmt, dynamic_pointer_cast<function_declare>(*ast->begin()));
-        BOOST_CHECK(fundecl_stmt->returns.size() == 0);
-        BOOST_REQUIRE(fundecl_stmt->args.size() == 2);
-        BOOST_CHECK(fundecl_stmt->args[0] == "c");
-        BOOST_CHECK(fundecl_stmt->args[1] == "d");
-        BOOST_CHECK(fundecl_stmt->statement_list->size() == 1);
-        BOOST_CHECK(fundecl_stmt->name == "test_funcall");
-        AUTO_REQUIRE(constant_stmt, dynamic_pointer_cast<expression_statement>(*fundecl_stmt->statement_list->begin()));
-        AUTO_REQUIRE(constant, constant_stmt->expression);
-        BOOST_REQUIRE(constant->op == expression_op::NONE);
-        EXPR_TO_PRIMARY(constant);
-        BOOST_CHECK(primary_constant->type == primary_expression_type::CONSTANT);
-        BOOST_CHECK(primary_constant->constant == 123.0);
-    }
-    
+    BOOST_REQUIRE(the_driver.parse_string(
+        string(
+        "function test_funcall(c, d)\n"
+        "   123\n"
+        "end"),
+        "test"
+    ));
+    auto ast = the_driver.ast;
+    BOOST_REQUIRE(ast->size() == 1);
+    AUTO_REQUIRE(fundecl_stmt, dynamic_pointer_cast<function_declare>(*ast->begin()));
+    BOOST_CHECK(fundecl_stmt->returns.size() == 0);
+    BOOST_REQUIRE(fundecl_stmt->args.size() == 2);
+    BOOST_CHECK(fundecl_stmt->args[0] == "c");
+    BOOST_CHECK(fundecl_stmt->args[1] == "d");
+    BOOST_CHECK(fundecl_stmt->statement_list->size() == 1);
+    BOOST_CHECK(fundecl_stmt->name == "test_funcall");
+    AUTO_REQUIRE(constant_stmt, dynamic_pointer_cast<expression_statement>(*fundecl_stmt->statement_list->begin()));
+    AUTO_REQUIRE(constant, constant_stmt->expression);
+    BOOST_REQUIRE(constant->op == expression_op::NONE);
+    EXPR_TO_PRIMARY(constant);
+    BOOST_CHECK(primary_constant->type == primary_expression_type::CONSTANT);
+    BOOST_CHECK(primary_constant->constant == 123.0);
+}
+
+BOOST_AUTO_TEST_CASE(test_function_declare_params_and_rets)
+{
+    matlab2r_driver the_driver;
     // function declare statement with both returns and parameters
-    {
-        BOOST_REQUIRE(the_driver.parse_string(
-            string(
-            "function [a, b] = test_funcall(c, d)\n"
-            "   123\n"
-            "end"),
-            "test"
-        ));
-        auto ast = the_driver.ast;
-        BOOST_REQUIRE(ast->size() == 1);
-        AUTO_REQUIRE(fundecl_stmt, dynamic_pointer_cast<function_declare>(*ast->begin()));
-        BOOST_REQUIRE(fundecl_stmt->returns.size() == 2);
-        BOOST_REQUIRE(fundecl_stmt->args.size() == 2);
-        BOOST_CHECK(fundecl_stmt->returns[0] == "a");
-        BOOST_CHECK(fundecl_stmt->returns[1] == "b");
-        BOOST_CHECK(fundecl_stmt->args[0] == "c");
-        BOOST_CHECK(fundecl_stmt->args[1] == "d");
-        BOOST_CHECK(fundecl_stmt->statement_list->size() == 1);
-        BOOST_CHECK(fundecl_stmt->name == "test_funcall");
-        AUTO_REQUIRE(constant_stmt, dynamic_pointer_cast<expression_statement>(*fundecl_stmt->statement_list->begin()));
-        AUTO_REQUIRE(constant, constant_stmt->expression);
-        BOOST_REQUIRE(constant->op == expression_op::NONE);
-        EXPR_TO_PRIMARY(constant);
-        BOOST_CHECK(primary_constant->type == primary_expression_type::CONSTANT);
-        BOOST_CHECK(primary_constant->constant == 123.0);
-    }
+    BOOST_REQUIRE(the_driver.parse_string(
+        string(
+        "function [a, b] = test_funcall(c, d)\n"
+        "   123\n"
+        "end"),
+        "test"
+    ));
+    auto ast = the_driver.ast;
+    BOOST_REQUIRE(ast->size() == 1);
+    AUTO_REQUIRE(fundecl_stmt, dynamic_pointer_cast<function_declare>(*ast->begin()));
+    BOOST_REQUIRE(fundecl_stmt->returns.size() == 2);
+    BOOST_REQUIRE(fundecl_stmt->args.size() == 2);
+    BOOST_CHECK(fundecl_stmt->returns[0] == "a");
+    BOOST_CHECK(fundecl_stmt->returns[1] == "b");
+    BOOST_CHECK(fundecl_stmt->args[0] == "c");
+    BOOST_CHECK(fundecl_stmt->args[1] == "d");
+    BOOST_CHECK(fundecl_stmt->statement_list->size() == 1);
+    BOOST_CHECK(fundecl_stmt->name == "test_funcall");
+    AUTO_REQUIRE(constant_stmt, dynamic_pointer_cast<expression_statement>(*fundecl_stmt->statement_list->begin()));
+    AUTO_REQUIRE(constant, constant_stmt->expression);
+    BOOST_REQUIRE(constant->op == expression_op::NONE);
+    EXPR_TO_PRIMARY(constant);
+    BOOST_CHECK(primary_constant->type == primary_expression_type::CONSTANT);
+    BOOST_CHECK(primary_constant->constant == 123.0);
 }
 
 BOOST_AUTO_TEST_CASE(test_global_statement)
@@ -652,11 +655,6 @@ BOOST_AUTO_TEST_CASE(test_otherwise_statement)
     }
 }
 
-BOOST_AUTO_TEST_CASE(test_iteration_statement)
-{
-
-}
-
 BOOST_AUTO_TEST_CASE(test_for_statement)
 {
 
@@ -687,22 +685,7 @@ BOOST_AUTO_TEST_CASE(test_naked_funcall_statement)
 
 }
 
-BOOST_AUTO_TEST_CASE(test_naked_arg_list)
-{
-
-}
-
 BOOST_AUTO_TEST_CASE(test_qualified_id)
-{
-
-}
-
-BOOST_AUTO_TEST_CASE(test_qualified_id_item)
-{
-
-}
-
-BOOST_AUTO_TEST_CASE(test_assignment_expression)
 {
 
 }

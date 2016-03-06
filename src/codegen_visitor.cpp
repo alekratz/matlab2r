@@ -160,7 +160,7 @@ void codegen_visitor::visit(expression* expr)
     else
     {
         auto unary_expr = expr->expr;
-        assert(unary_expr != nullptr && "unary expression portion of expession is null; this should not happen");
+        assert(unary_expr != nullptr && "unary expression portion of expression is null; this should not happen");
         unary_expr->accept(this);
     }
 }

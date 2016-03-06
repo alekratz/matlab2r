@@ -96,7 +96,7 @@
     DOT
 
 %token <std::string>        IDENTIFIER
-%token <std::string>        CONSTANT
+%token <double>             CONSTANT
 %token <std::string>        STRING_LITERAL
 %token <std::string>        NAKED_ARG
 
@@ -267,10 +267,10 @@ clear_statement
 identifier_list
         : IDENTIFIER
             { $$ = std::make_shared<ast::identifier_list>($1); }
-        | identifier_list IDENTIFIER
+        | IDENTIFIER identifier_list
         {
-            $1->add_front($2);
-            $$ = $1;
+            $2->add_front($1);
+            $$ = $2;
         }
         ;
 

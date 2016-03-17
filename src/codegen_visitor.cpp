@@ -24,8 +24,7 @@ static string pad_commas(const vector<string>& list)
 {
     string result;
     auto map = map_function_t();
-    for(auto it = list.begin(); it != list.end(); it++)
-    {
+    for(auto it = list.begin(); it != list.end(); it++) {
         result += map(*it);
         if(it + 1 != list.end())
             result += ", ";
@@ -42,8 +41,7 @@ codegen_visitor::codegen_visitor(unordered_set<string> function_names)
 void codegen_visitor::visit(qualified_id* q_id)
 {
     auto items = q_id->items;
-    for(auto it = items.begin(); it != items.end(); it++)
-    {
+    for(auto it = items.begin(); it != items.end(); it++) {
         (*it)->accept(this);
         if(it + 1 != items.end())
             out << "$";
@@ -54,8 +52,7 @@ void codegen_visitor::visit(qualified_id_item* q_id_item)
 {
     auto ary_idx_list = q_id_item->array_index_list;
 
-    switch(q_id_item->type)
-    {
+    switch(q_id_item->type) {
     case qualified_id_item_type::EXPRESSION:
         q_id_item->expression->accept(this);
     break;
@@ -63,10 +60,8 @@ void codegen_visitor::visit(qualified_id_item* q_id_item)
         out << q_id_item->identifier;
         //          this gets whether we're making a function call or accessing an array
         bool funcall = (function_names.find(q_id_item->identifier) != function_names.end());
-        if(ary_idx_list != nullptr)
-        {
-            for(auto ary_idx : ary_idx_list->items)
-            {
+        if(ary_idx_list != nullptr) {
+            for(auto ary_idx : ary_idx_list->items) {
                 assert(ary_idx != nullptr && "array indexer (or funcall) is null when it should not be");
                 // Only mess with unresolved types
                 if(ary_idx->type == array_index_type::ARRAY_OR_FUNCALL)
@@ -82,8 +77,7 @@ void codegen_visitor::visit(qualified_id_item* q_id_item)
 
 void codegen_visitor::visit(array_index_list* ary_idx_list)
 {
-    for(auto ary_idx : ary_idx_list->items)
-    {
+    for(auto ary_idx : ary_idx_list->items) {
         assert(ary_idx != nullptr && "array indexer (or funcall) is null when it should not be");
         ary_idx->accept(this);
     }
@@ -93,8 +87,7 @@ void codegen_visitor::visit(array_index* ary_idx)
 {
     auto expr_list = ary_idx->index_expression_list;
     auto type = ary_idx->type;
-    switch(type)
-    {
+    switch(type) {
     case array_index_type::ARRAY_OR_FUNCALL:
         assert(false && "unresolved array or funcall type");
     break;
@@ -123,16 +116,14 @@ void codegen_visitor::visit(assignment_expression* expr)
 
 void codegen_visitor::visit(expression* expr)
 {
-    if(expr->op != expression_op::NONE)
-    {
+    if(expr->op != expression_op::NONE) {
         out << '(';
         auto lhs = expr->lhs;
         auto rhs = expr->rhs;
         assert(lhs != nullptr && "left hand side of expression is null, when it should not be");
         assert(rhs != nullptr && "right hand side of expression is null, when it should not be");
         lhs->accept(this);
-        switch(expr->op)
-        {
+        switch(expr->op) {
         case expression_op::COLON: out << ":"; break;
         case expression_op::VBAR: out << " | "; break;
         case expression_op::AMP: out << " & "; break;
@@ -157,8 +148,7 @@ void codegen_visitor::visit(expression* expr)
         rhs->accept(this);
         out << ')';
     }
-    else
-    {
+    else {
         auto unary_expr = expr->expr;
         assert(unary_expr != nullptr && "unary expression portion of expression is null; this should not happen");
         unary_expr->accept(this);
@@ -167,8 +157,7 @@ void codegen_visitor::visit(expression* expr)
 
 void codegen_visitor::visit(unary_expression* unexpr)
 {
-    switch(unexpr->op)
-    {
+    switch(unexpr->op) {
     case unary_op::PLUS: out << "+";
     case unary_op::MINUS: out << "-";
     case unary_op::TILDE: out << "~";
@@ -189,10 +178,8 @@ void codegen_visitor::visit(postfix_expression* post_expr)
     function<void(transpose_iter)> tp = [&](transpose_iter here) {
         if(here == tp_list.end())
             expr->accept(this);
-        else
-        {
-            switch((*here))
-            {
+        else {
+            switch((*here)) {
             case postfix_op::TRANSPOSE: 
                 out << "t(";
                 tp(here + 1);
@@ -206,8 +193,7 @@ void codegen_visitor::visit(postfix_expression* post_expr)
 }
 void codegen_visitor::visit(primary_expression* prim_expr)
 {
-    switch(prim_expr->type)
-    {
+    switch(prim_expr->type) {
     case primary_expression_type::QUALIFIED_ID:
     {
         auto q_id = prim_expr->qualified_id;
@@ -224,14 +210,12 @@ void codegen_visitor::visit(primary_expression* prim_expr)
     {
         auto cols = prim_expr->array;
         if(cols->size() == 0) out << "NULL";
-        else if(cols->size() == 1)
-        {
+        else if(cols->size() == 1) {
             out << "c(";
             cols->accept(this);
             out << ")";
         }
-        else
-        {
+        else {
             size_t colsize = cols->size();
             size_t rowsize = (*cols->begin())->size();
             out << "matrix(c(";
@@ -244,14 +228,12 @@ void codegen_visitor::visit(primary_expression* prim_expr)
     {
         auto cols = prim_expr->array;
         if(cols->size() == 0) out << "NULL";
-        else if(cols->size() == 1)
-        {
+        else if(cols->size() == 1) {
             out << "list(";
             cols->accept(this);
             out << ")";
         }
-        else
-        {
+        else {
             size_t colsize = cols->size();
             size_t rowsize = (*cols->begin())->size();
             out << "matrix(list(";
@@ -273,8 +255,7 @@ void codegen_visitor::visit(primary_expression* prim_expr)
 }
 void codegen_visitor::visit(array_col_list* col_list)
 {
-    for(auto iter = col_list->begin(); iter != col_list->end(); iter++)
-    {
+    for(auto iter = col_list->begin(); iter != col_list->end(); iter++) {
         auto col = *iter;
         col->accept(this);
         if(iter + 1 != col_list->end())
@@ -283,8 +264,7 @@ void codegen_visitor::visit(array_col_list* col_list)
 }
 void codegen_visitor::visit(array_row_list* row_list)
 {
-    for(auto iter = row_list->begin(); iter != row_list->end(); iter++)
-    {
+    for(auto iter = row_list->begin(); iter != row_list->end(); iter++) {
         auto row = *iter;
         row->accept(this);
         if(iter + 1 != row_list->end())
@@ -293,12 +273,10 @@ void codegen_visitor::visit(array_row_list* row_list)
 }
 void codegen_visitor::visit(index_expression* idx_expr)
 {
-    if(idx_expr->is_colon_op)
-    {
+    if(idx_expr->is_colon_op) {
         // TODO: colon operator, aka select all
     }
-    else
-    {
+    else {
         auto expr = idx_expr->expr;
         assert(expr != nullptr && "index expression is null when it should not be");
         expr->accept(this);
@@ -306,8 +284,7 @@ void codegen_visitor::visit(index_expression* idx_expr)
 }
 void codegen_visitor::visit(index_expression_list* expr_list)
 {
-    for(auto iter = expr_list->begin(); iter != expr_list->end(); iter++)
-    {
+    for(auto iter = expr_list->begin(); iter != expr_list->end(); iter++) {
         (*iter)->accept(this);
         if(iter + 1 != expr_list->end())
             out << ", ";
@@ -359,8 +336,7 @@ void codegen_visitor::visit(try_statement* try_stmt)
     indent--;
     print_indent();
     out << "}";
-    if(catch_stmt != nullptr)
-    {
+    if(catch_stmt != nullptr) {
         out << ", error = ";
         catch_stmt->accept(this);
     }
@@ -396,8 +372,7 @@ void codegen_visitor::visit(while_statement* while_stmt)
 void codegen_visitor::visit(jump_statement* jump_stmt)
 {
     auto type = jump_stmt->type;
-    switch(type)
-    {
+    switch(type) {
     case jump_statement_type::BREAK:
         out << "break";
     break;
@@ -480,8 +455,7 @@ void codegen_visitor::visit(switch_statement* switch_stmt)
     auto otherwise_stmt = switch_stmt->otherwise_statement;
     assert(expr != nullptr && "expression in switch statement must not be null");
 
-    for(auto case_iter = case_list->begin(); case_iter != case_list->end(); case_iter++)
-    {
+    for(auto case_iter = case_list->begin(); case_iter != case_list->end(); case_iter++) {
         auto case_ptr = *case_iter;
         out << "if (";
         expr->accept(this);
@@ -517,8 +491,7 @@ void codegen_visitor::visit(otherwise_statement* otherwise_stmt)
 
 void codegen_visitor::visit(statement_list* stmt_list)
 {
-    for(auto stmt : stmt_list->items)
-    {
+    for(auto stmt : stmt_list->items) {
         print_indent();
         stmt->accept(this);
         out << endl;

@@ -5,13 +5,11 @@ namespace ast
 
 void expression::children_accept(visitor_p guest)
 { 
-    if(op == expression_op::NONE)
-    {
+    if(op == expression_op::NONE) {
         assert(expr != nullptr && "expr is null, when it should not be");
         expr->accept(guest);
     }
-    else
-    {
+    else {
         assert(lhs != nullptr && "left hand side of expression is null, when it should not be");
         lhs->accept(guest);
         assert(rhs != nullptr && "right hand side of expression is null, when it should not be");
@@ -22,13 +20,11 @@ void expression::children_accept(visitor_p guest)
 void expression::traverse_top_down(visitor_p guest)
 { 
     accept(guest);
-    if(op == expression_op::NONE)
-    {
+    if(op == expression_op::NONE) {
         assert(expr != nullptr && "expr is null, when it should not be");
         expr->traverse_top_down(guest);
     }
-    else
-    {
+    else {
         assert(lhs != nullptr && "left hand side of expression is null, when it should not be");
         lhs->traverse_top_down(guest);
         assert(rhs != nullptr && "right hand side of expression is null, when it should not be");
@@ -38,13 +34,11 @@ void expression::traverse_top_down(visitor_p guest)
 
 void expression::traverse_bottom_up(visitor_p guest)
 { 
-    if(op == expression_op::NONE)
-    {
+    if(op == expression_op::NONE) {
         assert(expr != nullptr && "expr is null, when it should not be");
         expr->traverse_bottom_up(guest);
     }
-    else
-    {
+    else {
         assert(lhs != nullptr && "left hand side of expression is null, when it should not be");
         lhs->traverse_bottom_up(guest);
         assert(rhs != nullptr && "right hand side of expression is null, when it should not be");

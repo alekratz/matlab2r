@@ -5,8 +5,7 @@ namespace ast
 
 void primary_expression::children_accept(visitor_p guest)
 { 
-    switch(type)
-    {
+    switch(type) {
     case primary_expression_type::QUALIFIED_ID:
         assert(qualified_id != nullptr && "primary_expression with type of QUALIFIED_ID has null or empty qualified_id container value.");
         qualified_id->accept(guest);
@@ -28,8 +27,7 @@ void primary_expression::children_accept(visitor_p guest)
 void primary_expression::traverse_top_down(visitor_p guest)
 { 
     accept(guest);
-    switch(type)
-    {
+    switch(type) {
     case primary_expression_type::QUALIFIED_ID:
         assert(qualified_id != nullptr && "primary_expression with type of QUALIFIED_ID has null or empty qualified_id container value.");
         qualified_id->traverse_top_down(guest);
@@ -50,8 +48,7 @@ void primary_expression::traverse_top_down(visitor_p guest)
 }
 void primary_expression::traverse_bottom_up(visitor_p guest)
 { 
-    switch(type)
-    {
+    switch(type) {
     case primary_expression_type::QUALIFIED_ID:
         assert(qualified_id != nullptr && "primary_expression with type of QUALIFIED_ID has null or empty qualified_id container value.");
         qualified_id->traverse_bottom_up(guest);

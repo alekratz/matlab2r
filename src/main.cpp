@@ -36,10 +36,8 @@ static bool parse_opts(int argc, char **argv)
 
     char c;
     int option_index;
-    while((c = getopt_long(argc, argv, "spv", lopts, &option_index)) != -1)
-    {
-        switch(c)
-        {
+    while((c = getopt_long(argc, argv, "spv", lopts, &option_index)) != -1) {
+        switch(c) {
         // GNU will print out the error for us. Thanks, GNU!
         case '?': return false;
         case 'v':
@@ -53,8 +51,7 @@ static bool parse_opts(int argc, char **argv)
             break;
         case 0:
             // print version and exit immediately
-            if(strcmp(lopts[option_index].name, "version") == 0)
-            {
+            if(strcmp(lopts[option_index].name, "version") == 0) {
                 print_version();
                 exit(0);
             }
@@ -93,16 +90,14 @@ static void print_version()
 int main(int argc, char **argv)
 {
     /* Parse command line options */
-    if(parse_opts(argc, argv) == 0)
-    {
+    if(parse_opts(argc, argv) == 0) {
         usage(argc, argv);
         cerr << "exiting" << endl;
         exit(1);
     }
 
     /* Make sure we got at least one filename in our list */
-    if(filenames.size() == 0)
-    {
+    if(filenames.size() == 0) {
         cerr << argv[0] << " requires at least one argument" << endl;
         usage(argc, argv);
         cerr << "exiting" << endl;
@@ -110,38 +105,32 @@ int main(int argc, char **argv)
     }
     
     /* Parse every file */
-    for(auto& file : filenames)
-    {
+    for(auto& file : filenames) {
         VCERR << "processing file " << file << ": ";
         matlab2r_driver the_driver;
         the_driver.trace_scanning = trace_scanning;
         the_driver.trace_parsing = trace_parsing;
 
         /* Make sure the file exists and is not a directory */
-        if(!fs::exists(file) || fs::is_directory(file))
-        {
+        if(!fs::exists(file) || fs::is_directory(file)) {
             VCERR << endl;
             cerr << "error: `" << file << "' is not a regular file." << endl;
             cerr << "exiting" << endl;
             exit(1);
         }
 
-        if(the_driver.parse_file(file))
-        {
+        if(the_driver.parse_file(file)) {
             VCERR << "done" << endl;
             // get the AST
             auto ast = the_driver.ast;
-            if(ast != nullptr)
-            {
+            if(ast != nullptr) {
                 VCERR << "checking sanity of " << file << ": ";
                 sanity_check_visitor sanity_checker;
                 sanity_checker.start(ast.get());
-                if(sanity_checker.is_successful())
-                {
+                if(sanity_checker.is_successful()) {
                     VCERR << "done" << endl;
                 }
-                else
-                {
+                else {
                     cerr << "there was an error checking the sanity of " << file << ", continuing" << endl;
                     continue;
                 }
@@ -152,8 +141,7 @@ int main(int argc, char **argv)
                 codegen_visitor generator = codegen_visitor(fun_namer.get_function_names());
                 generator.visit(ast.get());
             }
-            else
-            {
+            else {
                 cerr << "error: ast is null" << endl;
             }
         }

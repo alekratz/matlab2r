@@ -45,13 +45,11 @@ continue                { BEGIN string_lit; return yy::matlab_parser::make_CONTI
 else                    { BEGIN string_lit; return yy::matlab_parser::make_ELSE(loc); }
 end                     { 
                             // we could catch mismatched parens, buuuuut that's none of my business
-                            if(paren_depth > 0)
-                            {
+                            if(paren_depth > 0) {
                                 BEGIN transpose;
                                 return yy::matlab_parser::make_IDENTIFIER(yytext, loc);
                             }
-                            else
-                            {
+                            else {
                                 BEGIN string_lit;
                                 return yy::matlab_parser::make_END_KEYW(loc);
                             }

@@ -43,6 +43,7 @@ set(M2R_SOURCES
     ${CMAKE_SOURCE_DIR}/src/matlab2r_driver.cpp
     ${CMAKE_SOURCE_DIR}/src/codegen_visitor.cpp
     ${CMAKE_SOURCE_DIR}/src/function_name_visitor.cpp
+    ${CMAKE_SOURCE_DIR}/src/sanity_check_visitor.cpp
     ${CMAKE_SOURCE_DIR}/src/rename_visitor.cpp
 
     ${CMAKE_SOURCE_DIR}/src/ast/accept.cpp

@@ -112,7 +112,7 @@ int main(int argc, char **argv)
     /* Parse every file */
     for(auto& file : filenames)
     {
-        VCOUT << "processing file " << file << ": ";
+        VCERR << "processing file " << file << ": ";
         matlab2r_driver the_driver;
         the_driver.trace_scanning = trace_scanning;
         the_driver.trace_parsing = trace_parsing;
@@ -120,7 +120,7 @@ int main(int argc, char **argv)
         /* Make sure the file exists and is not a directory */
         if(!fs::exists(file) || fs::is_directory(file))
         {
-            VCOUT << endl;
+            VCERR << endl;
             cerr << "error: `" << file << "' is not a regular file." << endl;
             cerr << "exiting" << endl;
             exit(1);
@@ -128,21 +128,21 @@ int main(int argc, char **argv)
 
         if(the_driver.parse_file(file))
         {
-            VCOUT << "done" << endl;
+            VCERR << "done" << endl;
             // get the AST
             auto ast = the_driver.ast;
             if(ast != nullptr)
             {
-                VCOUT << "checking sanity of " << file << ": ";
+                VCERR << "checking sanity of " << file << ": ";
                 sanity_check_visitor sanity_checker;
                 sanity_checker.start(ast.get());
                 if(sanity_checker.is_successful())
                 {
-                    VCOUT << "done" << endl;
+                    VCERR << "done" << endl;
                 }
                 else
                 {
-                    cout << "there was an error processing " << file << ", continuing" << endl;
+                    cerr << "there was an error checking the sanity of " << file << ", continuing" << endl;
                     continue;
                 }
                 rename_visitor renamer;

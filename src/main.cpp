@@ -133,6 +133,18 @@ int main(int argc, char **argv)
             auto ast = the_driver.ast;
             if(ast != nullptr)
             {
+                VCOUT << "checking sanity of " << file << ": ";
+                sanity_check_visitor sanity_checker;
+                sanity_checker.start(ast.get());
+                if(sanity_checker.is_successful())
+                {
+                    VCOUT << "done" << endl;
+                }
+                else
+                {
+                    cout << "there was an error processing " << file << ", continuing" << endl;
+                    continue;
+                }
                 rename_visitor renamer;
                 renamer.visit(ast.get());
                 function_name_visitor fun_namer;

@@ -52,30 +52,10 @@ public:
     virtual void visit(ast::statement_list*) { }
 };
 
-/**
- * This visitor ensures that the MATLAB code plugged in is sane. This includes:
- *     * Matrix dimensions
- */
-class sanity_check_visitor
-    : public visitor
-{
-public:
-    sanity_check_visitor();
-    virtual ~sanity_check_visitor() = default;
-
-public:
-    virtual void visit(ast::primary_expression*);
-    
-    const bool successful() const { return success; }
-    void reset() { success = true; }
-    
-private:
-    bool success;
-};
-
 #include "visitor/function_name_visitor.hpp"
 #include "visitor/rename_visitor.hpp"
 #include "visitor/codegen_visitor.hpp"
+#include "visitor/sanity_check_visitor.hpp"
 
 typedef visitor* visitor_p;
 

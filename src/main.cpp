@@ -8,7 +8,7 @@
 #include <cstring>
 #include <boost/filesystem.hpp>
 
-#define VCOUT if(verbose) cout
+#define VCOUT if(verbose) cerr
 #define VCERR if(verbose) cerr
 
 using namespace std;
@@ -120,7 +120,6 @@ int main(int argc, char **argv)
         }
 
         if(the_driver.parse_file(file)) {
-            VCERR << "done" << endl;
             // get the AST
             auto ast = the_driver.ast;
             if(ast != nullptr) {
@@ -140,6 +139,7 @@ int main(int argc, char **argv)
                 fun_namer.visit(ast.get());
                 codegen_visitor generator = codegen_visitor(fun_namer.get_function_names());
                 generator.visit(ast.get());
+                VCERR << "done" << endl;
             }
             else {
                 cerr << "error: ast is null" << endl;

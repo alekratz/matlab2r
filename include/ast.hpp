@@ -98,4 +98,8 @@ typedef visitor* visitor_p;
 #include "ast/naked_funcall_statement.hpp"
 #include "ast/function_declare.hpp"
 
+
+/* Generator includes */
+#include "ast/generator.hpp"
+
 #endif

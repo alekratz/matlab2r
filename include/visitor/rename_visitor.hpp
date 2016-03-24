@@ -19,9 +19,6 @@ public:
 public:
     virtual void visit(ast::qualified_id_item*);
     virtual void visit(ast::statement_list*);
-
-private:
-    std::unordered_map<std::string, std::string> translations;
 };
 
 #endif

@@ -126,6 +126,7 @@ int main(int argc, char **argv)
                 VCERR << "checking sanity of " << file << ": ";
                 sanity_check_visitor sanity_checker;
                 sanity_checker.start(ast.get());
+                
                 if(sanity_checker.is_successful()) {
                     VCERR << "done" << endl;
                 }
@@ -133,6 +134,7 @@ int main(int argc, char **argv)
                     cerr << "there was an error checking the sanity of " << file << ", continuing" << endl;
                     continue;
                 }
+
                 rename_visitor renamer;
                 renamer.visit(ast.get());
                 function_name_visitor fun_namer;

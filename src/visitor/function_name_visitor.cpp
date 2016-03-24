@@ -1,5 +1,7 @@
 #include "visitor.hpp"
 #include "ast.hpp"
+#include <iostream>
+#include <string>
 
 using namespace ast;
 using namespace std;
@@ -18,47 +20,37 @@ void function_name_visitor::visit(ast::statement_list* stmt_list)
         stmt->traverse_top_down(this);
 }
 
-void function_name_visitor::visit(qualified_id* qual_id)
+void function_name_visitor::visit(ast::qualified_id* qual_id)
 {
-    // None of the function names we're dealing with are only one item long
-    if(qual_id->items.size() != 1)
-        return;
-    auto item = (*qual_id->items.begin());
-    assert(item != nullptr);
-
-    // only concerning identifiers
-    if(item->type != qualified_id_item_type::IDENTIFIER || item->array_index_list == nullptr 
-        || item->array_index_list->size() == 0)
-        return;
-    // is it contained?
-    if(fname_map.count(item->identifier) != 0)
-    {
-        auto array_index = (*item->array_index_list->begin());
-        if(array_index->type == array_index_type::ARRAY || array_index->type == array_index_type::ARRAY_CELL)
-            return;
-        auto item_ptr = item.get();
-        fname_map[item->identifier](item_ptr);
+    // We only care about single-shot qualified IDs
+    if(qual_id->items.size() != 1) return;
+    auto& qual_id_item = *qual_id->items.begin();
+    // We only care about identifiers (this check may not be necessary)
+    if(qual_id_item->type != qualified_id_item_type::IDENTIFIER) return;
+    // We only care about function calls
+    auto array_indices = qual_id_item->array_index_list;
+    if(array_indices == nullptr) return;
+    if(array_indices->size() == 0) return;
+    // Finally, check to see if it's a function we care about. If it is, then we will call its mapper function.
+    auto mapper = fname_map.find(qual_id_item->identifier);
+    if(mapper != fname_map.end()) {
+        auto array_index = (*qual_id_item->array_index_list->begin());
+        array_index->type = array_index_type::FUNCALL;
+        fname_map[qual_id_item->identifier](qual_id_item.get());
     }
 }
 
 void function_name_visitor::init_fname_map()
 {
-    fname_map["helpbrowser"] =
-    fname_map["doc"] =      [](qualified_id_item*& in) {
-        in->identifier = "help.start";
-    };
-    fname_map["lookfor"] =  [](qualified_id_item*& in) {
-        in->identifier = "help.search";
-    };
-    fname_map["linspace"] = [](qualified_id_item*& in) {
-        in->identifier = "seq";
-        auto funcall_args = (*in->array_index_list->begin())->index_expression_list;
-        if(funcall_args->size() != 3)
-        {
-            cerr << "WARNING: invalid number of arguments to 'linspace': got " << funcall_args->size() << ", expected 3" 
-                << endl;
+    fname_map["linspace"] = [](ast::qualified_id_item* item) {
+        auto args = (*item->array_index_list->begin())->index_expression_list;;
+        if(args->size() != 3) {
+            cerr << "error: unable to convert linspace function to seq function, "
+                    "incorrect number of arguments (got " << args->size() << " vs 3). skipping" << endl;
             return;
         }
-        
+        item->identifier = string("seq");
+
     };
+
 }

@@ -5,7 +5,7 @@
 #error This file should not be included standalone. Please include visitor.hpp instead.
 #endif
 
-typedef std::function<void(ast::qualified_id_item*&)> fname_mapper_t;
+typedef std::function<void(ast::qualified_id_item*)> fname_mapper_t;
 typedef std::unordered_set<std::string> fname_set_t;
 typedef std::unordered_map<std::string, fname_mapper_t> fname_map_t;
 

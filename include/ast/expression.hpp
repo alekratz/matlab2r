@@ -57,6 +57,10 @@ public:
     virtual void children_accept(visitor_p guest);
     virtual void traverse_top_down(visitor_p guest);
     virtual void traverse_bottom_up(visitor_p guest);
+
+public:
+    static expression_p build(double val);
+    static expression_p build(cstref str);
 };
 
 };

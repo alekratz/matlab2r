@@ -59,6 +59,11 @@ enum class eostmt_type : uint32_t
     SEMICOLON,
 };
 
+namespace generator
+{
+    AST_ITEM(funcall_arg_assign);
+}
+
 }
 
 /* Forward declaration of the visitor class */

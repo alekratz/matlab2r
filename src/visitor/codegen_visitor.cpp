@@ -276,10 +276,16 @@ void codegen_visitor::visit(index_expression* idx_expr)
     if(idx_expr->is_colon_op) {
         // TODO: colon operator, aka select all
     }
-    else {
+    else if(idx_expr->expr != nullptr) {
         auto expr = idx_expr->expr;
-        assert(expr != nullptr && "index expression is null when it should not be");
         expr->accept(this);
+    }
+    else if(idx_expr->named_expr != nullptr) {
+        auto expr = idx_expr->named_expr;
+        expr->accept(this);
+    }
+    else {
+        assert(false && "index expression contains no information");
     }
 }
 void codegen_visitor::visit(index_expression_list* expr_list)
@@ -496,4 +502,12 @@ void codegen_visitor::visit(statement_list* stmt_list)
         stmt->accept(this);
         out << endl;
     }
+}
+
+void codegen_visitor::visit(generator::funcall_arg_assign* named_arg)
+{
+    out << named_arg->lhs;
+    out << "=";
+    assert(named_arg->rhs != nullptr && "named_arg's rhs is null when it should not be");
+    named_arg->rhs->accept(this);
 }

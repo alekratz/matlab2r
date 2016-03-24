@@ -46,4 +46,9 @@ VISITOR_ACCEPT_DECL(if_statement)
 VISITOR_ACCEPT_DECL(elseif_statement)
 VISITOR_ACCEPT_DECL(else_statement)
 
+namespace generator
+{
+VISITOR_ACCEPT_DECL(funcall_arg_assign)
+} /* namespace generator */
+
 } /* namespace ast */

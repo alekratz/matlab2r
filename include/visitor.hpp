@@ -50,6 +50,8 @@ public:
 	virtual void visit(ast::case_statement*) { }
 	virtual void visit(ast::otherwise_statement*) { }
     virtual void visit(ast::statement_list*) { }
+
+    virtual void visit(ast::generator::funcall_arg_assign*) { }
 };
 
 #include "visitor/function_name_visitor.hpp"

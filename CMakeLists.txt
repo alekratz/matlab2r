@@ -70,6 +70,8 @@ set(M2R_SOURCES
     ${CMAKE_SOURCE_DIR}/src/ast/array_index.cpp
     ${CMAKE_SOURCE_DIR}/src/ast/qualified_id.cpp
     ${CMAKE_SOURCE_DIR}/src/ast/list_node.cpp
+
+    ${CMAKE_SOURCE_DIR}/src/ast/generator/funcall_arg_assign.cpp
     ${FLEX_matlab_lexer_OUTPUTS} 
     ${BISON_matlab_parser_OUTPUTS})
 

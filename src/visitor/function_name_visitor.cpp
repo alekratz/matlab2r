@@ -43,14 +43,46 @@ void function_name_visitor::visit(ast::qualified_id* qual_id)
 void function_name_visitor::init_fname_map()
 {
     fname_map["linspace"] = [](ast::qualified_id_item* item) {
-        auto args = (*item->array_index_list->begin())->index_expression_list;;
-        if(args->size() != 3) {
+        auto args = (*item->array_index_list->begin())->index_expression_list;
+        if(args->size() != 3) { 
             cerr << "error: unable to convert linspace function to seq function, "
                     "incorrect number of arguments (got " << args->size() << " vs 3). skipping" << endl;
             return;
         }
         item->identifier = string("seq");
+        auto rhs = args->items[2]->expr; // TODO : colon operator
+        args->items[2]->expr = nullptr;
+        args->items[2]->named_expr = std::make_shared<generator::funcall_arg_assign>("len", rhs);
+    };
 
+    fname_map["logspace"] = [](ast::qualified_id_item* item) {
+        // HACK : setting the expression section of the qualified ID item doesn't seem right
+        //        maybe add a parent item or something... I dunno.
+        auto args = (*item->array_index_list->begin())->index_expression_list;
+        if(args->size() != 3) { 
+            cerr << "error: unable to convert logspace function to seq function, "
+                    "incorrect number of arguments (got " << args->size() << " vs 3). skipping" << endl;
+            return;
+        }
+        
+        auto seq_qid_item = std::make_shared<qualified_id_item>("seq");
+        seq_qid_item->array_index_list = item->array_index_list;
+        auto rhs = args->items[2]->expr;
+        args->items[2]->expr = nullptr;
+        args->items[2]->named_expr = std::make_shared<generator::funcall_arg_assign>("len", rhs);
+        item->array_index_list = nullptr;
+        item->identifier = "";
+
+        // TODO : moar buildurz
+        item->expression = std::make_shared<expression>(
+            expression::build(10.0),
+            expression_op::POW,
+            std::make_shared<expression>(
+            std::make_shared<unary_expression>(
+            std::make_shared<postfix_expression>(
+            std::make_shared<primary_expression>(
+            std::make_shared<qualified_id>(seq_qid_item))))));
+        item->type = qualified_id_item_type::EXPRESSION;
     };
 
 }

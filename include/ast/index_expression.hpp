@@ -13,14 +13,17 @@ class index_expression
 public:
     index_expression() 
         : is_colon_op(true)
-        , expr(nullptr) { }
+        , expr(nullptr) 
+        , named_expr(nullptr) { }
 
     index_expression(expression_p expr) 
         : is_colon_op(false)
-        , expr(expr) { }
+        , expr(expr)
+        , named_expr(nullptr) { }
 
     bool is_colon_op;
     expression_p expr;
+    generator::funcall_arg_assign_p named_expr;
 
 public:
     virtual void accept(visitor_p guest);

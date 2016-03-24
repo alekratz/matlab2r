@@ -41,10 +41,10 @@ set(CMAKE_CXX_FLAGS "-g -Wall --std=c++14")
 
 set(M2R_SOURCES 
     ${CMAKE_SOURCE_DIR}/src/matlab2r_driver.cpp
-    ${CMAKE_SOURCE_DIR}/src/codegen_visitor.cpp
-    ${CMAKE_SOURCE_DIR}/src/function_name_visitor.cpp
-    ${CMAKE_SOURCE_DIR}/src/sanity_check_visitor.cpp
-    ${CMAKE_SOURCE_DIR}/src/rename_visitor.cpp
+    ${CMAKE_SOURCE_DIR}/src/visitor/codegen_visitor.cpp
+    ${CMAKE_SOURCE_DIR}/src/visitor/function_name_visitor.cpp
+    ${CMAKE_SOURCE_DIR}/src/visitor/sanity_check_visitor.cpp
+    ${CMAKE_SOURCE_DIR}/src/visitor/rename_visitor.cpp
 
     ${CMAKE_SOURCE_DIR}/src/ast/accept.cpp
     ${CMAKE_SOURCE_DIR}/src/ast/block_statement.cpp

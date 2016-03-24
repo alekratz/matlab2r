@@ -18,7 +18,7 @@ enum class sanity_check_status
  *     * Matrix dimensions
  */
 class sanity_check_visitor
-    : private visitor
+    : protected visitor
 {
 public:
     sanity_check_visitor();
@@ -32,7 +32,7 @@ public:
         { return status == sanity_check_status::SUCCESS; }
     void reset() { status = sanity_check_status::NOT_STARTED; }
     
-private:
+protected:
     virtual void visit(ast::primary_expression*);
     
 private:

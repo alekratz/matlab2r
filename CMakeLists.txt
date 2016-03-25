@@ -75,8 +75,10 @@ set(M2R_SOURCES
     ${FLEX_matlab_lexer_OUTPUTS} 
     ${BISON_matlab_parser_OUTPUTS})
 
-enable_testing()
-add_subdirectory(tests)
+if(${ENABLE_TESTING})
+    enable_testing()
+    add_subdirectory(tests)
+endif(${ENABLE_TESTING})
 
 add_executable(matlab2r ${CMAKE_SOURCE_DIR}/src/main.cpp ${M2R_SOURCES})
 target_link_libraries(matlab2r ${Boost_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY})

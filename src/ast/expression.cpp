@@ -47,20 +47,4 @@ void expression::traverse_bottom_up(visitor_p guest)
     accept(guest);
 }
 
-expression_p expression::build(double val)
-{
-    return std::make_shared<expression>(
-        std::make_shared<unary_expression>(
-        std::make_shared<postfix_expression>(
-        std::make_shared<primary_expression>(val))));
-}
-
-expression_p expression::build(cstref str)
-{
-    return std::make_shared<expression>(
-        std::make_shared<unary_expression>(
-        std::make_shared<postfix_expression>(
-        std::make_shared<primary_expression>(str))));
-}
-
 }

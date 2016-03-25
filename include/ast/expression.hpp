@@ -59,8 +59,14 @@ public:
     virtual void traverse_bottom_up(visitor_p guest);
 
 public:
-    static expression_p build(double val);
-    static expression_p build(cstref str);
+    template<typename T>
+    static expression_p build(T val)
+    {
+        return std::make_shared<expression>(
+            std::make_shared<unary_expression>(
+            std::make_shared<postfix_expression>(
+            std::make_shared<primary_expression>(val))));
+    }
 };
 
 };

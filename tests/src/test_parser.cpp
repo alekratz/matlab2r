@@ -9,9 +9,7 @@ using namespace ast;
 
 #define AUTO_REQUIRE(A, B) auto A = B; \
     BOOST_REQUIRE(A != nullptr)
-#define EXPR_TO_PRIMARY(E) AUTO_REQUIRE(unary_ ## E, E->expr); \
-        AUTO_REQUIRE(postfix_ ## E, unary_ ## E ->expr); \
-        AUTO_REQUIRE(primary_ ## E, postfix_ ## E ->expr)
+#define EXPR_TO_PRIMARY(E) AUTO_REQUIRE(primary_ ## E, E->expr)
 ; // this is here to keep me from going insane
 
 BOOST_AUTO_TEST_CASE(test_function_declare)
@@ -233,9 +231,8 @@ BOOST_AUTO_TEST_CASE(test_assignment_statement)
         AUTO_REQUIRE(rhs, assign_expr->rhs);
         
         BOOST_CHECK(lhs->transposes.size() == 0);
-        AUTO_REQUIRE(primary_lhs, lhs->expr);
-        BOOST_REQUIRE(primary_lhs->type == primary_expression_type::QUALIFIED_ID);
-        AUTO_REQUIRE(qid_lhs, primary_lhs->qualified_id);
+        BOOST_REQUIRE(lhs->type == primary_expression_type::QUALIFIED_ID);
+        AUTO_REQUIRE(qid_lhs, lhs->qualified_id);
         BOOST_REQUIRE(qid_lhs->items.size() == 1);
         AUTO_REQUIRE(qid_item_lhs, qid_lhs->items[0]);
         BOOST_REQUIRE(qid_item_lhs->type == qualified_id_item_type::IDENTIFIER);
@@ -268,9 +265,8 @@ BOOST_AUTO_TEST_CASE(test_assignment_statement_multiple)
         AUTO_REQUIRE(rhs, assign_expr->rhs);
         
         BOOST_CHECK(lhs->transposes.size() == 0);
-        AUTO_REQUIRE(primary_lhs, lhs->expr);
-        BOOST_REQUIRE(primary_lhs->type == primary_expression_type::MATRIX);
-        AUTO_REQUIRE(array_lhs, primary_lhs->array);
+        BOOST_REQUIRE(lhs->type == primary_expression_type::MATRIX);
+        AUTO_REQUIRE(array_lhs, lhs->array);
         BOOST_REQUIRE(array_lhs->items.size() == 1);
         BOOST_REQUIRE(array_lhs->items[0]->items.size() == 2);
         AUTO_REQUIRE(first_lhs, array_lhs->items[0]->items[0]);
@@ -325,10 +321,10 @@ BOOST_AUTO_TEST_CASE(test_if_statement)
     AUTO_REQUIRE(rhs, cond->rhs);
     EXPR_TO_PRIMARY(lhs);
     EXPR_TO_PRIMARY(rhs);
-    BOOST_CHECK(unary_lhs->op == unary_op::NONE);
-    BOOST_CHECK(unary_rhs->op == unary_op::NONE);
-    BOOST_CHECK(postfix_lhs->transposes.size() == 0);
-    BOOST_CHECK(postfix_rhs->transposes.size() == 0);
+    BOOST_CHECK(primary_lhs->u_op == unary_op::NONE);
+    BOOST_CHECK(primary_rhs->u_op == unary_op::NONE);
+    BOOST_CHECK(primary_lhs->transposes.size() == 0);
+    BOOST_CHECK(primary_rhs->transposes.size() == 0);
     AUTO_REQUIRE(qid_list_lhs, primary_lhs->qualified_id);
     AUTO_REQUIRE(qid_list_rhs, primary_rhs->qualified_id);
     AUTO_REQUIRE(qid_item_lhs, *qid_list_lhs->items.begin());
@@ -373,10 +369,10 @@ BOOST_AUTO_TEST_CASE(test_if_statement_with_elseif_else)
     AUTO_REQUIRE(rhs, cond->rhs);
     EXPR_TO_PRIMARY(lhs);
     EXPR_TO_PRIMARY(rhs);
-    BOOST_CHECK(unary_lhs->op == unary_op::NONE);
-    BOOST_CHECK(unary_rhs->op == unary_op::NONE);
-    BOOST_CHECK(postfix_lhs->transposes.size() == 0);
-    BOOST_CHECK(postfix_rhs->transposes.size() == 0);
+    BOOST_CHECK(primary_lhs->u_op == unary_op::NONE);
+    BOOST_CHECK(primary_rhs->u_op == unary_op::NONE);
+    BOOST_CHECK(primary_lhs->transposes.size() == 0);
+    BOOST_CHECK(primary_rhs->transposes.size() == 0);
     AUTO_REQUIRE(qid_list_lhs, primary_lhs->qualified_id);
     AUTO_REQUIRE(qid_list_rhs, primary_rhs->qualified_id);
     AUTO_REQUIRE(qid_item_lhs, *qid_list_lhs->items.begin());
@@ -403,10 +399,10 @@ BOOST_AUTO_TEST_CASE(test_if_statement_with_elseif_else)
     AUTO_REQUIRE(elseif_rhs, elseif_cond->rhs);
     EXPR_TO_PRIMARY(elseif_lhs);
     EXPR_TO_PRIMARY(elseif_rhs);
-    BOOST_CHECK(unary_elseif_lhs->op == unary_op::NONE);
-    BOOST_CHECK(unary_elseif_rhs->op == unary_op::NONE);
-    BOOST_CHECK(postfix_elseif_lhs->transposes.size() == 0);
-    BOOST_CHECK(postfix_elseif_rhs->transposes.size() == 0);
+    BOOST_CHECK(primary_elseif_lhs->u_op == unary_op::NONE);
+    BOOST_CHECK(primary_elseif_rhs->u_op == unary_op::NONE);
+    BOOST_CHECK(primary_elseif_lhs->transposes.size() == 0);
+    BOOST_CHECK(primary_elseif_rhs->transposes.size() == 0);
     AUTO_REQUIRE(elseif_qid_list_lhs, primary_elseif_lhs->qualified_id);
     AUTO_REQUIRE(elseif_qid_list_rhs, primary_elseif_rhs->qualified_id);
     AUTO_REQUIRE(elseif_qid_item_lhs, *elseif_qid_list_lhs->items.begin());
@@ -451,10 +447,10 @@ BOOST_AUTO_TEST_CASE(test_elseif_statement)
     AUTO_REQUIRE(rhs, cond->rhs);
     EXPR_TO_PRIMARY(lhs);
     EXPR_TO_PRIMARY(rhs);
-    BOOST_CHECK(unary_lhs->op == unary_op::NONE);
-    BOOST_CHECK(unary_rhs->op == unary_op::NONE);
-    BOOST_CHECK(postfix_lhs->transposes.size() == 0);
-    BOOST_CHECK(postfix_rhs->transposes.size() == 0);
+    BOOST_CHECK(primary_lhs->u_op == unary_op::NONE);
+    BOOST_CHECK(primary_rhs->u_op == unary_op::NONE);
+    BOOST_CHECK(primary_lhs->transposes.size() == 0);
+    BOOST_CHECK(primary_rhs->transposes.size() == 0);
     AUTO_REQUIRE(qid_list_lhs, primary_lhs->qualified_id);
     AUTO_REQUIRE(qid_list_rhs, primary_rhs->qualified_id);
     AUTO_REQUIRE(qid_item_lhs, *qid_list_lhs->items.begin());
@@ -481,10 +477,10 @@ BOOST_AUTO_TEST_CASE(test_elseif_statement)
     AUTO_REQUIRE(elseif_rhs, elseif_cond->rhs);
     EXPR_TO_PRIMARY(elseif_lhs);
     EXPR_TO_PRIMARY(elseif_rhs);
-    BOOST_CHECK(unary_elseif_lhs->op == unary_op::NONE);
-    BOOST_CHECK(unary_elseif_rhs->op == unary_op::NONE);
-    BOOST_CHECK(postfix_elseif_lhs->transposes.size() == 0);
-    BOOST_CHECK(postfix_elseif_rhs->transposes.size() == 0);
+    BOOST_CHECK(primary_elseif_lhs->u_op == unary_op::NONE);
+    BOOST_CHECK(primary_elseif_rhs->u_op == unary_op::NONE);
+    BOOST_CHECK(primary_elseif_lhs->transposes.size() == 0);
+    BOOST_CHECK(primary_elseif_rhs->transposes.size() == 0);
     AUTO_REQUIRE(elseif_qid_list_lhs, primary_elseif_lhs->qualified_id);
     AUTO_REQUIRE(elseif_qid_list_rhs, primary_elseif_rhs->qualified_id);
     AUTO_REQUIRE(elseif_qid_item_lhs, *elseif_qid_list_lhs->items.begin());
@@ -520,10 +516,10 @@ BOOST_AUTO_TEST_CASE(test_else_statement)
     AUTO_REQUIRE(rhs, cond->rhs);
     EXPR_TO_PRIMARY(lhs);
     EXPR_TO_PRIMARY(rhs);
-    BOOST_CHECK(unary_lhs->op == unary_op::NONE);
-    BOOST_CHECK(unary_rhs->op == unary_op::NONE);
-    BOOST_CHECK(postfix_lhs->transposes.size() == 0);
-    BOOST_CHECK(postfix_rhs->transposes.size() == 0);
+    BOOST_CHECK(primary_lhs->u_op == unary_op::NONE);
+    BOOST_CHECK(primary_rhs->u_op == unary_op::NONE);
+    BOOST_CHECK(primary_lhs->transposes.size() == 0);
+    BOOST_CHECK(primary_rhs->transposes.size() == 0);
     AUTO_REQUIRE(qid_list_lhs, primary_lhs->qualified_id);
     AUTO_REQUIRE(qid_list_rhs, primary_rhs->qualified_id);
     AUTO_REQUIRE(qid_item_lhs, *qid_list_lhs->items.begin());
@@ -705,16 +701,6 @@ BOOST_AUTO_TEST_CASE(test_qualified_id)
 }
 
 BOOST_AUTO_TEST_CASE(test_expression)
-{
-
-}
-
-BOOST_AUTO_TEST_CASE(test_unary_expression)
-{
-
-}
-
-BOOST_AUTO_TEST_CASE(test_postfix_expression)
 {
 
 }

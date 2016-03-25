@@ -52,7 +52,7 @@ void function_name_visitor::init_fname_map()
         item->identifier = string("seq");
         auto rhs = args->items[2]->expr; // TODO : colon operator
         args->items[2]->expr = nullptr;
-        args->items[2]->named_expr = std::make_shared<generator::funcall_arg_assign>("len", rhs);
+        args->items[2]->named_expr = make_shared<generator::funcall_arg_assign>("len", rhs);
     };
 
     fname_map["logspace"] = [](ast::qualified_id_item* item) {
@@ -65,23 +65,18 @@ void function_name_visitor::init_fname_map()
             return;
         }
         
-        auto seq_qid_item = std::make_shared<qualified_id_item>("seq");
+        auto seq_qid_item = make_shared<qualified_id_item>("seq");
         seq_qid_item->array_index_list = item->array_index_list;
         auto rhs = args->items[2]->expr;
         args->items[2]->expr = nullptr;
-        args->items[2]->named_expr = std::make_shared<generator::funcall_arg_assign>("len", rhs);
+        args->items[2]->named_expr = make_shared<generator::funcall_arg_assign>("len", rhs);
         item->array_index_list = nullptr;
         item->identifier = "";
 
-        // TODO : moar buildurz
-        item->expression = std::make_shared<expression>(
+        item->expression = make_shared<expression>(
             expression::build(10.0),
             expression_op::POW,
-            std::make_shared<expression>(
-            std::make_shared<unary_expression>(
-            std::make_shared<postfix_expression>(
-            std::make_shared<primary_expression>(
-            std::make_shared<qualified_id>(seq_qid_item))))));
+            expression::build(make_shared<qualified_id>(seq_qid_item)));
         item->type = qualified_id_item_type::EXPRESSION;
     };
 

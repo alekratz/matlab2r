@@ -22,8 +22,6 @@ VISITOR_ACCEPT_DECL(qualified_id)
 VISITOR_ACCEPT_DECL(array_index)
 VISITOR_ACCEPT_DECL(assignment_expression)
 VISITOR_ACCEPT_DECL(expression)
-VISITOR_ACCEPT_DECL(unary_expression)
-VISITOR_ACCEPT_DECL(postfix_expression)
 VISITOR_ACCEPT_DECL(primary_expression)
 VISITOR_ACCEPT_DECL(index_expression)
 

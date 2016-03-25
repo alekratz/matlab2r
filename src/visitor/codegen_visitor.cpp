@@ -149,15 +149,16 @@ void codegen_visitor::visit(expression* expr)
         out << ')';
     }
     else {
-        auto unary_expr = expr->expr;
-        assert(unary_expr != nullptr && "unary expression portion of expression is null; this should not happen");
-        unary_expr->accept(this);
+        auto primary_expr = expr->expr;
+        assert(primary_expr != nullptr && "primary expression portion of expression is null; this should not happen");
+        primary_expr->accept(this);
     }
 }
-
-void codegen_visitor::visit(unary_expression* unexpr)
+void codegen_visitor::visit(primary_expression* prim_expr)
 {
-    switch(unexpr->op) {
+    auto u_op = prim_expr->u_op;
+    // output stuff for the unary operator
+    switch(u_op) {
     case unary_op::PLUS: out << "+";
     case unary_op::MINUS: out << "-";
     case unary_op::TILDE: out << "~";
@@ -165,34 +166,15 @@ void codegen_visitor::visit(unary_expression* unexpr)
     default: assert(false && "unknown unary_op type encountered");
     }
 
-    auto expr = unexpr->expr;
-    assert(expr != nullptr && "unary_expression's wrapped expression should not be null");
-    expr->accept(this);
-}
-void codegen_visitor::visit(postfix_expression* post_expr)
-{
-    typedef vector<postfix_op>::const_iterator transpose_iter;
-    auto expr = post_expr->expr;
-    const auto& tp_list = post_expr->transposes;
-
-    function<void(transpose_iter)> tp = [&](transpose_iter here) {
-        if(here == tp_list.end())
-            expr->accept(this);
-        else {
-            switch((*here)) {
-            case postfix_op::TRANSPOSE: 
-                out << "t(";
-                tp(here + 1);
-                out << ")";
-            break;
-            case postfix_op::NCTRANSPOSE: /* TODO */ break;
-            }
-        }
-    };
-    tp(tp_list.cbegin());
-}
-void codegen_visitor::visit(primary_expression* prim_expr)
-{
+    // previously, this was a recursive function in visit(postfix_expression)
+    // but that class is gone, and I don't really want to do some weird lambda recursion using this mess
+    // so it's time for some for loops
+    auto transposes = prim_expr->transposes;
+    for(auto iter = transposes.cbegin(); iter != transposes.cend(); iter++) {
+        if(*iter == postfix_op::TRANSPOSE) {
+            out << "t(";
+        } // TODO : postfix_op::NCTRANSPOSE
+    }
     switch(prim_expr->type) {
     case primary_expression_type::QUALIFIED_ID:
     {
@@ -251,6 +233,12 @@ void codegen_visitor::visit(primary_expression* prim_expr)
     default:
         assert(false && "unknown primary_expression_type encountered");
         break;
+    }
+    // close up the parens we made above
+    for(auto iter = transposes.cbegin(); iter != transposes.cend(); iter++) {
+        if(*iter == postfix_op::TRANSPOSE) {
+            out << ")";
+        } // TODO : postfix_op::NCTRANSPOSE
     }
 }
 void codegen_visitor::visit(array_col_list* col_list)

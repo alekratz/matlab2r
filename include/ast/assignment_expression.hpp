@@ -14,11 +14,11 @@ public:
     typedef node base_t;
 
 public:
-    assignment_expression(postfix_expression_p lhs, expression_p rhs)
+    assignment_expression(primary_expression_p lhs, expression_p rhs)
         : lhs(lhs)
         , rhs(rhs) { }
 
-    postfix_expression_p lhs;
+    primary_expression_p lhs;
     expression_p rhs;
 
 public:

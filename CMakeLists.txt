@@ -63,8 +63,6 @@ set(M2R_SOURCES
     ${CMAKE_SOURCE_DIR}/src/ast/catch_statement.cpp
     ${CMAKE_SOURCE_DIR}/src/ast/assignment_expression.cpp
     ${CMAKE_SOURCE_DIR}/src/ast/expression.cpp
-    ${CMAKE_SOURCE_DIR}/src/ast/unary_expression.cpp
-    ${CMAKE_SOURCE_DIR}/src/ast/postfix_expression.cpp
     ${CMAKE_SOURCE_DIR}/src/ast/primary_expression.cpp
     ${CMAKE_SOURCE_DIR}/src/ast/index_expression.cpp
     ${CMAKE_SOURCE_DIR}/src/ast/array_index.cpp

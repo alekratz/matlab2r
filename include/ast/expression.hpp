@@ -35,7 +35,7 @@ class expression
     : public node
 {
 public:
-    expression(unary_expression_p expr) 
+    expression(primary_expression_p expr) 
         : lhs(nullptr)
         , op(expression_op::NONE)
         , rhs(nullptr)
@@ -51,7 +51,7 @@ public:
     expression_op op;
     expression_p rhs;
 
-    unary_expression_p expr;
+    primary_expression_p expr;
 public:
     virtual void accept(visitor_p guest);
     virtual void children_accept(visitor_p guest);
@@ -61,12 +61,7 @@ public:
 public:
     template<typename T>
     static expression_p build(T val)
-    {
-        return std::make_shared<expression>(
-            std::make_shared<unary_expression>(
-            std::make_shared<postfix_expression>(
-            std::make_shared<primary_expression>(val))));
-    }
+        { return std::make_shared<expression>(std::make_shared<primary_expression>(val)); }
 };
 
 };

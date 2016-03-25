@@ -133,8 +133,8 @@
 %type <ast::qualified_id_item_p>        qualified_id_item
 %type <ast::assignment_expression_p>    assignment_expression
 %type <ast::expression_p>               expression
-%type <ast::unary_expression_p>         unary_expression
-%type <ast::postfix_expression_p>       postfix_expression
+%type <ast::primary_expression_p>       unary_expression
+%type <ast::primary_expression_p>       postfix_expression
 %type <ast::primary_expression_p>       primary_expression
 %type <ast::array_col_list_p>           array_col_list
 %type <ast::array_row_list_p>           array_row_list
@@ -422,7 +422,7 @@ assignment_expression
         ;
 
 postfix_expression
-        : primary_expression { $$ = std::make_shared<ast::postfix_expression>($1); }
+        : primary_expression { $$ = $1; }
         | postfix_expression TRANSPOSE
         { 
             $1->add_front(ast::postfix_op::TRANSPOSE);
@@ -493,14 +493,26 @@ expression
         ;
 
 unary_expression
-        : PLUS postfix_expression
-            { $$ = std::make_shared<ast::unary_expression>(ast::unary_op::PLUS, $2); }
-        | MINUS postfix_expression
-            { $$ = std::make_shared<ast::unary_expression>(ast::unary_op::MINUS, $2); }
-        | TILDE postfix_expression
-            { $$ = std::make_shared<ast::unary_expression>(ast::unary_op::TILDE, $2); }
-        | postfix_expression 
-            { $$ = std::make_shared<ast::unary_expression>($1); }
+        : PLUS primary_expression
+        {
+            $2->u_op = ast::unary_op::PLUS;
+            $$ = $2;
+        }
+        | MINUS primary_expression
+        {
+            $2->u_op = ast::unary_op::MINUS;
+            $$ = $2;
+        }
+        | TILDE primary_expression
+        {
+            $2->u_op = ast::unary_op::TILDE;
+            $$ = $2;
+        }
+        | primary_expression
+        {
+            $1->u_op = ast::unary_op::NONE;
+            $$ = $1;
+        }
         ;
 
 array_index_list

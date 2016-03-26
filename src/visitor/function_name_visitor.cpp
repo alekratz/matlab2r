@@ -20,23 +20,27 @@ void function_name_visitor::visit(ast::statement_list* stmt_list)
         stmt->traverse_top_down(this);
 }
 
-void function_name_visitor::visit(ast::qualified_id* qual_id)
+void function_name_visitor::visit(ast::expression* expr)
 {
-    // We only care about single-shot qualified IDs
-    if(qual_id->items.size() != 1) return;
-    auto& qual_id_item = *qual_id->items.begin();
-    // We only care about identifiers (this check may not be necessary)
-    if(qual_id_item->type != qualified_id_item_type::IDENTIFIER) return;
-    // We only care about function calls
-    auto array_indices = qual_id_item->array_index_list;
-    if(array_indices == nullptr) return;
-    if(array_indices->size() == 0) return;
-    // Finally, check to see if it's a function we care about. If it is, then we will call its mapper function.
-    auto mapper = fname_map.find(qual_id_item->identifier);
-    if(mapper != fname_map.end()) {
-        auto array_index = (*qual_id_item->array_index_list->begin());
-        array_index->type = array_index_type::FUNCALL;
-        fname_map[qual_id_item->identifier](qual_id_item.get());
+    auto prim_expr = expr->expr;
+    if(expr->op == expression_op::NONE && prim_expr->type == primary_expression_type::QUALIFIED_ID) {
+        auto qual_id = prim_expr->qualified_id;
+        // We only care about single-shot qualified IDs
+        if(qual_id->items.size() != 1) return;
+        auto& qual_id_item = *qual_id->items.begin();
+        // We only care about identifiers (this check may not be necessary)
+        if(qual_id_item->type != qualified_id_item_type::IDENTIFIER) return;
+        // We only care about function calls
+        auto array_indices = qual_id_item->array_index_list;
+        if(array_indices == nullptr) return;
+        if(array_indices->size() == 0) return;
+        // Finally, check to see if it's a function we care about. If it is, then we will call its mapper function.
+        auto mapper = fname_map.find(qual_id_item->identifier);
+        if(mapper != fname_map.end()) {
+            auto array_index = (*qual_id_item->array_index_list->begin());
+            array_index->type = array_index_type::FUNCALL;
+            fname_map[qual_id_item->identifier](qual_id_item.get());
+        }
     }
 }
 

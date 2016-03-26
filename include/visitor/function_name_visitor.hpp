@@ -28,7 +28,7 @@ public:
 public:
     virtual void visit(ast::function_declare*);
     virtual void visit(ast::statement_list*);
-    virtual void visit(ast::qualified_id*);
+    virtual void visit(ast::expression*);
 
     const std::unordered_set<std::string>& get_function_names() const 
         { return function_names; }

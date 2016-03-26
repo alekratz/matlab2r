@@ -77,4 +77,54 @@ void function_name_visitor::init_fname_map()
         expr->rhs = make_shared<expression>(expr->expr);
         expr->expr = nullptr;
     };
+
+    fname_map["ones"] = fname_map["zeros"] = [](expression* expr, qualified_id_item* item) {
+        auto args = (*item->array_index_list->begin())->index_expression_list;
+        expression_p rows = nullptr, cols = nullptr;
+        expression_p value = nullptr;
+        assert(item->identifier == "ones" || item->identifier == "zeros");
+        if(item->identifier == "ones")
+            value = expression::build(1.0);
+        else
+            value = expression::build(0.0);
+
+        if(args->size() == 1) {
+            if(args->items[0]->is_colon_op) {
+                cerr << "error: unable to convert zeros function to matrix function, "
+                        "colon op used when expression expected. skipping" << endl;
+                return;
+            }
+            rows = cols = args->items[0]->expr;
+        }
+        else if(args->size() == 2) {
+            if(args->items[0]->is_colon_op || args->items[1]->is_colon_op) {
+                cerr << "error: unable to convert zeros function to matrix function, "
+                        "colon op used when expression expected. skipping" << endl;
+                return;
+            }
+            rows = args->items[0]->expr;
+            cols = args->items[1]->expr;
+        }
+        else if(args->size() == 0) {
+            expr->expr = make_shared<primary_expression>(0.0);
+            return;
+        }
+        else {
+            cerr << "error: unsupported number of arguments for zeros function "
+                    "(" << args->size() << "). skipping" << endl;
+            return;
+        }
+
+        // make the matrix definition
+        item->identifier = "matrix";
+        while(args->size() < 3) {
+            auto idx_expr = make_shared<index_expression>();
+            idx_expr->is_colon_op = false;
+            args->items.push_back(idx_expr);
+        }
+        args->items[0]->expr = value;
+        args->items[1]->named_expr = make_shared<generator::funcall_arg_assign>("nrow", rows);
+        args->items[2]->named_expr = make_shared<generator::funcall_arg_assign>("ncol", cols);
+        args->items[1]->expr = args->items[2]->expr = nullptr;
+    };
 }

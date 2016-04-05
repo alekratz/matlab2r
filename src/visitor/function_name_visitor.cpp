@@ -118,6 +118,8 @@ void function_name_visitor::init_fname_map()
             return;
         }
 
+        assert(rows != nullptr && cols != nullptr);
+
         /* 
         so the source I'm using (noted in comments above) makes a distinction
         between when MATLAB uses zeros(1, n) and zeros(m, n); the former
@@ -140,5 +142,40 @@ void function_name_visitor::init_fname_map()
         args->items[1]->expr = args->items[2]->expr = nullptr;
     };
 
-
+    fname_map["eye"] = [](expression* expr, qualified_id_item* item) {
+        auto args = (*item->array_index_list->begin())->index_expression_list;
+        if(args->size() == 1) {
+            if(args->items[0]->is_colon_op) {
+                cerr << "error: unable to convert eye function to diag function, "
+                        "colon op used when expression expected. skipping" << endl;
+                return;
+            }
+        }
+        else if(args->size() == 2) {
+            if(args->items[0]->is_colon_op || args->items[1]->is_colon_op) {
+                cerr << "error: unable to convert eye function to diag function, "
+                        "colon op used when expression expected. skipping" << endl;
+                return;
+            }
+        }
+        else {
+            cerr << "error: unable to convert eye function to diag function, "
+                    "incorrect number of arguments (expected 1 or 2 vs. " <<
+                    args->size() << "). skipping" << endl;
+            return;
+        }
+        // double check that we're not dealing with a colon op
+        for(auto arg : args->items) {
+            if(arg->is_colon_op) {
+                cerr << "error: unable to convert eye function to diag function, "
+                        "colon op used when expression expected. skipping" << endl;
+            }
+        }
+        // insert a final named argument that specifies that the value should be
+        // 1. In matlab, you multiply by X, which is valid in R as well.
+        auto one = expression::build(1.0);
+        auto x_named_arg = make_shared<generator::funcall_arg_assign>("x", one);
+        args->items.push_back(make_shared<index_expression>(x_named_arg));
+        item->identifier = "diag";
+    };
 }

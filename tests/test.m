@@ -9,4 +9,7 @@ function test_funcall()
    zeros(1, 3)
    zeros(5, 1)
    zeros(3, 2)
+
+   eye(2)
+   eye(4, 3)
 end

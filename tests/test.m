@@ -13,4 +13,5 @@ function test_funcall()
    eye(2)
    eye(4, 3)
    fliplr(A)
+   flipud(A)
 end

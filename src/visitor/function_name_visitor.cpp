@@ -194,4 +194,22 @@ void function_name_visitor::init_fname_map()
         item->identifier = "t";
         item->array_index_list = qualified_id_item::build_args({ apply_func_expr });
     };
+
+    fname_map["flipud"] = [](expression* expr, qualified_id_item* item) {
+        auto args = (*item->array_index_list->begin())->index_expression_list;
+        if(args->size() != 1) {
+            cerr << "error: unable to convert flipud function to apply() function, "
+                    "incorrect number of arguments (expected 1 vs. " << 
+                    args->size() << "). skipping" << endl;
+            return;
+        }
+
+        // flipup(A) -> apply(A, 2, rev)
+        auto first_arg = args->items[0]->expr; // this is necessary because args[0] gets reset and thus becomes invalidated
+        auto two = expression::build(2.0);
+        auto rev_ident = expression::build_identifier("rev");
+
+        item->identifier = "apply";
+        item->array_index_list = qualified_id_item::build_args({ first_arg, two, rev_ident });
+    };
 }

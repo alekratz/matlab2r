@@ -178,4 +178,22 @@ void function_name_visitor::init_fname_map()
         args->items.push_back(make_shared<index_expression>(x_named_arg));
         item->identifier = "diag";
     };
+
+    fname_map["fliplr"] = [](expression* expr, qualified_id_item* item) {
+        auto args = (*item->array_index_list->begin())->index_expression_list;
+        if(args->size() != 1) {
+            cerr << "error: unable to convert fliplr function to t(apply()) function, "
+                    "incorrect number of arguments (expected 1 vs. " << 
+                    args->size() << "). skipping" << endl;
+            return;
+        }
+
+        // fliplr(A) -> t(apply(A, 1, rev))
+        auto rev_ident = expression::build_identifier("rev");
+        auto one = expression::build(1.0);
+        auto apply_func_expr = expression::build_function("apply", { args->items[0]->expr, one, rev_ident });
+
+        item->identifier = "t";
+        item->array_index_list = qualified_id_item::build_args({ apply_func_expr });
+    };
 }

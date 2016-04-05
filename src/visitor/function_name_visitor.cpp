@@ -84,12 +84,10 @@ void function_name_visitor::init_fname_map()
     fname_map["ones"] = fname_map["zeros"] = [](expression* expr, qualified_id_item* item) {
         auto args = (*item->array_index_list->begin())->index_expression_list;
         expression_p rows = nullptr, cols = nullptr;
-        expression_p value = nullptr;
         assert(item->identifier == "ones" || item->identifier == "zeros");
-        if(item->identifier == "ones")
-            value = expression::build(1.0);
-        else
-            value = expression::build(0.0);
+        expression_p value = (item->identifier == "ones")
+            ? expression::build(1.0)
+            : expression::build(0.0);
 
         if(args->size() == 1) {
             if(args->items[0]->is_colon_op) {
@@ -172,7 +170,7 @@ void function_name_visitor::init_fname_map()
             }
         }
         // insert a final named argument that specifies that the value should be
-        // 1. In matlab, you multiply by X, which is valid in R as well.
+        // one. In matlab, you multiply by X, which is valid in R as well.
         auto one = expression::build(1.0);
         auto x_named_arg = make_shared<generator::funcall_arg_assign>("x", one);
         args->items.push_back(make_shared<index_expression>(x_named_arg));

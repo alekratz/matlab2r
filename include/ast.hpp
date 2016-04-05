@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <memory>
+#include <initializer_list>
 
 #define AST_ITEM(AST) class AST; \
 typedef std::shared_ptr<AST> AST ## _p;
@@ -16,6 +17,7 @@ template<typename wrapped>
 class list_node;
 AST_ITEM(qualified_id_item);
 AST_ITEM(qualified_id);
+enum class array_index_type; // forward decl of this enum, as it's used later in other spots beyond array_index
 AST_ITEM(array_index);
 AST_ITEM(primary_expression);
 AST_ITEM(expression);
@@ -70,9 +72,9 @@ typedef visitor* visitor_p;
 
 #include "ast/node.hpp"
 #include "ast/list_node.hpp"
+#include "ast/array_index.hpp"
 #include "ast/qualified_id_item.hpp"
 #include "ast/qualified_id.hpp"
-#include "ast/array_index.hpp"
 #include "ast/primary_expression.hpp"
 #include "ast/assignment_expression.hpp"
 #include "ast/expression.hpp"

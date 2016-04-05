@@ -46,6 +46,9 @@ void function_name_visitor::visit(ast::expression* expr)
 
 void function_name_visitor::init_fname_map()
 {
+    /* 
+        The source I'm using for matlab to R https://cran.r-project.org/doc/contrib/Hiebeler-matlabR.pdf
+    */
     fname_map["linspace"] = [](expression* expr, qualified_id_item* item) {
         auto args = (*item->array_index_list->begin())->index_expression_list;
         if(args->size() != 3) { 
@@ -90,7 +93,7 @@ void function_name_visitor::init_fname_map()
 
         if(args->size() == 1) {
             if(args->items[0]->is_colon_op) {
-                cerr << "error: unable to convert zeros function to matrix function, "
+                cerr << "error: unable to convert ones/zeros function to matrix function, "
                         "colon op used when expression expected. skipping" << endl;
                 return;
             }
@@ -98,7 +101,7 @@ void function_name_visitor::init_fname_map()
         }
         else if(args->size() == 2) {
             if(args->items[0]->is_colon_op || args->items[1]->is_colon_op) {
-                cerr << "error: unable to convert zeros function to matrix function, "
+                cerr << "error: unable to convert ones/zeros function to matrix function, "
                         "colon op used when expression expected. skipping" << endl;
                 return;
             }
@@ -110,10 +113,19 @@ void function_name_visitor::init_fname_map()
             return;
         }
         else {
-            cerr << "error: unsupported number of arguments for zeros function "
+            cerr << "error: unsupported number of arguments for ones/zeros function "
                     "(" << args->size() << "). skipping" << endl;
             return;
         }
+
+        /* 
+        so the source I'm using (noted in comments above) makes a distinction
+        between when MATLAB uses zeros(1, n) and zeros(m, n); the former
+        having a translation to a vector (using R's rep() function) and the
+        latter having a translation to a matrix. I don't think this is a good
+        idea - matrices vs. vectors have different behaviors in R. I want for
+        matrices to stay matrices, and vectors to stay vectors.
+        */
 
         // make the matrix definition
         item->identifier = "matrix";
@@ -127,4 +139,6 @@ void function_name_visitor::init_fname_map()
         args->items[2]->named_expr = make_shared<generator::funcall_arg_assign>("ncol", cols);
         args->items[1]->expr = args->items[2]->expr = nullptr;
     };
+
+
 }

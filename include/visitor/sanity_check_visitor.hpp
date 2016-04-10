@@ -21,7 +21,7 @@ class sanity_check_visitor
     : protected visitor
 {
 public:
-    sanity_check_visitor();
+    sanity_check_visitor(std::ostream& out=std::cerr);
     virtual ~sanity_check_visitor() = default;
 
 public:
@@ -37,6 +37,7 @@ protected:
     
 private:
     sanity_check_status status;
+    std::ostream& out;
     friend class ast::node;
 };
 

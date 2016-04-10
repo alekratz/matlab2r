@@ -11,8 +11,8 @@ class index_expression
     : node
 {
 public:
-    index_expression() 
-        : is_colon_op(true)
+    index_expression(bool is_colon_op=true) 
+        : is_colon_op(is_colon_op)
         , expr(nullptr) 
         , named_expr(nullptr) { }
 
@@ -20,6 +20,11 @@ public:
         : is_colon_op(false)
         , expr(expr)
         , named_expr(nullptr) { }
+
+    index_expression(generator::funcall_arg_assign_p named_expr) 
+        : is_colon_op(false)
+        , expr(nullptr)
+        , named_expr(named_expr) { }
 
     bool is_colon_op;
     expression_p expr;

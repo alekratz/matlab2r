@@ -116,7 +116,16 @@ void codegen_visitor::visit(assignment_expression* expr)
 
 void codegen_visitor::visit(expression* expr)
 {
-    if(expr->op != expression_op::NONE) {
+    if(expr->op == expression_op::COLON) {
+        auto lhs = expr->lhs;
+        auto rhs = expr->rhs;
+        assert(lhs != nullptr && "left hand side of expression is null, when it should not be");
+        assert(rhs != nullptr && "right hand side of expression is null, when it should not be");
+        lhs->accept(this);
+        out << ":";
+        rhs->accept(this);
+    }
+    else if(expr->op != expression_op::NONE) {
         out << '(';
         auto lhs = expr->lhs;
         auto rhs = expr->rhs;
@@ -124,7 +133,6 @@ void codegen_visitor::visit(expression* expr)
         assert(rhs != nullptr && "right hand side of expression is null, when it should not be");
         lhs->accept(this);
         switch(expr->op) {
-        case expression_op::COLON: out << ":"; break;
         case expression_op::VBAR: out << " | "; break;
         case expression_op::AMP: out << " & "; break;
         case expression_op::EQ_OP: out << " == "; break;

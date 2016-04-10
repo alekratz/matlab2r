@@ -43,6 +43,20 @@ public:
     virtual void children_accept(visitor_p guest) {  }
     virtual void traverse_top_down(visitor_p guest) { accept(guest); }
     virtual void traverse_bottom_up(visitor_p guest) { accept(guest); }
+
+public:
+    static array_index_list_p build_args(std::initializer_list<expression_p> args)
+    {
+        auto result = std::make_shared<ast::array_index_list>(); // some jackass used this as a member name already
+        auto idx_expr_list = std::make_shared<index_expression_list>();
+        auto array_idx = std::make_shared<array_index>(idx_expr_list, array_index_type::FUNCALL);
+        for(auto expr : args) {
+            idx_expr_list->items.push_back(std::make_shared<index_expression>(expr));
+        }
+        result->add_front(array_idx);
+
+        return result;
+    }
 };
 
 };

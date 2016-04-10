@@ -24,5 +24,8 @@ Provided that `make` succeeded, there should be a matlab2r executable in the bui
 ## Under Windows with Visual Studio
 Coming soon
 
+# Known bugs
+See the KNOWN_BUGS.md file for a list of these.
+
 # License
 ISC License, see the LICENSE file.

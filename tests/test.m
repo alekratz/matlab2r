@@ -10,10 +10,10 @@ function test_function()
    zeros(1, 3)
    zeros(5, 1)
    zeros(3, 2)
+   6 * ones(6)
    ident = eye(2)
    eye(4, 3)
    ident = fliplr(ident)
    ident = flipud(ident)
    v = v((1+1):4)
-
 end

@@ -4,8 +4,9 @@
 using namespace std;
 using namespace ast;
 
-sanity_check_visitor::sanity_check_visitor()
+sanity_check_visitor::sanity_check_visitor(ostream& out)
     : status(sanity_check_status::NOT_STARTED)
+    , out(out)
     { }
 
 void sanity_check_visitor::start(statement_list* ast)
@@ -27,7 +28,7 @@ void sanity_check_visitor::visit(primary_expression* primary_expr)
         size_t row_dim = (*primary_expr->array->begin())->size();
         for(auto row : primary_expr->array->items) {
             if(row_dim != row->size()) {
-                cerr << "mismatched matrix rows (established " << row_dim << " vs. " << row->size() << ")" << endl;
+                out << "mismatched matrix rows (established " << row_dim << " vs. " << row->size() << ")" << endl;
                 status = sanity_check_status::ERROR;
             }
         }
@@ -36,7 +37,7 @@ void sanity_check_visitor::visit(primary_expression* primary_expr)
     case primary_expression_type::CELL_ARRAY:
     {
         if(primary_expr->array->size() > 1) {
-            cerr << "cell array is not allowed to have multiple columns" << endl;
+            out << "cell array is not allowed to have multiple columns" << endl;
             status = sanity_check_status::ERROR;
         }
     }

@@ -212,4 +212,8 @@ void function_name_visitor::init_fname_map()
         item->identifier = "apply";
         item->array_index_list = qualified_id_item::build_args({ first_arg, two, rev_ident });
     };
+    // The "diag" method works by itself just fine, so we'll just define it to do nothing so it gets labeled as a function
+    fname_map["diag"] = [](expression* expr, qualified_id_item* item) {};
+
+    
 }

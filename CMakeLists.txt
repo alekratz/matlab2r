@@ -30,7 +30,11 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 find_package(FLEX REQUIRED)
 find_package(BISON REQUIRED)
 
-find_package(Boost REQUIRED COMPONENTS filesystem system unit_test_framework)
+if(${ENABLE_TESTING})
+    find_package(Boost REQUIRED COMPONENTS filesystem system unit_test_framework)
+else(${ENABLE_TESTING})
+    find_package(Boost REQUIRED COMPONENTS filesystem system)
+endif(${ENABLE_TESTING})
 
 BISON_TARGET(matlab_parser src/matlab_parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp)
 FLEX_TARGET(matlab_lexer src/matlab_lexer.l ${CMAKE_CURRENT_BINARY_DIR}/lexer.cpp COMPILE_FLAGS "-+ --header")
